@@ -1,71 +1,238 @@
 # Project Showcase Studio
 
-A professional web studio to design, preview, customize, and export stunning multi-slide showcase decks for your portfolio, Fiverr, Upwork, and personal website.
-
-## 🚀 How to Run
-
-Both servers run concurrently:
-```bash
-# 1. Start Backend Server (Handles file exports & disk saving)
-npm run server
-
-# 2. Start Frontend Studio (React + Vite + Tailwind)
-npm run dev
-```
-
-Open **`http://localhost:5173`** in your browser.
+A high-performance, developer-grade web application to design, customize, preview, and export multi-slide showcase decks for your portfolios, GitHub repositories, Fiverr gigs, Upwork projects, and personal websites.
 
 ---
 
-## ✨ Features Implemented
+## 🚀 How to Run the Application
 
-1. **Pre-Loaded with 30 Real Projects:**
-   - Automatically loaded from `ProjectData.kt` into `src/data/projects.json`.
-   - Titles, short descriptions, bullet features, technologies, and platforms auto-populate on project selection.
-   - `imageUrls` are completely decoupled; you upload your real screenshots directly.
+The studio consists of a React + Vite frontend and a lightweight Node.js persistence/export backend.
 
-2. **6 Layout Variants for Every Slide:**
-   - **Variant 1: Hero Cover:** Big headline, category pill, tech stack chips, 3D angled device with ambient glow.
-   - **Variant 2: Feature Deep-Dive:** Focused mockup on the left with 3 floating glassmorphism feature cards on the right.
-   - **Variant 3: Dual Screen Flow:** 2 phone mockups side-by-side (ideal for step-by-step user journeys or comparison).
-   - **Variant 4: Desktop Dashboard:** MacBook / Web browser mockup with 3 bottom feature highlight pillars.
-   - **Variant 5: Responsive Combo:** Desktop monitor in the background with an overlapping mobile phone in the foreground.
-   - **Variant 6: Minimal Big Focus:** Clean top headline with an extra-large centered mockup.
+### 1. Start Both Servers
 
-3. **Multi-Slide Carousel Management (3 to 7 Slides):**
-   - Add, duplicate, delete, and switch between slides.
-   - Each slide can have its own screenshot, variant, title, and bullet points.
+Run the backend and frontend concurrently in your terminal:
 
-4. **Frame Flexibility (With or Without Frame):**
-   - **Image Already Has Frame:** Toggle on to avoid double frames while keeping realistic shadows and 3D tilt.
-   - **Raw Screenshot:** Choose between **Android Pixel**, **iPhone 16 Pro**, or **Desktop Browser / MacBook** frame.
+```bash
+# Terminal 1: Start Backend Server (Handles file exports, zip packaging & disk sync)
+npm run server
 
-5. **1-Click Platform Dimension Presets:**
-   - 🌐 **Personal Website HD:** `1920 × 1080` (Full HD)
-   - 🌐 **Personal Website 720p:** `1280 × 720`
-   - 🟢 **Fiverr Recommended:** `1280 × 769 px`
-   - 🟢 **Fiverr Minimum:** `712 × 430 px`
-   - 💼 **Upwork Portfolio:** `1000 × 750 px`
-   - 🔍 **Thumbnail Mode Test:** One-click simulation of small card views to verify legibility.
+# Terminal 2: Start Frontend Studio (React + Vite + Tailwind CSS)
+npm run dev
+```
 
-6. **Smart Typography & Sizing Control:**
-   - Dynamic math scaling based on canvas dimensions.
-   - **Text Scale Slider (80% - 140%):** Fine-tune typography size for each platform.
-   - **Device Scale Slider (75% - 125%):** Adjust mockup size.
+### 2. Open in Browser
 
-7. **Theming & Magic Auto-Color:**
-   - **Auto-Color Button:** Samples pixels from your uploaded screenshot and adjusts ambient mesh glow to match.
-   - 6 Curated presets (Indigo Nebula, Emerald Vault, Cyber Violet, Solar Flare, Electric Cyan, Clean Slate).
-   - Custom hex color pickers for background and accent glow.
+Open [http://localhost:5173](http://localhost:5173) in Google Chrome or any modern browser.
 
-8. **Direct Disk Export & ZIP Packaging:**
-   - **Export Slide:** Instant high-res download of the active slide (`PNG`, `WebP`, `JPG`).
-   - **Save Deck & ZIP:** Sequentially renders all slides at 2x Retina scale, bundles them into `<project>_showcase_deck.zip`, and automatically saves them into:
-     ```text
-     /Volumes/Meet/project_showcase/exports/<project_slug>/
-     ├── project_config.json
-     ├── slide_1_<title>.png
-     ├── slide_2_<title>.png
-     ├── slide_3_<title>.png
-     └── <project_slug>_showcase_deck.zip
-     ```
+---
+
+## 📖 Step-by-Step Guide: How to Use the Studio
+
+### Step 1: Select Your Project
+- In the top header bar, click the **Project Dropdown** to select one of the **30 pre-loaded projects** (sourced from `ProjectData.kt`) or create custom slide decks.
+- Titles, taglines, technologies, platforms, and feature bullets are automatically populated.
+
+### Step 2: Choose Your Canvas Dimension Preset
+In the top bar, pick the ideal resolution for your target platform:
+- 🌐 **Personal Website HD:** `1920 × 1080` (16:9 Full HD)
+- 🌐 **Personal Website 720p:** `1280 × 720` (16:9 Standard)
+- 🟢 **Fiverr Recommended:** `1280 × 769` (Official Fiverr Gig Gallery Ratio)
+- 🟢 **Fiverr Minimum:** `712 × 430` (Compact Fiverr Card)
+- 💼 **Upwork Portfolio:** `1000 × 750` (4:3 Upwork Project Gallery Standard)
+- ⚙️ **Custom:** Enter custom pixel Width × Height.
+- 🔍 **Thumbnail Mode:** Toggle to preview how your slide looks at small card scale to ensure headline legibility.
+
+### Step 3: Manage Multi-Slide Carousel Deck
+- Use the **Slide Dock** floating at the bottom of the screen.
+- **Select Slide:** Click any slide badge (e.g., `Slide 1: hero`, `Slide 2: dual`, etc.) to switch active slide.
+- **Add Slide:** Click the `+ Add Slide` button to append a new slide (up to 20 slides per project).
+- **Duplicate Slide:** Click the copy icon to duplicate the active slide with all its customizations intact.
+- **Delete Slide:** Click the trash icon to remove a slide.
+
+### Step 4: Customize the Slide Layout Template
+Click the **Template** tab in the right Inspector:
+- Select from **6 unique composition layouts**:
+  1. **Hero Cover:** Cover slide featuring 3D isometric mockup, title, subtitle, eyebrow badge, status pill, and tech stack pills.
+  2. **Feature Deep-Dive:** Device mockup on the left with 3 floating glassmorphism feature cards on the right.
+  3. **Dual Screen Flow:** Two phone mockups side-by-side with primary & secondary screenshot uploads.
+  4. **Desktop Dashboard:** MacBook / Web browser window frame with feature highlight pillars.
+  5. **Responsive Combo:** Desktop monitor with overlapping mobile phone and Universal UI badge.
+  6. **Minimal Focus:** Ultra-clean centered device mockup with focused typography.
+
+> **Note:** The Inspector dynamically filters controls based on the selected layout template. Irrelevant properties are automatically hidden to keep your workspace clean.
+
+### Step 5: Upload Screenshots & Set Hardware Frame
+Click the **Mockup** tab in the Inspector:
+- **Upload Screenshot:** Drag and drop or browse for your screenshot (`PNG`, `JPG`, `WebP`). You can also type local image paths (e.g., `/images/screenshot.png`) or data URLs.
+- **Secondary Screenshot:** For *Dual Screen* and *Responsive Combo*, upload a 2nd screenshot for the mobile device.
+- **Auto-Color:** Click the ✨ **Auto-Color** button to sample dominant colors from your screenshot and automatically tune the ambient lighting.
+- **Hardware Frame Model:** Choose from **33 real hardware specifications** (Pixel 9/10, iPhone 16 Pro/17, Galaxy S25, iPad Pro M4, macOS Desktop Window, or Frameless).
+- **Image Has Frame Toggle:** Turn ON if your image already includes bezels to prevent double bezels.
+- **3D Isometric Tilt (Hero Cover):** Adjust perspective tilt angle Y (-25° to 25°) and pitch angle X (-15° to 15°).
+- **Device Shadows & Reflection:** Choose shadow styles (*Dramatic, Soft, Neon, None*), shadow intensity, and glossy screen reflection.
+- **Scale & Offsets:** Adjust device zoom scale (50% to 140%) and X/Y offset positioning.
+
+### Step 6: Customize Typography & Gradient Styles
+Click the **Content** tab in the Inspector:
+- **Slide Headline & Subtitle:** Type custom text (supports multiline with Enter or `\n`).
+- **Headline & Subtitle Color Customizer:**
+  - ✨ **Gradient Mode:** Choose from 8 presets (*Metallic Silver, Cyber Violet, Sunset Gold, Emerald Ice, Electric Cyan, Luxury Gold, Neon Rose, Deep Ocean*) OR build a **Custom 2-Color Gradient** with live angle controls (`0° ↑`, `45° ↗`, `90° →`, `135° ↘`, `180° ↓`).
+  - 🎨 **Solid Color Mode:** Pick from 11 curated swatches or type custom hex values.
+- **Eyebrow Badge & Tags:** Customize badge text, accent color, and choose from 17 Lucide icons (*Sparkles, Flame, Star, Shield, Terminal, Lightning, Rocket, Award, Crown, Code, Globe, AI/Cpu, Heart, Lock, Verified, Growth, Layers, Mobile*).
+- **Feature Cards:** Edit 3 key feature bullets and card text color (for Feature Deep-Dive & Desktop Dashboard).
+- **Font & Weights:** Select font (*Plus Jakarta Sans, Outfit, Inter, Cabinet Grotesk, Space Grotesk, Poppins, JetBrains Mono*) and boldness (*Regular 400, Medium 500, SemiBold 600, Bold 700, ExtraBold 800, Black 900*).
+- **Element Sizing:** Adjust individual sliders for Headline Size, Subtitle Size, Eyebrow Badge Size, Icon Size, Feature Text Size, Tech Pills Size, and Global Text Scale.
+
+### Step 7: Tune Background Atmosphere
+Click the **Canvas** tab in the Inspector:
+- **Background Lighting:** Select from 9 lighting variants (*Aurora Mesh, Spotlight Cone, Studio Radial, Cyber Grid, Linear Gradient, Sunset Glow, Concentric Rings, Studio Vignette, Horizon Ray*).
+- **Lighting Alignment:** Choose directional focus (*Behind Device Auto, Top-Left, Top-Center, Top-Right, Center-Left, Center, Center-Right, Bottom-Left, Bottom-Center, Bottom-Right*).
+- **18 Curated Color Themes:** 1-click themes including *Indigo Aura, Emerald Mint, Neon Violet, Sunset Amber, Pure Obsidian, Cyberpunk Rose, Neon Lime, Sapphire Deep, Luxury Gold*, etc.
+- **Custom Texture & Background:** Upload custom wallpaper or enable Dots / Grid texture overlays.
+- **Canvas Radius:** Adjust corner roundness (0px to 48px).
+
+### Step 8: Export Your Showcase
+- **Export Single Slide:** Click **Export Slide** in the header to instantly download the active slide in high resolution (`PNG`, `JPG`, or `WebP`).
+- **Save & Export Deck (ZIP):** Click **Save Deck & ZIP** to render all slides sequentially at 2x Retina scale. The backend saves files directly to disk and downloads a packaged ZIP archive:
+  ```text
+  /Volumes/Meet/project_showcase/exports/<project_slug>/
+  ├── project_config.json
+  ├── slide_1_<title>.png
+  ├── slide_2_<title>.png
+  ├── slide_3_<title>.png
+  └── <project_slug>_showcase_deck.zip
+  ```
+
+---
+
+## 🎛️ Complete Properties Reference
+
+### 1. Slide Layout Templates (`variant`)
+| Template ID | Name | Description | Key Visible Properties |
+|---|---|---|---|
+| `hero_cover` | Hero Cover | High-impact 3D cover slide | 3D Isometric Tilt, Eyebrow Badge, Status Callout Pill, Tech Stack Pills, Single Screenshot |
+| `feature_deep_dive` | Feature Deep-Dive | Mockup with feature breakdown | 3 Feature Cards, Card Text Color, Eyebrow Badge, Feature Text Size Slider |
+| `dual_screen` | Dual Screen Flow | Two phones side-by-side | Primary Screenshot, Secondary Screenshot, Centered Title & Subtitle |
+| `desktop_dashboard` | Desktop Dashboard | MacBook / Web desktop frame | Desktop Window Frames, 3 Feature Highlights, Single Screenshot |
+| `responsive_combo` | Responsive Combo | Multiplatform desktop + mobile | Primary (Desktop) + Secondary (Mobile) Screenshot, Universal UI Badge |
+| `minimal_focus` | Minimal Focus | Large centered clean mockup | Single Screenshot, Large Centered Device, Clean Headline & Subtitle |
+
+---
+
+### 2. Hardware Frame Models (33 Real Specifications)
+| Brand / Category | Model IDs | Specifications Included |
+|---|---|---|
+| **Google Pixel** | `google-pixel-9`, `google-pixel-10`, `google-pixel-10-pro-fold` | Real aspect ratios, camera visors, punch-holes, precise corner radii |
+| **Apple iPhone** | `apple-iphone-16-pro`, `apple-iphone-16-pro-max`, `apple-iphone-16`, `apple-iphone-16-plus`, `apple-iphone-17-pro`, `apple-iphone-17-pro-max`, `apple-iphone-17`, `apple-iphone-17e`, `apple-iphone-air`, `apple-iphone-se-3` | Dynamic Island, Titanium bezels, home button (SE), ultra-thin bezels |
+| **Samsung Galaxy** | `samsung-galaxy-s25`, `samsung-galaxy-s24`, `samsung-galaxy-z-fold-8`, `samsung-galaxy-z-fold-8-ultra`, `samsung-galaxy-z-flip-8` | Ultra bezels, foldable aspect ratios, camera punch holes |
+| **Tablets & iPads** | `apple-ipad-pro-11-m4`, `apple-ipad-pro-13-m4`, `apple-ipad-air-11-m2`, `apple-ipad-air-13-m2`, `apple-ipad-mini`, `apple-ipad-10`, `samsung-galaxy-tab-s11`, `samsung-galaxy-tab-s10-plus` | Landscape & portrait aspect ratios, slim uniform bezels |
+| **Desktop Windows** | `desktop-large` (macOS Window), `desktop-small` (Windows Window) | Window chrome titlebars, macOS traffic lights, Windows controls |
+| **Special Frames** | `frameless` | Clean card with customizable shadow and border radius |
+
+---
+
+### 3. Mockup & Device 3D Controls
+| Property | Control Type | Default | Range / Options | Description |
+|---|---|---|---|---|
+| `imageSrc` | Upload / URL | `null` | Base64 / Local URL | Primary screenshot displayed inside the device |
+| `secondaryImageSrc` | Upload / URL | `null` | Base64 / Local URL | Secondary screenshot (Dual Screen & Responsive Combo) |
+| `hasFrame` | Checkbox | `false` | `true` / `false` | Enable if screenshot already has frames to prevent double bezels |
+| `deviceType` | Select / Badges | `google-pixel-9` | 33 Real Hardware Models | Frame bezel and aspect ratio specifications |
+| `tilt` | Checkbox | `true` (Hero) | `true` / `false` | Enables 3D perspective transform (Hero Cover only) |
+| `tiltAngle` | Slider | `-8°` | `-25°` to `+25°` | 3D perspective rotation on the Y-axis |
+| `pitchAngle` | Slider | `4°` | `-15°` to `+15°` | 3D perspective rotation on the X-axis |
+| `shadowStyle` | Buttons | `dramatic` | `dramatic`, `soft`, `neon`, `none` | Realistic drop shadow styling under device |
+| `shadowIntensity` | Slider | `0.8` | `0.2` to `1.0` (20% - 100%) | Opacity and darkness of device drop shadow |
+| `screenReflection` | Checkbox | `true` | `true` / `false` | Diagonal high-gloss glass reflection sheen |
+| `deviceScale` | Slider | `1.0` | `0.5` to `1.4` (50% - 140%) | Size zoom scale of the mockup |
+| `offsetX` | Slider | `0px` | `-80px` to `+80px` | Horizontal fine-tuning translation offset |
+| `offsetY` | Slider | `0px` | `-80px` to `+80px` | Vertical fine-tuning translation offset |
+
+---
+
+### 4. Typography, Colors & Gradients
+| Property | Control Type | Options / Values | Description |
+|---|---|---|---|
+| `title` | Textarea | Text string | Slide headline (supports `\n` for linebreaks) |
+| `tagline` | Textarea | Text string | Subtitle / description paragraph |
+| `titleGradient` | Mode Toggle / Grid | `metallic`, `cyber`, `sunset`, `emerald`, `cyan`, `gold`, `rose`, `ocean`, `custom`, `solid` | Headline color style (Gradient presets, Custom, or Solid) |
+| `titleColor` | Swatches / Color / Hex | Hex string (e.g. `#ffffff`) | Solid headline color |
+| `titleGradientFrom` | Color / Hex | Hex string | Custom gradient start color |
+| `titleGradientTo` | Color / Hex | Hex string | Custom gradient end color |
+| `titleGradientAngle`| Slider / Quick Pills | `0°`, `45°`, `90°`, `135°`, `180°` | Custom gradient directional angle |
+| `subtitleGradient` | Mode Toggle / Grid | `none`, `metallic`, `cyber`, `sunset`, `emerald`, `cyan`, `gold`, `rose`, `ocean`, `custom`, `solid` | Subtitle color style |
+| `subtitleColor` | Swatches / Color / Hex | Hex string (e.g. `#cbd5e1`) | Solid subtitle text color |
+| `subtitleGradientFrom` | Color / Hex | Hex string | Subtitle custom gradient start color |
+| `subtitleGradientTo` | Color / Hex | Hex string | Subtitle custom gradient end color |
+| `subtitleGradientAngle`| Slider / Quick Pills | `0°` to `360°` | Subtitle custom gradient angle |
+| `eyebrowText` | Input | Text string | Top tag / platform badge text |
+| `eyebrowIcon` | Icon Grid | 17 Lucide Icons | Sparkles, Flame, Star, Shield, Terminal, Zap, Rocket, Award, Crown, Code, Globe, Cpu, Heart, Lock, CheckCircle2, TrendingUp, Layers, Smartphone |
+| `badgeColor` | Swatches / Color / Hex | Hex string (e.g. `#818cf8`) | Accent color for eyebrow tag and callout badge |
+| `statusBadge` | Input | Text string | Callout status pill (e.g., `⭐ 88 Stars on GitHub`) |
+| `features` | 3 Inputs | Array of 3 strings | Key feature bullets for Feature Deep-Dive |
+| `featureColor` | Swatches / Color / Hex | Hex string | Text color for floating feature cards |
+| `fontFamily` | Select | 7 Fonts | Plus Jakarta Sans, Outfit, Inter, Cabinet Grotesk, Space Grotesk, Poppins, JetBrains Mono |
+| `fontWeight` | 6 Buttons | `400`, `500`, `600`, `700`, `800`, `900` | Headline boldness (Regular, Medium, SemiBold, Bold, ExtraBold, Black) |
+| `titleSize` | Slider | `28px` - `76px` | Headline font size |
+| `subtitleSize` | Slider | `13px` - `26px` | Subtitle font size |
+| `badgeSize` | Slider | `10px` - `18px` | Eyebrow badge font size |
+| `iconSize` | Slider | `12px` - `28px` | Badge icon size |
+| `featureSize` | Slider | `11px` - `20px` | Feature cards text size |
+| `techChipSize` | Slider | `10px` - `18px` | Tech stack pills font size |
+| `textScale` | Slider | `0.75` - `1.4` (75% - 140%) | Global typography scaling multiplier |
+
+---
+
+### 5. Canvas, Lighting & Atmosphere
+| Property | Control Type | Default | Options / Values | Description |
+|---|---|---|---|---|
+| `backgroundVariant` | 2-Col Grid | `aurora` | 9 Variants | `aurora` (Mesh), `spotlight` (Cone ray), `radial` (Apple studio), `grid` (Cyber matrix), `linear` (Directional wash), `mesh_sunset` (Warm sunset glow), `cyber_rings` (Radar target circles), `deep_void` (Studio vignette), `split_horizon` (Cinematic beam) |
+| `bgAlignment` | 3x3 Grid + Auto | `behind_device` | 10 Alignments | `behind_device` (Auto aligns with device focus), `top_left`, `top_center`, `top_right`, `center_left`, `center`, `center_right`, `bottom_left`, `bottom_center`, `bottom_right` |
+| `backgroundColor` | Color Picker / Hex | `#080a12` | Any Hex Color | Main canvas backdrop solid color |
+| `accentColor` | Color Picker / Hex | `#6366f1` | Any Hex Color | Primary glowing light / ambient spotlight color |
+| `glowIntensity` | Slider | `0.35` | `0.05` - `1.0` (5% - 100%) | Brightness and spread multiplier of lighting glow |
+| `customBgImage` | File Upload | `null` | Image URL / Base64 | Custom uploaded background wallpaper or texture |
+| `textureOverlay` | Buttons | `dots` | `dots`, `grid`, `none` | Subtle texture grid or dot matrix overlay on canvas |
+| `canvasRadius` | Slider | `28px` | `0px` - `48px` | Corner roundness of the exported canvas |
+
+---
+
+### 6. Curated Color Themes (18 Designer Presets)
+| Theme Name | Background Hex | Accent Glow Hex | Aesthetic Description |
+|---|---|---|---|
+| **Indigo Aura** | `#080a12` | `#6366f1` | Modern SaaS & Developer Dark Mode |
+| **Emerald Mint** | `#050f0e` | `#10b981` | Fintech, Health & Sustainable Tech |
+| **Neon Violet** | `#0c0714` | `#a855f7` | AI, Web3 & Creative Studio |
+| **Sunset Amber** | `#100a06` | `#f97316` | Warm, energetic, consumer lifestyle |
+| **Electric Cyan** | `#060d14` | `#06b6d4` | Cloud computing & developer tools |
+| **Slate Minimal** | `#0e1117` | `#94a3b8` | Clean Apple-like monochrome |
+| **Pure Obsidian** | `#000000` | `#38bdf8` | Deep OLED true black with cyan ray |
+| **Cyberpunk Rose** | `#0f050b` | `#f43f5e` | Bold neon hot rose for gaming/entertainment |
+| **Neon Lime** | `#080e05` | `#84cc16` | High-voltage electric green tech |
+| **Sapphire Deep** | `#030712` | `#3b82f6` | Professional enterprise & corporate tech |
+| **Midnight Teal** | `#020f0f` | `#14b8a6` | Deep ocean cyan for productivity apps |
+| **Luxury Gold** | `#100d04` | `#eab308` | Premium, crypto & luxury showcases |
+| **Lavender Mist** | `#0b0813` | `#c084fc` | Soft pastel purple for consumer apps |
+| **Ruby Crimson** | `#120407` | `#e11d48` | High-energy automotive & sports apps |
+| **Titanium Dark** | `#0a0a0c` | `#e2e8f0` | Industrial Apple Titanium finish |
+| **Deep Space** | `#050510` | `#4f46e5` | Ultra-deep indigo galaxy glow |
+| **Matrix Forest** | `#040d06` | `#22c55e` | Terminal hacker green matrix |
+| **Hot Coral** | `#120706` | `#fb7185` | Playful coral peach display |
+
+---
+
+## 💾 Project Persistence & Disk Auto-Sync
+
+All project customizations are automatically synchronized in real time:
+- **Disk File:** `src/data/projectStore.json` (persisted on disk across git and reboots).
+- **Backend Auto-Save:** The Express backend (`server.js`) listens on port 3001 and writes changes every time a slide or project property is modified.
+- **Browser Fallback:** Synchronized with `localStorage` so your work is never lost even if the backend is temporarily offline.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React 19, Vite, Tailwind CSS, Lucide React Icons, HTML2Canvas, JSZip
+- **Backend:** Node.js, Express, File System (`fs/promises`), CORS
+- **Typography:** Google Fonts (Plus Jakarta Sans, Outfit, Inter, Cabinet Grotesk, Space Grotesk, Poppins, JetBrains Mono)
+- **Hardware Mockups:** SVG & CSS-based 3D hardware device frames with sub-pixel precision.

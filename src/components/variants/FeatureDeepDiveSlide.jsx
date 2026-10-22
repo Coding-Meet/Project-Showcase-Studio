@@ -1,15 +1,39 @@
 import React from 'react';
 import DeviceMockup from '../DeviceMockup';
-import { CheckCircle2, Zap, Shield, Cpu, Activity } from 'lucide-react';
+import { CheckCircle2, Zap, Shield, Cpu, Activity, Flame, Terminal, Star } from 'lucide-react';
+import { resolveTextGradientStyle } from '../../data/typographyPresets';
 
-const FEATURE_ICONS = [Zap, Shield, Cpu, Activity, CheckCircle2];
+const FEATURE_ICONS = [Zap, Shield, Cpu, Activity, CheckCircle2, Flame, Terminal, Star];
 
 export default function FeatureDeepDiveSlide({
   slideData,
   projectData,
+  baseScale = 1,
+  deviceFitScale = 1,
   textScale = 1,
-  deviceScale = 1,
-  accentColor = '#6366f1',
+  titleSize,
+  subtitleSize,
+  featureSize,
+  iconSize,
+  fontFamily,
+  fontWeight,
+  titleGradient,
+  titleColor,
+  subtitleColor,
+  subtitleGradient,
+  badgeColor,
+  featureColor,
+  deviceScale,
+  tilt,
+  tiltAngle,
+  pitchAngle,
+  perspective,
+  shadowStyle,
+  shadowIntensity,
+  screenReflection,
+  offsetX,
+  offsetY,
+  accentColor,
 }) {
   const title = slideData.title || 'Core Architecture & Features';
   const features = slideData.features && slideData.features.length > 0
@@ -18,54 +42,100 @@ export default function FeatureDeepDiveSlide({
 
   const platforms = projectData.platform || ['Android'];
 
+  const titleStyleObj = resolveTextGradientStyle({
+    gradient: titleGradient,
+    solidColor: titleColor,
+    customFrom: slideData.titleGradientFrom,
+    customTo: slideData.titleGradientTo,
+    customAngle: slideData.titleGradientAngle,
+  });
+
+  // Compute resolution-aware sizes
+  const effectiveRatio = baseScale;
+  const calcTitle = Math.max(18, Math.round(titleSize * textScale * effectiveRatio));
+  const calcFeature = Math.max(11, Math.round(featureSize * textScale * effectiveRatio));
+  const calcFeatureTitle = Math.max(12, Math.round((featureSize + 2) * textScale * effectiveRatio));
+  const calcIcon = Math.max(12, Math.round(iconSize * textScale * effectiveRatio));
+
   return (
-    <div className="w-full h-full flex items-center justify-between px-16 py-12 relative overflow-hidden z-10">
-      {/* Left Mockup (46%) */}
-      <div className="w-[45%] flex items-center justify-center relative z-10">
+    <div
+      className="w-full h-full flex items-center justify-between px-[6%] py-[5%] relative overflow-hidden z-10"
+      style={{ fontFamily: `${fontFamily}, sans-serif` }}
+    >
+      {/* Left Mockup (Strict 45% boundary) */}
+      <div className="w-[45%] max-w-[45%] flex-shrink-0 flex items-center justify-center relative z-10">
         <DeviceMockup
           imageSrc={slideData.imageSrc}
           hasFrame={slideData.hasFrame}
           deviceType={slideData.deviceType || (platforms.includes('Desktop') ? 'desktop' : 'android')}
-          tilt={false}
-          scale={deviceScale}
+          tilt={tilt}
+          tiltAngle={tiltAngle}
+          pitchAngle={pitchAngle}
+          perspective={perspective}
+          shadowStyle={shadowStyle}
+          shadowIntensity={shadowIntensity}
+          screenReflection={screenReflection}
+          accentColor={accentColor}
+          scale={deviceScale * deviceFitScale}
+          offsetX={offsetX * effectiveRatio}
+          offsetY={offsetY * effectiveRatio}
         />
       </div>
 
-      {/* Right Feature Cards (52%) */}
-      <div className="w-[52%] flex flex-col justify-center items-start z-10 space-y-4">
-        {/* Section Title */}
+      {/* Right Feature Cards (Strict 52% boundary) */}
+      <div className="w-[52%] max-w-[52%] flex-shrink-0 flex flex-col justify-center items-start z-10 space-y-3">
+        {/* Section Title with whitespace-pre-line */}
         <h2
-          className="font-extrabold tracking-tight text-white mb-2"
-          style={{ fontSize: `${Math.round(36 * textScale)}px` }}
+          className={`tracking-tight whitespace-pre-line ${titleStyleObj.className} mb-1`}
+          style={{
+            fontSize: `${calcTitle}px`,
+            fontWeight: fontWeight,
+            ...titleStyleObj.style,
+          }}
         >
           {title}
         </h2>
 
         {/* Floating Feature Cards */}
-        <div className="w-full space-y-3">
+        <div className="w-full space-y-2.5">
           {features.slice(0, 3).map((feat, i) => {
             const Icon = FEATURE_ICONS[i % FEATURE_ICONS.length];
             return (
               <div
                 key={i}
-                className="w-full p-4 rounded-xl glass-card border border-white/10 flex items-start gap-3.5 transition-all shadow-lg"
+                className="w-full p-3.5 rounded-xl glass-card border border-white/10 flex items-start gap-3 transition-all shadow-lg hover:border-white/20"
               >
                 <div
-                  className="p-2.5 rounded-lg flex-shrink-0 text-white"
-                  style={{ backgroundColor: `${accentColor}25`, border: `1px solid ${accentColor}40` }}
+                  className="p-2 rounded-lg flex-shrink-0 flex items-center justify-center"
+                  style={{
+                    backgroundColor: `${badgeColor || accentColor}22`,
+                    border: `1px solid ${badgeColor || accentColor}40`,
+                  }}
                 >
-                  <Icon className="w-5 h-5" style={{ color: accentColor }} />
+                  <Icon
+                    style={{
+                      width: `${calcIcon}px`,
+                      height: `${calcIcon}px`,
+                      color: badgeColor || accentColor,
+                    }}
+                  />
                 </div>
                 <div>
                   <h4
-                    className="font-bold text-white leading-snug"
-                    style={{ fontSize: `${Math.round(16 * textScale)}px` }}
+                    className="font-bold leading-snug"
+                    style={{
+                      fontSize: `${calcFeatureTitle}px`,
+                      color: titleColor || '#ffffff',
+                    }}
                   >
                     Feature #{i + 1}
                   </h4>
                   <p
-                    className="text-slate-300 mt-1 leading-relaxed"
-                    style={{ fontSize: `${Math.round(14 * textScale)}px` }}
+                    className="mt-0.5 leading-relaxed whitespace-pre-line"
+                    style={{
+                      fontSize: `${calcFeature}px`,
+                      color: featureColor || '#cbd5e1',
+                    }}
                   >
                     {feat}
                   </p>
