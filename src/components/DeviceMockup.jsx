@@ -1,6 +1,7 @@
 import React, { useId } from 'react';
 import { Smartphone, Monitor, Tablet } from 'lucide-react';
 import { getDeviceSpec } from '../data/deviceSpecs';
+import { DEVICE_FINISHES } from './inspector/inspectorConstants';
 
 export function normalizeImageSrc(src) {
   if (!src || typeof src !== 'string') return src;
@@ -30,6 +31,9 @@ export default function DeviceMockup({
   imageSrc,
   hasFrame = false,
   deviceType = 'google-pixel-9',
+  deviceFinish = 'natural_titanium',
+  frameGleam = true,
+  deviceCornerRadius,
   tilt = false,
   tiltAngle = -8,
   pitchAngle = 4,
@@ -45,6 +49,10 @@ export default function DeviceMockup({
 }) {
   const uniqueId = useId ? useId().replace(/[^a-zA-Z0-9_-]/g, '') : Math.random().toString(36).substring(7);
   const resolvedSrc = normalizeImageSrc(imageSrc);
+
+  const finishObj =
+    DEVICE_FINISHES.find((f) => f.id === deviceFinish) || DEVICE_FINISHES[0];
+
 
   if (!resolvedSrc) {
     const isDesktop = deviceType.includes('desktop');
@@ -101,11 +109,16 @@ export default function DeviceMockup({
 
   // 1. IMAGE ALREADY HAS A FRAME
   if (hasFrame) {
+    const radius = deviceCornerRadius || 24;
     return (
       <div className={`relative inline-block ${className}`} style={transformStyle}>
         <div
-          className="relative rounded-2xl overflow-hidden ring-1 ring-white/10"
-          style={{ boxShadow: shadowCss }}
+          className="relative overflow-hidden ring-1 ring-white/10"
+          style={{
+            boxShadow: shadowCss,
+            borderRadius: `${radius}px`,
+            border: `2px solid ${finishObj.border}`,
+          }}
         >
           <img
             src={resolvedSrc}
@@ -114,6 +127,16 @@ export default function DeviceMockup({
             crossOrigin="anonymous"
           />
           <ReflectionOverlay />
+          {frameGleam && (
+            <div
+              className="absolute inset-0 pointer-events-none z-30"
+              style={{
+                boxShadow:
+                  'inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.4), inset 1px 0 1px 0 rgba(255, 255, 255, 0.2)',
+                borderRadius: `${radius}px`,
+              }}
+            />
+          )}
         </div>
       </div>
     );
@@ -121,11 +144,16 @@ export default function DeviceMockup({
 
   // 2. FRAMELESS CLEAN CARD
   if (deviceType === 'frameless') {
+    const radius = deviceCornerRadius || 28;
     return (
       <div className={`relative inline-block ${className}`} style={transformStyle}>
         <div
-          className="relative rounded-2xl overflow-hidden border border-white/15 bg-black"
-          style={{ boxShadow: shadowCss }}
+          className="relative overflow-hidden bg-black"
+          style={{
+            boxShadow: shadowCss,
+            borderRadius: `${radius}px`,
+            border: `2.5px solid ${finishObj.border}`,
+          }}
         >
           <img
             src={resolvedSrc}
@@ -134,6 +162,16 @@ export default function DeviceMockup({
             crossOrigin="anonymous"
           />
           <ReflectionOverlay />
+          {frameGleam && (
+            <div
+              className="absolute inset-0 pointer-events-none z-30"
+              style={{
+                boxShadow:
+                  'inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.45), inset 1px 0 1px 0 rgba(255, 255, 255, 0.25)',
+                borderRadius: `${radius}px`,
+              }}
+            />
+          )}
         </div>
       </div>
     );
@@ -142,11 +180,22 @@ export default function DeviceMockup({
   // 3. AUTHENTIC VECTOR DEVICE SPEC FRAME
   const spec = getDeviceSpec(deviceType);
   const clipId = `screen-clip-${spec.id}-${uniqueId}`;
+  const finishGradId = `finish-grad-${spec.id}-${uniqueId}`;
   const isDesktop = spec.kind === 'desktop';
   const isTablet = spec.kind === 'tablet' || spec.kind === 'foldable';
   const maxH = isDesktop ? 460 : isTablet ? 500 : 530;
   const aspect = spec.frameSize.width / spec.frameSize.height;
   const targetW = Math.round(maxH * aspect);
+  const resolvedRadius = isDesktop ? 12 : deviceCornerRadius || 36;
+
+  // Dynamically inject metallic titanium/aluminum chassis gradient into the device frame SVG
+  let customizedBodySvg = spec.bodySvg;
+  if (finishObj && !isDesktop) {
+    customizedBodySvg = customizedBodySvg.replace(
+      /fill="[^"]*"/,
+      `fill="url(#${finishGradId})"`
+    );
+  }
 
   return (
     <div
@@ -157,7 +206,7 @@ export default function DeviceMockup({
         className={`relative overflow-hidden ${isDesktop ? 'w-full' : 'inline-block'}`}
         style={{
           boxShadow: shadowCss,
-          borderRadius: isDesktop ? '12px' : '36px',
+          borderRadius: `${resolvedRadius}px`,
         }}
       >
         <svg
@@ -178,10 +227,24 @@ export default function DeviceMockup({
             <clipPath id={clipId}>
               <path d={spec.screenPath} fillRule="nonzero" />
             </clipPath>
+
+            {/* Specular Metallic Chassis Gradient */}
+            <linearGradient
+              id={finishGradId}
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop offset="0%" stopColor={finishObj.border} />
+              <stop offset="35%" stopColor={finishObj.chassisFill} />
+              <stop offset="70%" stopColor={finishObj.bezelFill} />
+              <stop offset="100%" stopColor={finishObj.border} />
+            </linearGradient>
           </defs>
 
           {/* Device Frame Body (bezels, camera buttons, window bar) */}
-          <g dangerouslySetInnerHTML={{ __html: spec.bodySvg }} />
+          <g dangerouslySetInnerHTML={{ __html: customizedBodySvg }} />
 
           {/* Screenshot precisely placed at screenOffset and clipped to screenPath */}
           <g transform={`translate(${spec.screenOffset.x}, ${spec.screenOffset.y})`}>
@@ -198,6 +261,20 @@ export default function DeviceMockup({
             </g>
           </g>
         </svg>
+
+        {/* Specular Rim Gleam */}
+        {frameGleam && (
+          <div
+            className="absolute inset-0 pointer-events-none z-30"
+            style={{
+              boxShadow: isDesktop
+                ? 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.3)'
+                : 'inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.45), inset 1.5px 0 1px 0 rgba(255, 255, 255, 0.25), inset -1px -1px 2px 0 rgba(0, 0, 0, 0.5)',
+              borderRadius: `${resolvedRadius}px`,
+            }}
+          />
+        )}
+
         <ReflectionOverlay />
       </div>
     </div>

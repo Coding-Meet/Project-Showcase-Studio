@@ -3,6 +3,8 @@ import DeviceMockup from '../DeviceMockup';
 import { CheckCircle2, Zap, Shield, Cpu, Activity, Flame, Terminal, Star } from 'lucide-react';
 import { resolveTextGradientStyle } from '../../data/typographyPresets';
 
+import TrustPill from '../common/TrustPill';
+
 const FEATURE_ICONS = [Zap, Shield, Cpu, Activity, CheckCircle2, Flame, Terminal, Star];
 
 export default function FeatureDeepDiveSlide({
@@ -57,17 +59,24 @@ export default function FeatureDeepDiveSlide({
   const calcFeatureTitle = Math.max(12, Math.round((featureSize + 2) * textScale * effectiveRatio));
   const calcIcon = Math.max(12, Math.round(iconSize * textScale * effectiveRatio));
 
+  const isReversed = slideData.layoutAlign === 'right';
+
   return (
     <div
-      className="w-full h-full flex items-center justify-between px-[6%] py-[5%] relative overflow-hidden z-10"
+      className={`w-full h-full flex items-center justify-between px-[6%] py-[5%] relative overflow-hidden z-10 ${
+        isReversed ? 'flex-row-reverse' : ''
+      }`}
       style={{ fontFamily: `${fontFamily}, sans-serif` }}
     >
-      {/* Left Mockup (Strict 45% boundary) */}
+      {/* Mockup Column (Strict 45% boundary) */}
       <div className="w-[45%] max-w-[45%] flex-shrink-0 flex items-center justify-center relative z-10">
         <DeviceMockup
           imageSrc={slideData.imageSrc}
           hasFrame={slideData.hasFrame}
           deviceType={slideData.deviceType || (platforms.includes('Desktop') ? 'desktop' : 'android')}
+          deviceFinish={slideData.deviceFinish || 'natural_titanium'}
+          frameGleam={slideData.frameGleam !== false}
+          deviceCornerRadius={slideData.deviceCornerRadius}
           tilt={tilt}
           tiltAngle={tiltAngle}
           pitchAngle={pitchAngle}

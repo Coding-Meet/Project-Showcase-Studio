@@ -88,6 +88,9 @@ export default function DualScreenSlide({
             imageSrc={image1}
             hasFrame={slideData.hasFrame}
             deviceType={slideData.deviceType || 'android'}
+            deviceFinish={slideData.deviceFinish || 'natural_titanium'}
+            frameGleam={slideData.frameGleam !== false}
+            deviceCornerRadius={slideData.deviceCornerRadius}
             shadowStyle={shadowStyle}
             shadowIntensity={shadowIntensity}
             screenReflection={screenReflection}
@@ -102,6 +105,9 @@ export default function DualScreenSlide({
             imageSrc={image2}
             hasFrame={slideData.hasFrame}
             deviceType={slideData.deviceType || 'iphone'}
+            deviceFinish={slideData.deviceFinish || 'natural_titanium'}
+            frameGleam={slideData.frameGleam !== false}
+            deviceCornerRadius={slideData.deviceCornerRadius}
             shadowStyle={shadowStyle}
             shadowIntensity={shadowIntensity}
             screenReflection={screenReflection}

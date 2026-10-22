@@ -125,6 +125,9 @@ export default function ResponsiveComboSlide({
             imageSrc={desktopImage}
             hasFrame={slideData.hasFrame}
             deviceType="desktop"
+            deviceFinish={slideData.deviceFinish || 'natural_titanium'}
+            frameGleam={slideData.frameGleam !== false}
+            deviceCornerRadius={slideData.deviceCornerRadius}
             shadowStyle={shadowStyle}
             shadowIntensity={shadowIntensity}
             screenReflection={screenReflection}
@@ -140,6 +143,9 @@ export default function ResponsiveComboSlide({
             imageSrc={mobileImage}
             hasFrame={slideData.secondaryHasFrame ?? slideData.hasFrame}
             deviceType={slideData.deviceType || 'android'}
+            deviceFinish={slideData.deviceFinish || 'natural_titanium'}
+            frameGleam={slideData.frameGleam !== false}
+            deviceCornerRadius={slideData.deviceCornerRadius}
             shadowStyle={shadowStyle}
             shadowIntensity={shadowIntensity}
             screenReflection={screenReflection}

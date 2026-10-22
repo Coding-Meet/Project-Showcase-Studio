@@ -3,6 +3,9 @@ import DeviceMockup from '../DeviceMockup';
 import { Sparkles } from 'lucide-react';
 import { resolveTextGradientStyle } from '../../data/typographyPresets';
 import { EYEBROW_ICONS_MAP } from '../inspector/inspectorConstants';
+import StoreBadges from '../common/StoreBadges';
+import TechIcon from '../common/TechIcon';
+import TrustPill from '../common/TrustPill';
 
 export default function HeroCoverSlide({
   slideData,
@@ -40,8 +43,10 @@ export default function HeroCoverSlide({
 }) {
   const title = slideData.title || projectData.title || 'App Showcase';
   const tagline = slideData.tagline || projectData.shortDescription || 'Next-Generation Application Experience';
-  const technologies = projectData.technologies || ['Kotlin', 'Compose', 'MVI'];
+  const rawTech = slideData.technologies !== undefined ? slideData.technologies : projectData.technologies;
+  const technologies = Array.isArray(rawTech) ? rawTech : (typeof rawTech === 'string' ? rawTech.split(',').map((s) => s.trim()).filter(Boolean) : ['Kotlin', 'Compose', 'MVI']);
   const platforms = projectData.platform || ['Android'];
+  const isReversed = slideData.layoutAlign === 'right';
 
   const EyebrowIcon = EYEBROW_ICONS_MAP[eyebrowIcon] || Sparkles;
 
@@ -71,29 +76,43 @@ export default function HeroCoverSlide({
 
   return (
     <div
-      className="w-full h-full flex items-center justify-between px-[6%] py-[5%] relative overflow-hidden z-10"
+      className={`w-full h-full flex items-center justify-between px-[6%] py-[5%] relative overflow-hidden z-10 ${
+        isReversed ? 'flex-row-reverse' : ''
+      }`}
       style={{ fontFamily: `${fontFamily}, sans-serif` }}
     >
-      {/* Left Content (Strict 46% boundary to guarantee 0% overlap) */}
-      <div className="w-[46%] max-w-[46%] flex-shrink-0 flex flex-col justify-center items-start z-10 space-y-4">
-        {/* Category / Platform Tag */}
-        <div
-          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-semibold uppercase tracking-wider glass-card shadow-sm border"
-          style={{
-            fontSize: `${calcBadge}px`,
-            color: badgeColor,
-            borderColor: `${badgeColor}35`,
-            backgroundColor: `${badgeColor}12`,
-          }}
-        >
-          <EyebrowIcon
+      {/* Text & Content Column (Strict 46% boundary to guarantee 0% overlap) */}
+      <div className="w-[46%] max-w-[46%] flex-shrink-0 flex flex-col justify-center items-start z-10 space-y-3.5">
+        {/* Eyebrow Platform Tag & Trust Metric Pill in Header */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Category / Platform Tag */}
+          <div
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-semibold uppercase tracking-wider glass-card shadow-sm border"
             style={{
-              width: `${calcIcon}px`,
-              height: `${calcIcon}px`,
+              fontSize: `${calcBadge}px`,
               color: badgeColor,
+              borderColor: `${badgeColor}35`,
+              backgroundColor: `${badgeColor}12`,
             }}
-          />
-          <span className="truncate">{eyebrowText || platforms.join(' • ')}</span>
+          >
+            <EyebrowIcon
+              style={{
+                width: `${calcIcon}px`,
+                height: `${calcIcon}px`,
+                color: badgeColor,
+              }}
+            />
+            <span className="truncate">{eyebrowText || platforms.join(' • ')}</span>
+          </div>
+
+          {/* Social Proof Metric / Rating Pill */}
+          {slideData.showMetricPill && (
+            <TrustPill
+              text={slideData.metricText || '4.9 ★ Rating • 50K+ Downloads'}
+              icon={slideData.metricIcon || 'star'}
+              styleType={slideData.metricStyle || 'gold'}
+            />
+          )}
         </div>
 
         {/* Big Title with whitespace-pre-line */}
@@ -137,30 +156,47 @@ export default function HeroCoverSlide({
           </div>
         )}
 
-        {/* Tech Stack Chips */}
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {technologies.slice(0, 5).map((tech, i) => (
+        {/* Tech Stack Chips with Vector SVG Logos */}
+        <div className="flex flex-wrap gap-1.5 pt-0.5">
+          {technologies.slice(0, 6).map((tech, i) => (
             <span
               key={i}
-              className="px-2.5 py-0.5 rounded-lg font-medium bg-white/[0.04] border shadow-sm"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium bg-white/[0.05] border shadow-sm transition-all hover:bg-white/[0.08]"
               style={{
                 fontSize: `${calcTech}px`,
                 color: '#e2e8f0',
-                borderColor: 'rgba(255,255,255,0.08)',
+                borderColor: 'rgba(255,255,255,0.1)',
               }}
             >
-              {tech}
+              {slideData.showTechIcons !== false && (
+                <TechIcon name={tech} className="w-3.5 h-3.5 flex-shrink-0" />
+              )}
+              <span>{tech}</span>
             </span>
           ))}
         </div>
+
+        {/* App Store & Google Play Conversion Badges */}
+        {(slideData.showStoreBadges ||
+          (slideData.storeBadgeType && slideData.storeBadgeType !== 'none')) && (
+          <StoreBadges
+            type={slideData.storeBadgeType || 'both'}
+            styleType={slideData.storeBadgeStyle || 'official'}
+            scale={Math.min(1, Math.max(0.85, effectiveRatio))}
+            className="pt-1"
+          />
+        )}
       </div>
 
-      {/* Right Mockup (Strict 50% boundary, perfectly contained) */}
+      {/* Mockup Column (Strict 50% boundary, perfectly contained) */}
       <div className="w-[50%] max-w-[50%] flex-shrink-0 flex items-center justify-center relative z-10">
         <DeviceMockup
           imageSrc={slideData.imageSrc}
           hasFrame={slideData.hasFrame}
           deviceType={slideData.deviceType || (platforms.includes('Desktop') ? 'desktop' : 'android')}
+          deviceFinish={slideData.deviceFinish || 'natural_titanium'}
+          frameGleam={slideData.frameGleam !== false}
+          deviceCornerRadius={slideData.deviceCornerRadius}
           tilt={tilt}
           tiltAngle={tiltAngle}
           pitchAngle={pitchAngle}

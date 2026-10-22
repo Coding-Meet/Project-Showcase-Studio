@@ -138,6 +138,10 @@ Click the **Canvas** tab in the Inspector:
 | `secondaryImageSrc` | Upload / URL | `null` | Base64 / Local URL | Secondary screenshot (Dual Screen & Responsive Combo) |
 | `hasFrame` | Checkbox | `false` | `true` / `false` | Enable if screenshot already has frames to prevent double bezels |
 | `deviceType` | Select / Badges | `google-pixel-9` | 33 Real Hardware Models | Frame bezel and aspect ratio specifications |
+| `deviceFinish` | 10 Visual Swatches | `natural_titanium` | Natural Titanium, Desert Titanium, White Titanium, Black Titanium, Space Gray, Silver Aluminum, Midnight Navy, Alpine Emerald, Cosmic Orange, Rose Gold | Realistic metallic chassis finish & gradient rim |
+| `frameGleam` | Checkbox | `true` | `true` / `false` | Specular metallic rim light reflection along device edges |
+| `deviceCornerRadius`| Slider | `36px` | `10px` to `54px` | Inner & outer device corner curvature |
+| `layoutAlign` | Toggle Button | `left` | `left` ⇄ `right` | **Swap Layout Alignment**: Swaps mockup and content positions (Hero Cover & Feature Deep-Dive) |
 | `tilt` | Checkbox | `true` (Hero) | `true` / `false` | Enables 3D perspective transform (Hero Cover only) |
 | `tiltAngle` | Slider | `-8°` | `-25°` to `+25°` | 3D perspective rotation on the Y-axis |
 | `pitchAngle` | Slider | `4°` | `-15°` to `+15°` | 3D perspective rotation on the X-axis |
@@ -150,7 +154,7 @@ Click the **Canvas** tab in the Inspector:
 
 ---
 
-### 4. Typography, Colors & Gradients
+### 4. Typography, Colors, Trust Badges & Conversion Elements
 | Property | Control Type | Options / Values | Description |
 |---|---|---|---|
 | `title` | Textarea | Text string | Slide headline (supports `\n` for linebreaks) |
@@ -165,6 +169,29 @@ Click the **Canvas** tab in the Inspector:
 | `subtitleGradientFrom` | Color / Hex | Hex string | Subtitle custom gradient start color |
 | `subtitleGradientTo` | Color / Hex | Hex string | Subtitle custom gradient end color |
 | `subtitleGradientAngle`| Slider / Quick Pills | `0°` to `360°` | Subtitle custom gradient angle |
+| `storeBadgeType` | Dropdown | `none`, `both`, `app_store`, `google_play` | **App Store & Google Play Badges**: Official Apple and Google vector badges |
+| `storeBadgeStyle` | Buttons | `official` (Solid Black), `glass` (Frosted Glass) | Badge visual design theme |
+| `showTechIcons` | Checkbox | `true` / `false` | **Vector Tech Logos**: Renders authentic vector icons for Kotlin, Compose, Swift, React, Flutter, Android, iOS, Python, Firebase, etc. |
+| `technologies` | Text Input | Comma-separated list | Custom technology stack chips |
+| `showMetricPill` | Checkbox | `true` / `false` | **Social Proof / Metric Pill**: High-converting trust element |
+| `metricText` | Text Input | e.g. `4.9 ★ Rating • 50K+ Downloads` | Custom metric or star rating text |
+| `metricIcon` | Dropdown | `star`, `download`, `users`, `github`, `shield`, `trophy`, `bolt` | Metric icon |
+| `metricStyle` | Dropdown | `gold`, `emerald`, `indigo`, `glass`, `ruby` | Trust pill color aesthetic |
+| `eyebrowText` | Input | Text string | Top tag / platform badge text |
+| `eyebrowIcon` | Icon Grid | 17 Lucide Icons | Sparkles, Flame, Star, Shield, Terminal, Zap, Rocket, Award, Crown, Code, Globe, Cpu, Heart, Lock, CheckCircle2, TrendingUp, Layers, Smartphone |
+| `badgeColor` | Swatches / Color / Hex | Hex string (e.g. `#818cf8`) | Accent color for eyebrow tag and callout badge |
+| `statusBadge` | Input | Text string | Callout status pill (e.g., `⭐ 88 Stars on GitHub`) |
+| `features` | 3 Inputs | Array of 3 strings | Key feature bullets for Feature Deep-Dive |
+| `featureColor` | Swatches / Color / Hex | Hex string | Text color for floating feature cards |
+| `fontFamily` | Select | 7 Fonts | Plus Jakarta Sans, Outfit, Inter, Cabinet Grotesk, Space Grotesk, Poppins, JetBrains Mono |
+| `fontWeight` | 6 Buttons | `400`, `500`, `600`, `700`, `800`, `900` | Headline boldness (Regular, Medium, SemiBold, Bold, ExtraBold, Black) |
+| `titleSize` | Slider | `28px` - `76px` | Headline font size |
+| `subtitleSize` | Slider | `13px` - `26px` | Subtitle font size |
+| `badgeSize` | Slider | `10px` - `18px` | Eyebrow badge font size |
+| `iconSize` | Slider | `12px` - `28px` | Badge icon size |
+| `featureSize` | Slider | `11px` - `20px` | Feature cards text size |
+| `techChipSize` | Slider | `10px` - `18px` | Tech stack pills font size |
+| `textScale` | Slider | `0.75` - `1.4` (75% - 140%) | Global typography scaling multiplier |
 | `eyebrowText` | Input | Text string | Top tag / platform badge text |
 | `eyebrowIcon` | Icon Grid | 17 Lucide Icons | Sparkles, Flame, Star, Shield, Terminal, Zap, Rocket, Award, Crown, Code, Globe, Cpu, Heart, Lock, CheckCircle2, TrendingUp, Layers, Smartphone |
 | `badgeColor` | Swatches / Color / Hex | Hex string (e.g. `#818cf8`) | Accent color for eyebrow tag and callout badge |

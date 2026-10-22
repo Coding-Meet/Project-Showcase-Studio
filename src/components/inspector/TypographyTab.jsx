@@ -1,6 +1,15 @@
 import React from 'react';
 import { TEXT_GRADIENTS, SOLID_COLOR_SWATCHES } from '../../data/typographyPresets';
-import { FONTS, WEIGHTS, EYEBROW_ICONS, VARIANTS } from './inspectorConstants';
+import {
+  FONTS,
+  WEIGHTS,
+  EYEBROW_ICONS,
+  VARIANTS,
+  STORE_BADGE_OPTIONS,
+  STORE_BADGE_STYLES,
+  METRIC_ICONS_LIST,
+  METRIC_STYLES,
+} from './inspectorConstants';
 import GradientColorPicker from './GradientColorPicker';
 
 export default function TypographyTab({
@@ -333,6 +342,165 @@ export default function TypographyTab({
           />
         </div>
       )}
+
+      {/* 5b. App Store & Google Play Badges (High-Converting Trust Badges) */}
+      <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2.5">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-xs font-bold text-white uppercase tracking-wider block">
+              App Store & Google Play
+            </span>
+            <span className="text-[10px] text-slate-400">Official conversion badges</span>
+          </div>
+          <select
+            value={slide.storeBadgeType || (slide.showStoreBadges ? 'both' : 'none')}
+            onChange={(e) => {
+              const val = e.target.value;
+              onUpdateSlide({
+                storeBadgeType: val,
+                showStoreBadges: val !== 'none',
+              });
+            }}
+            className="px-2 py-1 rounded-lg bg-white/[0.04] border border-white/[0.1] text-xs text-white focus:outline-none focus:border-indigo-500 cursor-pointer"
+          >
+            {STORE_BADGE_OPTIONS.map((opt) => (
+              <option key={opt.id} value={opt.id} className="bg-[#0f141f]">
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {(slide.storeBadgeType || (slide.showStoreBadges ? 'both' : 'none')) !== 'none' && (
+          <div className="grid grid-cols-2 gap-1.5 pt-1 border-t border-white/[0.06]">
+            {STORE_BADGE_STYLES.map((st) => {
+              const isSelected = (slide.storeBadgeStyle || 'official') === st.id;
+              return (
+                <button
+                  key={st.id}
+                  onClick={() => onUpdateSlide({ storeBadgeStyle: st.id })}
+                  className={`py-1 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    isSelected
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'bg-white/[0.03] text-slate-400 hover:text-white'
+                  }`}
+                >
+                  {st.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* 5c. Tech Stack Chips & Vector SVG Logos */}
+      <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2.5">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-xs font-bold text-white uppercase tracking-wider block">
+              Tech Stack & Icons
+            </span>
+            <span className="text-[10px] text-slate-400">Authentic vector logos</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-slate-400">Logos</span>
+            <input
+              type="checkbox"
+              checked={slide.showTechIcons !== false}
+              onChange={(e) => onUpdateSlide({ showTechIcons: e.target.checked })}
+              className="w-4 h-4 rounded text-indigo-600 bg-slate-900 border-white/20 cursor-pointer"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-[10px] text-slate-400 block mb-1">
+            Technologies (comma separated)
+          </label>
+          <input
+            type="text"
+            value={
+              slide.technologies !== undefined
+                ? (Array.isArray(slide.technologies) ? slide.technologies.join(', ') : slide.technologies)
+                : ((project.technologies || ['Kotlin', 'Compose', 'MVI']).join(', '))
+            }
+            onChange={(e) => {
+              const raw = e.target.value;
+              const arr = raw.split(',').map((s) => s.trim()).filter(Boolean);
+              onUpdateSlide({ technologies: arr });
+            }}
+            placeholder="e.g. Kotlin, Jetpack Compose, MVI, Android"
+            className="w-full px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono"
+          />
+        </div>
+      </div>
+
+      {/* 5d. Social Proof & Conversion Metric Pill */}
+      <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2.5">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-xs font-bold text-white uppercase tracking-wider block">
+              Social Proof & Rating
+            </span>
+            <span className="text-[10px] text-slate-400">Upwork/Fiverr conversion booster</span>
+          </div>
+          <input
+            type="checkbox"
+            checked={Boolean(slide.showMetricPill)}
+            onChange={(e) => onUpdateSlide({ showMetricPill: e.target.checked })}
+            className="w-4 h-4 rounded text-indigo-600 bg-slate-900 border-white/20 cursor-pointer"
+          />
+        </div>
+
+        {slide.showMetricPill && (
+          <div className="space-y-2 pt-1 border-t border-white/[0.06]">
+            <div>
+              <label className="text-[10px] text-slate-400 block mb-1">
+                Badge Headline / Metric Text
+              </label>
+              <input
+                type="text"
+                value={slide.metricText || '4.9 ★ Rating • 50K+ Downloads'}
+                onChange={(e) => onUpdateSlide({ metricText: e.target.value })}
+                placeholder="e.g. 4.9 ★ (50K+ Downloads)"
+                className="w-full px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="text-[10px] text-slate-400 block mb-1">Icon</label>
+                <select
+                  value={slide.metricIcon || 'star'}
+                  onChange={(e) => onUpdateSlide({ metricIcon: e.target.value })}
+                  className="w-full px-2 py-1 rounded-lg bg-white/[0.04] border border-white/[0.1] text-xs text-white focus:outline-none focus:border-indigo-500 cursor-pointer"
+                >
+                  {METRIC_ICONS_LIST.map((ic) => (
+                    <option key={ic.id} value={ic.id} className="bg-[#0f141f]">
+                      {ic.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] text-slate-400 block mb-1">Pill Color</label>
+                <select
+                  value={slide.metricStyle || 'gold'}
+                  onChange={(e) => onUpdateSlide({ metricStyle: e.target.value })}
+                  className="w-full px-2 py-1 rounded-lg bg-white/[0.04] border border-white/[0.1] text-xs text-white focus:outline-none focus:border-indigo-500 cursor-pointer"
+                >
+                  {METRIC_STYLES.map((st) => (
+                    <option key={st.id} value={st.id} className="bg-[#0f141f]">
+                      {st.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* 6. Font Family & Boldness */}
       <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2.5">
