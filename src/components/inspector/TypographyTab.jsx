@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Search, Plus, X, Sparkles, Layers } from 'lucide-react';
 import { TEXT_GRADIENTS, SOLID_COLOR_SWATCHES } from '../../data/typographyPresets';
-import { FONTS, WEIGHTS, EYEBROW_ICONS, VARIANTS } from './inspectorConstants';
+import {
+  FONTS,
+  WEIGHTS,
+  EYEBROW_ICONS,
+  VARIANTS,
+  STORE_BADGE_OPTIONS,
+  STORE_BADGE_STYLES,
+  METRIC_ICONS_LIST,
+  METRIC_STYLES,
+} from './inspectorConstants';
 import GradientColorPicker from './GradientColorPicker';
+import TechIcon, { POPULAR_TECH_LOGOS } from '../common/TechIcon';
+import { LOCAL_LOGOS } from '../../data/localLogos';
 
 export default function TypographyTab({
   slide,
@@ -44,6 +56,10 @@ export default function TypographyTab({
   statusBadge,
   onChangeStatusBadge,
 }) {
+  const [logoSearch, setLogoSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [showLogoBrowser, setShowLogoBrowser] = useState(false);
+
   const variant = slide.variant || 'hero_cover';
   const activeTemplate = VARIANTS.find((v) => v.id === variant) || VARIANTS[0];
 
@@ -333,6 +349,414 @@ export default function TypographyTab({
           />
         </div>
       )}
+
+      {/* 5b. App Store & Google Play Badges (High-Converting Trust Badges) */}
+      <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2.5">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-xs font-bold text-white uppercase tracking-wider block">
+              App Store & Google Play
+            </span>
+            <span className="text-[10px] text-slate-400">Official conversion badges</span>
+          </div>
+          <select
+            value={slide.storeBadgeType || (slide.showStoreBadges ? 'both' : 'none')}
+            onChange={(e) => {
+              const val = e.target.value;
+              onUpdateSlide({
+                storeBadgeType: val,
+                showStoreBadges: val !== 'none',
+              });
+            }}
+            className="px-2 py-1 rounded-lg bg-white/[0.04] border border-white/[0.1] text-xs text-white focus:outline-none focus:border-indigo-500 cursor-pointer"
+          >
+            {STORE_BADGE_OPTIONS.map((opt) => (
+              <option key={opt.id} value={opt.id} className="bg-[#0f141f]">
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {(slide.storeBadgeType || (slide.showStoreBadges ? 'both' : 'none')) !== 'none' && (
+          <div className="grid grid-cols-2 gap-1.5 pt-1 border-t border-white/[0.06]">
+            {STORE_BADGE_STYLES.map((st) => {
+              const isSelected = (slide.storeBadgeStyle || 'official') === st.id;
+              return (
+                <button
+                  key={st.id}
+                  onClick={() => onUpdateSlide({ storeBadgeStyle: st.id })}
+                  className={`py-1 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    isSelected
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'bg-white/[0.03] text-slate-400 hover:text-white'
+                  }`}
+                >
+                  {st.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* 5c. Tech Stack Chips & Vector SVG Logos (Powered by theSVG 7,600+ Logos) */}
+      <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-xs font-bold text-white uppercase tracking-wider block">
+              Tech Stack & Brand Logos
+            </span>
+            <span className="text-[10px] text-slate-400">
+              Powered by <strong className="text-indigo-400">theSVG</strong> (7,600+ SVGs)
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-slate-400 font-semibold">Show Logos</span>
+            <input
+              type="checkbox"
+              checked={slide.showTechIcons !== false}
+              onChange={(e) => onUpdateSlide({ showTechIcons: e.target.checked })}
+              className="w-4 h-4 rounded text-indigo-600 bg-slate-900 border-white/20 cursor-pointer"
+            />
+          </div>
+        </div>
+
+        {/* Active Tech Stack Badges with Live Logos */}
+        {(() => {
+          const rawTechs =
+            slide.technologies !== undefined
+              ? slide.technologies
+              : project.technologies || ['Kotlin', 'Compose', 'MVI'];
+          const activeTechList = Array.isArray(rawTechs)
+            ? rawTechs
+            : typeof rawTechs === 'string'
+              ? rawTechs.split(',').map((s) => s.trim()).filter(Boolean)
+              : ['Kotlin', 'Compose', 'MVI'];
+
+          const removeTech = (indexToRemove) => {
+            const updated = activeTechList.filter((_, idx) => idx !== indexToRemove);
+            onUpdateSlide({ technologies: updated });
+          };
+
+          const addOrToggleTech = (techName) => {
+            const exists = activeTechList.some(
+              (t) => t.toLowerCase() === techName.toLowerCase()
+            );
+            if (exists) {
+              onUpdateSlide({
+                technologies: activeTechList.filter(
+                  (t) => t.toLowerCase() !== techName.toLowerCase()
+                ),
+              });
+            } else {
+              onUpdateSlide({ technologies: [...activeTechList, techName] });
+            }
+          };
+
+          const localListFormatted = LOCAL_LOGOS.map((loc) => ({
+            name: loc.label,
+            slug: loc.id,
+            category: '📁 Local Logos',
+            isLocal: true,
+            hasWordmark: loc.hasWordmark,
+          }));
+
+          const filteredLogos = (
+            selectedCategory === '📁 Local Logos' ? localListFormatted : POPULAR_TECH_LOGOS
+          ).filter((item) => {
+            const matchesCat =
+              selectedCategory === 'All' ||
+              selectedCategory === '📁 Local Logos' ||
+              item.category === selectedCategory;
+            const matchesSearch =
+              !logoSearch ||
+              item.name.toLowerCase().includes(logoSearch.toLowerCase()) ||
+              item.slug.toLowerCase().includes(logoSearch.toLowerCase());
+            return matchesCat && matchesSearch;
+          });
+
+          return (
+            <div className="space-y-2.5">
+              {/* Current Active Chips */}
+              <div className="flex flex-wrap gap-1.5 p-2 rounded-xl bg-black/40 border border-white/[0.08] min-h-[38px] items-center">
+                {activeTechList.length === 0 ? (
+                  <span className="text-[11px] text-slate-500 italic px-1">
+                    No technologies added yet. Select from below or type.
+                  </span>
+                ) : (
+                  activeTechList.map((tech, idx) => (
+                    <span
+                      key={idx}
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/[0.06] border border-white/10 text-[11px] text-white font-medium shadow-sm group hover:border-white/20 transition-all"
+                    >
+                      <TechIcon
+                        name={tech}
+                        variant={slide.techLogoVariant || 'icon'}
+                        className="w-3 h-3 flex-shrink-0"
+                      />
+                      <span>{tech}</span>
+                      <button
+                        onClick={() => removeTech(idx)}
+                        className="text-slate-400 hover:text-rose-400 ml-0.5 cursor-pointer p-0.5"
+                        title={`Remove ${tech}`}
+                      >
+                        <X className="w-2.5 h-2.5" />
+                      </button>
+                    </span>
+                  ))
+                )}
+              </div>
+
+              {/* Logo Asset Style Toggle: Icon Only (_logo.png) vs Logo with Name (_logo_2.png) */}
+              <div className="flex items-center justify-between p-2 rounded-lg bg-black/30 border border-white/[0.06]">
+                <div>
+                  <span className="text-[11px] text-slate-300 font-semibold block">Logo Asset Style</span>
+                  <span className="text-[9px] text-slate-500">
+                    {(slide.techLogoVariant || 'icon') === 'wordmark'
+                      ? 'logoname_logo_2.png (Logo with name)'
+                      : 'logoname_logo.png (Only logo icon)'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 bg-white/[0.04] p-0.5 rounded-lg border border-white/10">
+                  <button
+                    onClick={() => onUpdateSlide({ techLogoVariant: 'icon' })}
+                    className={`px-2 py-0.5 text-[10px] font-semibold rounded-md transition-all cursor-pointer ${
+                      (slide.techLogoVariant || 'icon') === 'icon'
+                        ? 'bg-indigo-600 text-white shadow-sm'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    Icon Only
+                  </button>
+                  <button
+                    onClick={() => onUpdateSlide({ techLogoVariant: 'wordmark' })}
+                    className={`px-2 py-0.5 text-[10px] font-semibold rounded-md transition-all cursor-pointer ${
+                      slide.techLogoVariant === 'wordmark'
+                        ? 'bg-indigo-600 text-white shadow-sm'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    Logo + Name
+                  </button>
+                </div>
+              </div>
+
+              {/* Logo Browser Expand Toggle */}
+              <div className="flex items-center justify-between pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowLogoBrowser(!showLogoBrowser)}
+                  className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Sparkles className="w-3 h-3 text-indigo-400" />
+                  <span>
+                    {showLogoBrowser
+                      ? 'Hide Logo Explorer'
+                      : `Browse Logos (${LOCAL_LOGOS.length} Local + theSVG)`}
+                  </span>
+                </button>
+                <span className="text-[10px] text-slate-500 font-mono">
+                  {selectedCategory === '📁 Local Logos' ? `${LOCAL_LOGOS.length} local` : '7,600+ CDN'}
+                </span>
+              </div>
+
+              {/* Collapsible Logo Library Browser */}
+              {showLogoBrowser && (
+                <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.08] space-y-2">
+                  {/* Search Input */}
+                  <div className="relative">
+                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                    <input
+                      type="text"
+                      value={logoSearch}
+                      onChange={(e) => setLogoSearch(e.target.value)}
+                      placeholder="Search brands (e.g. Kotlin, Docker, AWS, Firebase)..."
+                      className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-black/50 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-medium"
+                    />
+                    {logoSearch && (
+                      <button
+                        onClick={() => setLogoSearch('')}
+                        className="absolute right-2 top-2 text-slate-400 hover:text-white"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Category Pills */}
+                  <div className="flex items-center gap-1 overflow-x-auto pb-1 no-scrollbar text-[10px]">
+                    {[
+                      'All',
+                      '📁 Local Logos',
+                      'Mobile',
+                      'Frontend',
+                      'Backend',
+                      'Cloud',
+                      'Database',
+                      'AI',
+                      'Tools',
+                    ].map((cat) => (
+                      <button
+                        key={cat}
+                        onClick={() => setSelectedCategory(cat)}
+                        className={`px-2 py-0.5 rounded-full font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                          selectedCategory === cat
+                            ? 'bg-indigo-600 text-white shadow-sm'
+                            : 'bg-white/[0.03] text-slate-400 hover:text-white hover:bg-white/[0.06]'
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Quick-Click Logo Grid with Live SVG & PNG Icons */}
+                  <div className="grid grid-cols-2 gap-1.5 max-h-52 overflow-y-auto pr-1">
+                    {filteredLogos.map((item) => {
+                      const isAdded = activeTechList.some(
+                        (t) => t.toLowerCase() === item.name.toLowerCase()
+                      );
+                      return (
+                        <button
+                          key={item.name}
+                          onClick={() => addOrToggleTech(item.name)}
+                          className={`flex items-center gap-2 p-1.5 rounded-lg border text-left transition-all cursor-pointer ${
+                            isAdded
+                              ? 'bg-indigo-600/20 border-indigo-500 text-white ring-1 ring-indigo-500/40'
+                              : 'bg-white/[0.02] border-white/[0.06] text-slate-300 hover:bg-white/[0.05] hover:border-white/15'
+                          }`}
+                        >
+                          <TechIcon
+                            name={item.slug || item.name}
+                            variant={slide.techLogoVariant || 'icon'}
+                            className="w-3.5 h-3.5 flex-shrink-0"
+                          />
+                          <span className="text-[11px] font-semibold truncate flex-1">
+                            {item.name}
+                          </span>
+                          {item.hasWordmark && (
+                            <span className="text-[8px] px-1 py-0.2 rounded bg-indigo-500/20 text-indigo-300 font-mono" title="Has wordmark logo_2.png">
+                              +2
+                            </span>
+                          )}
+                          {isAdded ? (
+                            <span className="text-[10px] text-indigo-400 font-bold">✓</span>
+                          ) : (
+                            <Plus className="w-3 h-3 text-slate-500 group-hover:text-white" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Custom Search Query Adder (add ANY brand among 7,600+ theSVG logos) */}
+                  {logoSearch && (
+                    <button
+                      onClick={() => {
+                        addOrToggleTech(logoSearch.trim());
+                        setLogoSearch('');
+                      }}
+                      className="w-full py-1.5 px-2 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-indigo-300 text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all"
+                    >
+                      <Plus className="w-3 h-3" />
+                      <span>Add &quot;{logoSearch}&quot; from theSVG Library</span>
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Direct comma-separated input for power users */}
+              <div>
+                <label className="text-[10px] text-slate-400 block mb-1">
+                  Manual Tech List (comma separated)
+                </label>
+                <input
+                  type="text"
+                  value={activeTechList.join(', ')}
+                  onChange={(e) => {
+                    const raw = e.target.value;
+                    const arr = raw
+                      .split(',')
+                      .map((s) => s.trim())
+                      .filter(Boolean);
+                    onUpdateSlide({ technologies: arr });
+                  }}
+                  placeholder="e.g. Kotlin, Compose, AWS, Docker"
+                  className="w-full px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono"
+                />
+              </div>
+            </div>
+          );
+        })()}
+      </div>
+
+      {/* 5d. Social Proof & Conversion Metric Pill */}
+      <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2.5">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-xs font-bold text-white uppercase tracking-wider block">
+              Social Proof & Rating
+            </span>
+            <span className="text-[10px] text-slate-400">Upwork/Fiverr conversion booster</span>
+          </div>
+          <input
+            type="checkbox"
+            checked={Boolean(slide.showMetricPill)}
+            onChange={(e) => onUpdateSlide({ showMetricPill: e.target.checked })}
+            className="w-4 h-4 rounded text-indigo-600 bg-slate-900 border-white/20 cursor-pointer"
+          />
+        </div>
+
+        {slide.showMetricPill && (
+          <div className="space-y-2 pt-1 border-t border-white/[0.06]">
+            <div>
+              <label className="text-[10px] text-slate-400 block mb-1">
+                Badge Headline / Metric Text
+              </label>
+              <input
+                type="text"
+                value={slide.metricText || '4.9 ★ Rating • 50K+ Downloads'}
+                onChange={(e) => onUpdateSlide({ metricText: e.target.value })}
+                placeholder="e.g. 4.9 ★ (50K+ Downloads)"
+                className="w-full px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="text-[10px] text-slate-400 block mb-1">Icon</label>
+                <select
+                  value={slide.metricIcon || 'star'}
+                  onChange={(e) => onUpdateSlide({ metricIcon: e.target.value })}
+                  className="w-full px-2 py-1 rounded-lg bg-white/[0.04] border border-white/[0.1] text-xs text-white focus:outline-none focus:border-indigo-500 cursor-pointer"
+                >
+                  {METRIC_ICONS_LIST.map((ic) => (
+                    <option key={ic.id} value={ic.id} className="bg-[#0f141f]">
+                      {ic.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] text-slate-400 block mb-1">Pill Color</label>
+                <select
+                  value={slide.metricStyle || 'gold'}
+                  onChange={(e) => onUpdateSlide({ metricStyle: e.target.value })}
+                  className="w-full px-2 py-1 rounded-lg bg-white/[0.04] border border-white/[0.1] text-xs text-white focus:outline-none focus:border-indigo-500 cursor-pointer"
+                >
+                  {METRIC_STYLES.map((st) => (
+                    <option key={st.id} value={st.id} className="bg-[#0f141f]">
+                      {st.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* 6. Font Family & Boldness */}
       <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2.5">

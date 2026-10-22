@@ -1,7 +1,7 @@
 import React from 'react';
-import { Upload, Sparkles, X } from 'lucide-react';
+import { Upload, Sparkles, X, ArrowLeftRight, Shield } from 'lucide-react';
 import { normalizeImageSrc } from '../DeviceMockup';
-import { VARIANTS } from './inspectorConstants';
+import { VARIANTS, DEVICE_FINISHES } from './inspectorConstants';
 
 export default function MockupTab({
   slide,
@@ -248,6 +248,107 @@ export default function MockupTab({
           </div>
         )}
       </div>
+
+      {/* Device Body Finish & Metallic Realism */}
+      <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-semibold text-white block">
+            Device Body Finish
+          </span>
+          <span className="text-[10px] text-slate-400 font-mono">
+            Titanium & Aluminum
+          </span>
+        </div>
+
+        {/* 10 Realistic Metallic Finishes */}
+        <div className="grid grid-cols-2 gap-1.5">
+          {DEVICE_FINISHES.map((fin) => {
+            const isSelected = (slide.deviceFinish || 'natural_titanium') === fin.id;
+            return (
+              <button
+                key={fin.id}
+                onClick={() => onUpdateSlide({ deviceFinish: fin.id })}
+                className={`flex items-center gap-2 p-1.5 rounded-lg border text-left transition-all cursor-pointer ${
+                  isSelected
+                    ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-sm ring-1 ring-indigo-500/50'
+                    : 'bg-white/[0.02] border-white/[0.06] text-slate-300 hover:bg-white/[0.05] hover:border-white/10'
+                }`}
+              >
+                <span
+                  className="w-4 h-4 rounded-full flex-shrink-0 shadow-inner border border-white/20"
+                  style={{ background: fin.gradient }}
+                />
+                <span className="text-[11px] font-semibold truncate leading-none">
+                  {fin.name}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Specular Rim Gleam & Screen Corner Radius */}
+        <div className="pt-2 border-t border-white/[0.06] space-y-2.5">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-xs text-slate-300 block">Specular Rim Gleam</span>
+              <span className="text-[10px] text-slate-500">Metallic edge light reflection</span>
+            </div>
+            <input
+              type="checkbox"
+              checked={slide.frameGleam !== false}
+              onChange={(e) => onUpdateSlide({ frameGleam: e.target.checked })}
+              className="w-4 h-4 rounded text-indigo-600 bg-slate-900 border-white/20 cursor-pointer"
+            />
+          </div>
+
+          <div>
+            <div className="flex justify-between text-xs mb-1">
+              <span className="text-slate-400">Screen Corner Radius</span>
+              <span className="text-indigo-400 font-mono">
+                {slide.deviceCornerRadius || (isDesktopVariant ? 12 : 36)}px
+              </span>
+            </div>
+            <input
+              type="range"
+              min="10"
+              max="54"
+              step="2"
+              value={slide.deviceCornerRadius || (isDesktopVariant ? 12 : 36)}
+              onChange={(e) => onUpdateSlide({ deviceCornerRadius: parseInt(e.target.value) })}
+              className="w-full accent-indigo-500 cursor-pointer"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Swap Layout Alignment (for Hero Cover and Feature Deep-Dive) */}
+      {(variant === 'hero_cover' || variant === 'feature_deep_dive') && (
+        <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between">
+          <div>
+            <span className="text-xs font-semibold text-white block">Layout Alignment</span>
+            <span className="text-[10px] text-slate-400">
+              {(slide.layoutAlign || 'left') === 'left'
+                ? variant === 'hero_cover'
+                  ? 'Text Left ⇄ Mockup Right'
+                  : 'Mockup Left ⇄ Features Right'
+                : variant === 'hero_cover'
+                  ? 'Mockup Left ⇄ Text Right'
+                  : 'Features Left ⇄ Mockup Right'}
+            </span>
+          </div>
+          <button
+            onClick={() =>
+              onUpdateSlide({
+                layoutAlign: (slide.layoutAlign || 'left') === 'left' ? 'right' : 'left',
+              })
+            }
+            className="px-2.5 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 text-indigo-300 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+          >
+            <ArrowLeftRight className="w-3.5 h-3.5" />
+            <span>Swap Sides</span>
+          </button>
+        </div>
+      )}
 
       {/* 3D Isometric Tilt Controls (Exclusive to Hero Cover) */}
       {showTiltControls && (

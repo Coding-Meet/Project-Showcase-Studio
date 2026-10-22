@@ -93,6 +93,9 @@ export default function DesktopDashboardSlide({
           imageSrc={slideData.imageSrc}
           hasFrame={slideData.hasFrame}
           deviceType="desktop"
+          deviceFinish={slideData.deviceFinish || 'silver_aluminum'}
+          frameGleam={slideData.frameGleam !== false}
+          deviceCornerRadius={slideData.deviceCornerRadius}
           tilt={tilt}
           tiltAngle={tiltAngle}
           pitchAngle={pitchAngle}

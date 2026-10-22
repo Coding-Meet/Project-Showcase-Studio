@@ -14,6 +14,7 @@ const PORT = 3001;
 
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
+app.use('/logo', express.static(path.join(__dirname, 'logo')));
 
 const EXPORTS_DIR = path.join(__dirname, 'exports');
 if (!fs.existsSync(EXPORTS_DIR)) {

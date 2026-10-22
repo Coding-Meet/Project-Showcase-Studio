@@ -85,6 +85,9 @@ export default function MinimalFocusSlide({
           imageSrc={slideData.imageSrc}
           hasFrame={slideData.hasFrame}
           deviceType={slideData.deviceType || (platforms.includes('Desktop') ? 'desktop' : 'android')}
+          deviceFinish={slideData.deviceFinish || 'natural_titanium'}
+          frameGleam={slideData.frameGleam !== false}
+          deviceCornerRadius={slideData.deviceCornerRadius}
           tilt={false}
           shadowStyle={shadowStyle}
           shadowIntensity={shadowIntensity}

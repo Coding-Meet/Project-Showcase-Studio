@@ -104,3 +104,117 @@ export const EYEBROW_ICONS = [
 export const EYEBROW_ICONS_MAP = Object.fromEntries(
   EYEBROW_ICONS.map((item) => [item.id, item.icon])
 );
+
+export const DEVICE_FINISHES = [
+  {
+    id: 'natural_titanium',
+    name: 'Natural Titanium',
+    chassisFill: '#827e78',
+    bezelFill: '#4c4945',
+    gradient: 'linear-gradient(135deg, #a39f98 0%, #5e5a55 100%)',
+    border: '#9a968f',
+  },
+  {
+    id: 'desert_titanium',
+    name: 'Desert Titanium',
+    chassisFill: '#ba9f86',
+    bezelFill: '#6e5a48',
+    gradient: 'linear-gradient(135deg, #dfc6ae 0%, #7d6550 100%)',
+    border: '#cca88a',
+  },
+  {
+    id: 'white_titanium',
+    name: 'White Titanium',
+    chassisFill: '#e2e4e8',
+    bezelFill: '#8d9299',
+    gradient: 'linear-gradient(135deg, #ffffff 0%, #9ba0a6 100%)',
+    border: '#ffffff',
+  },
+  {
+    id: 'black_titanium',
+    name: 'Black Titanium',
+    chassisFill: '#1f2024',
+    bezelFill: '#0d0d0f',
+    gradient: 'linear-gradient(135deg, #3d3e42 0%, #0d0e10 100%)',
+    border: '#45474c',
+  },
+  {
+    id: 'space_gray',
+    name: 'Space Gray',
+    chassisFill: '#5a5b61',
+    bezelFill: '#2b2c30',
+    gradient: 'linear-gradient(135deg, #787980 0%, #292a2d 100%)',
+    border: '#8a8b92',
+  },
+  {
+    id: 'silver_aluminum',
+    name: 'Silver Aluminum',
+    chassisFill: '#e8eaed',
+    bezelFill: '#a6abb0',
+    gradient: 'linear-gradient(135deg, #ffffff 0%, #b8bcc2 100%)',
+    border: '#f1f3f4',
+  },
+  {
+    id: 'midnight_navy',
+    name: 'Midnight Navy',
+    chassisFill: '#1e293b',
+    bezelFill: '#0f172a',
+    gradient: 'linear-gradient(135deg, #334155 0%, #090d16 100%)',
+    border: '#38bdf8',
+  },
+  {
+    id: 'emerald_green',
+    name: 'Alpine Emerald',
+    chassisFill: '#143827',
+    bezelFill: '#081a11',
+    gradient: 'linear-gradient(135deg, #1f573d 0%, #07170f 100%)',
+    border: '#34d399',
+  },
+  {
+    id: 'cosmic_orange',
+    name: 'Cosmic Orange',
+    chassisFill: '#ea580c',
+    bezelFill: '#7c2d12',
+    gradient: 'linear-gradient(135deg, #fb923c 0%, #9a3412 100%)',
+    border: '#fdba74',
+  },
+  {
+    id: 'rose_gold',
+    name: 'Rose Gold',
+    chassisFill: '#d48c8c',
+    bezelFill: '#6e3838',
+    gradient: 'linear-gradient(135deg, #f7b2b2 0%, #7d3f3f 100%)',
+    border: '#ffe4e6',
+  },
+];
+
+export const STORE_BADGE_OPTIONS = [
+  { id: 'none', label: 'Hidden' },
+  { id: 'both', label: 'App Store & Google Play' },
+  { id: 'app_store', label: 'App Store Only' },
+  { id: 'google_play', label: 'Google Play Only' },
+];
+
+export const STORE_BADGE_STYLES = [
+  { id: 'official', label: 'Official Black' },
+  { id: 'glass', label: 'Glassmorphism' },
+];
+
+export const METRIC_ICONS_LIST = [
+  { id: 'star', label: 'Star Rating' },
+  { id: 'download', label: 'Downloads' },
+  { id: 'users', label: 'Active Users' },
+  { id: 'github', label: 'GitHub Stars' },
+  { id: 'shield', label: 'Enterprise Security' },
+  { id: 'trophy', label: 'Award / Featured' },
+  { id: 'bolt', label: 'High Performance' },
+];
+
+export const METRIC_STYLES = [
+  { id: 'gold', label: 'Luxury Gold' },
+  { id: 'emerald', label: 'Mint Emerald' },
+  { id: 'indigo', label: 'Electric Indigo' },
+  { id: 'glass', label: 'Frosted Glass' },
+  { id: 'ruby', label: 'Ruby Red' },
+];
+
