@@ -35,7 +35,9 @@
       "Windows",
       "macOS",
       "Linux"
-    ]
+    ],
+    "primaryColor": "#dd8563",
+    "secondaryColor": "#491cab"
   },
   {
     "id": "devanalyzer",
@@ -71,7 +73,9 @@
       "Windows",
       "macOS",
       "Linux"
-    ]
+    ],
+    "primaryColor": "#3b82f6",
+    "secondaryColor": "#8b5cf6"
   },
   {
     "id": "pepper_robot_ai_assistant",
@@ -103,7 +107,9 @@
       "Android",
       "Pepper Robot",
       "Android Tablet"
-    ]
+    ],
+    "primaryColor": "#775ac8",
+    "secondaryColor": "#db7c62"
   },
   {
     "id": "gemini_ai_kotlin_multiplatform_app",
@@ -133,7 +139,9 @@
       "macOS",
       "Linux",
       "Web"
-    ]
+    ],
+    "primaryColor": "#0cfa75",
+    "secondaryColor": "#3509b4"
   },
   {
     "id": "pokemon_app_mvi_compose_multiplatform",
@@ -164,7 +172,9 @@
       "Android",
       "iOS",
       "Desktop"
-    ]
+    ],
+    "primaryColor": "#94e965",
+    "secondaryColor": "#fa9850"
   },
   {
     "id": "text_to_speech_with_real_time_highlighting",
@@ -191,7 +201,9 @@
     "platform": [
       "Android",
       "iOS"
-    ]
+    ],
+    "primaryColor": "#08a64e",
+    "secondaryColor": "#7358c3"
   },
   {
     "id": "git_backup_hub",
@@ -218,7 +230,9 @@
       "Windows",
       "macOS",
       "Linux"
-    ]
+    ],
+    "primaryColor": "#f97316",
+    "secondaryColor": "#3b82f6"
   },
   {
     "id": "shader_compose_multiplatform_app",
@@ -247,7 +261,9 @@
       "iOS",
       "Desktop",
       "Web"
-    ]
+    ],
+    "primaryColor": "#ec4899",
+    "secondaryColor": "#8b5cf6"
   },
   {
     "id": "coding_meet_kobweb",
@@ -267,7 +283,9 @@
     ],
     "platform": [
       "Web"
-    ]
+    ],
+    "primaryColor": "#6366f1",
+    "secondaryColor": "#06b6d4"
   },
   {
     "id": "string_translator_desktop_app",
@@ -290,7 +308,9 @@
       "Windows",
       "macOS",
       "Linux"
-    ]
+    ],
+    "primaryColor": "#0284c7",
+    "secondaryColor": "#10b981"
   },
   {
     "id": "custom_lcd_pattern_generator",
@@ -319,7 +339,9 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#059669",
+    "secondaryColor": "#14b8a6"
   },
   {
     "id": "third_eye_ai_assistant_app_for_blind_people",
@@ -346,7 +368,9 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#8b5cf6",
+    "secondaryColor": "#f59e0b"
   },
   {
     "id": "home_automation_system",
@@ -373,7 +397,9 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#face3d",
+    "secondaryColor": "#fa5e52"
   },
   {
     "id": "electric_vehicle",
@@ -393,7 +419,9 @@
     ],
     "platform": [
       "Arduino"
-    ]
+    ],
+    "primaryColor": "#10b981",
+    "secondaryColor": "#06b6d4"
   },
   {
     "id": "quillbot_web_scraper",
@@ -409,7 +437,9 @@
     ],
     "platform": [
       "Web"
-    ]
+    ],
+    "primaryColor": "#16a34a",
+    "secondaryColor": "#3b82f6"
   },
   {
     "id": "chatgpt_android_app",
@@ -441,7 +471,9 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#0cfa75",
+    "secondaryColor": "#4580d9"
   },
   {
     "id": "multi_factor_authenticator_app",
@@ -461,7 +493,9 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#1270fa",
+    "secondaryColor": "#8327fa"
   },
   {
     "id": "daily_affirmation_app",
@@ -483,7 +517,9 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#0881a6",
+    "secondaryColor": "#1609bf"
   },
   {
     "id": "document_scanner_app",
@@ -507,7 +543,9 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#3390ad",
+    "secondaryColor": "#1fd7b2"
   },
   {
     "id": "math_workout_brain_exercise",
@@ -528,7 +566,9 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#fab85c",
+    "secondaryColor": "#0876a6"
   },
   {
     "id": "bluetooth_arduino_communication_android_app",
@@ -548,7 +588,9 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#00979d",
+    "secondaryColor": "#3b82f6"
   },
   {
     "id": "truth_or_dare_app",
@@ -572,7 +614,9 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#0c7bfa",
+    "secondaryColor": "#5b03ee"
   },
   {
     "id": "meetmyshow",
@@ -596,7 +640,9 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#30fa6a",
+    "secondaryColor": "#0b9de3"
   },
   {
     "id": "dual_axis_solar_tracking_system",
@@ -619,7 +665,9 @@
     ],
     "platform": [
       "Arduino"
-    ]
+    ],
+    "primaryColor": "#f59e0b",
+    "secondaryColor": "#eab308"
   },
   {
     "id": "smart_irrigation_system",
@@ -642,7 +690,9 @@
     ],
     "platform": [
       "Arduino"
-    ]
+    ],
+    "primaryColor": "#10b981",
+    "secondaryColor": "#0284c7"
   },
   {
     "id": "android_addict",
@@ -662,7 +712,9 @@
     ],
     "platform": [
       "Web"
-    ]
+    ],
+    "primaryColor": "#3ddc84",
+    "secondaryColor": "#6366f1"
   },
   {
     "id": "gamer_s_arena",
@@ -684,7 +736,9 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#a855f7",
+    "secondaryColor": "#ef4444"
   },
   {
     "id": "todo_note_app",
@@ -710,7 +764,9 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#f59e0b",
+    "secondaryColor": "#3b82f6"
   },
   {
     "id": "camera_app",
@@ -734,7 +790,9 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#06b6d4",
+    "secondaryColor": "#6366f1"
   },
   {
     "id": "math_quiz_app",
@@ -760,6 +818,8 @@
     ],
     "platform": [
       "Android"
-    ]
+    ],
+    "primaryColor": "#0cfa75",
+    "secondaryColor": "#430ac6"
   }
 ]
