@@ -262,29 +262,6 @@
     ],
     "presetKey": "FIVERR_REC",
     "exportFormat": "png",
-    "textScale": 1.4,
-    "titleSize": 46,
-    "subtitleSize": 16,
-    "badgeSize": 14,
-    "featureSize": 14,
-    "techChipSize": 18,
-    "iconSize": 19,
-    "fontFamily": "Plus Jakarta Sans",
-    "fontWeight": "800",
-    "titleGradient": "metallic",
-    "eyebrowIcon": "sparkles",
-    "eyebrowText": "",
-    "statusBadge": "",
-    "deviceScale": 1.05,
-    "tilt": true,
-    "tiltAngle": 12,
-    "pitchAngle": 2,
-    "perspective": 1200,
-    "shadowStyle": "neon",
-    "shadowIntensity": 0.7,
-    "screenReflection": false,
-    "offsetX": 0,
-    "offsetY": 0,
     "backgroundColor": "#080a12",
     "accentColor": "#63b4f5",
     "glowIntensity": 0.2,
@@ -303,7 +280,7 @@
         "title": "Pepper Robot AI Assistant",
         "tagline": "An Android tablet app for SoftBank Pepper robots featuring voice-based AI conversations powered by Google Gemini.",
         "titleColor": "#ffffff",
-        "titleGradient": "custom",
+        "titleGradient": "cyan",
         "titleGradientFrom": "#ffffff",
         "titleGradientTo": "#775ac8",
         "titleGradientAngle": 90,
@@ -334,18 +311,18 @@
         "metricText": "4.9 ★ Rating • Production Ready",
         "metricIcon": "star",
         "metricStyle": "gold",
-        "deviceType": "android",
-        "deviceFinish": "natural_titanium",
-        "hasFrame": false,
-        "frameGleam": true,
-        "deviceCornerRadius": 36,
+        "deviceType": "frameless",
+        "deviceFinish": "white_titanium",
+        "hasFrame": true,
+        "frameGleam": false,
+        "deviceCornerRadius": 34,
         "shadowStyle": "dramatic",
-        "shadowIntensity": 0.8,
+        "shadowIntensity": 1,
         "screenReflection": true,
         "tiltX": 4,
         "tiltY": -14,
         "zoom": 1,
-        "offsetX": 0,
+        "offsetX": 50,
         "offsetY": 0,
         "deviceImage": "/projects_images/images/pepper_robot_ai_assistant/german_voice_assistant_chat.png",
         "imageSrc": "/projects_images/images/pepper_robot_ai_assistant/german_voice_assistant_chat.png",
@@ -358,7 +335,9 @@
         "badgeSize": 12,
         "featureSize": 12,
         "techChipSize": 12,
-        "iconSize": 14
+        "iconSize": 14,
+        "deviceScale": 1.4,
+        "tilt": true
       },
       {
         "id": "slide-2",
@@ -491,17 +470,16 @@
         "iconSize": 14
       }
     ],
-    "primaryColor": "#775ac8",
-    "secondaryColor": "#db7c62",
+    "presetKey": "personal_website_hd",
+    "exportFormat": "png",
     "backgroundColor": "#080a12",
     "accentColor": "#775ac8",
     "glowIntensity": 0.38,
-    "backgroundVariant": "aurora",
+    "backgroundVariant": "split_horizon",
     "bgAlignment": "behind_device",
-    "canvasRadius": 28,
-    "presetKey": "personal_website_hd",
-    "exportFormat": "png",
-    "textureOverlay": "dots"
+    "customBgImage": null,
+    "textureOverlay": "dots",
+    "canvasRadius": 28
   },
   "gemini_ai_kotlin_multiplatform_app": {
     "slides": [
@@ -702,17 +680,16 @@
         "iconSize": 14
       }
     ],
-    "primaryColor": "#0cfa75",
-    "secondaryColor": "#3509b4",
+    "presetKey": "personal_website_hd",
+    "exportFormat": "png",
     "backgroundColor": "#080a12",
     "accentColor": "#0cfa75",
     "glowIntensity": 0.38,
     "backgroundVariant": "aurora",
     "bgAlignment": "behind_device",
-    "canvasRadius": 28,
-    "presetKey": "personal_website_hd",
-    "exportFormat": "png",
-    "textureOverlay": "dots"
+    "customBgImage": null,
+    "textureOverlay": "dots",
+    "canvasRadius": 28
   },
   "pokemon_app_mvi_compose_multiplatform": {
     "slides": [
@@ -754,10 +731,10 @@
         "metricIcon": "star",
         "metricStyle": "gold",
         "deviceType": "android",
-        "deviceFinish": "natural_titanium",
-        "hasFrame": false,
+        "deviceFinish": "cosmic_orange",
+        "hasFrame": true,
         "frameGleam": true,
-        "deviceCornerRadius": 36,
+        "deviceCornerRadius": 12,
         "shadowStyle": "dramatic",
         "shadowIntensity": 0.8,
         "screenReflection": true,
@@ -910,17 +887,16 @@
         "iconSize": 14
       }
     ],
-    "primaryColor": "#94e965",
-    "secondaryColor": "#fa9850",
+    "presetKey": "personal_website_hd",
+    "exportFormat": "png",
     "backgroundColor": "#080a12",
     "accentColor": "#94e965",
     "glowIntensity": 0.38,
     "backgroundVariant": "aurora",
     "bgAlignment": "behind_device",
-    "canvasRadius": 28,
-    "presetKey": "personal_website_hd",
-    "exportFormat": "png",
-    "textureOverlay": "dots"
+    "customBgImage": null,
+    "textureOverlay": "dots",
+    "canvasRadius": 28
   },
   "text_to_speech_with_real_time_highlighting": {
     "slides": [
@@ -1311,17 +1287,16 @@
         "iconSize": 14
       }
     ],
-    "primaryColor": "#f97316",
-    "secondaryColor": "#3b82f6",
+    "presetKey": "personal_website_hd",
+    "exportFormat": "png",
     "backgroundColor": "#080a12",
     "accentColor": "#f97316",
     "glowIntensity": 0.38,
     "backgroundVariant": "aurora",
     "bgAlignment": "behind_device",
-    "canvasRadius": 28,
-    "presetKey": "personal_website_hd",
-    "exportFormat": "png",
-    "textureOverlay": "dots"
+    "customBgImage": null,
+    "textureOverlay": "dots",
+    "canvasRadius": 28
   },
   "coding_meet_kobweb": {
     "slides": [
@@ -1502,17 +1477,16 @@
         "iconSize": 14
       }
     ],
-    "primaryColor": "#6366f1",
-    "secondaryColor": "#06b6d4",
+    "presetKey": "personal_website_hd",
+    "exportFormat": "png",
     "backgroundColor": "#080a12",
     "accentColor": "#6366f1",
     "glowIntensity": 0.38,
     "backgroundVariant": "aurora",
     "bgAlignment": "behind_device",
-    "canvasRadius": 28,
-    "presetKey": "personal_website_hd",
-    "exportFormat": "png",
-    "textureOverlay": "dots"
+    "customBgImage": null,
+    "textureOverlay": "dots",
+    "canvasRadius": 28
   },
   "string_translator_desktop_app": {
     "slides": [
@@ -2107,17 +2081,16 @@
         "iconSize": 14
       }
     ],
-    "primaryColor": "#8b5cf6",
-    "secondaryColor": "#f59e0b",
+    "presetKey": "personal_website_hd",
+    "exportFormat": "png",
     "backgroundColor": "#080a12",
     "accentColor": "#8b5cf6",
     "glowIntensity": 0.38,
     "backgroundVariant": "aurora",
     "bgAlignment": "behind_device",
-    "canvasRadius": 28,
-    "presetKey": "personal_website_hd",
-    "exportFormat": "png",
-    "textureOverlay": "dots"
+    "customBgImage": null,
+    "textureOverlay": "dots",
+    "canvasRadius": 28
   },
   "home_automation_system": {
     "slides": [
@@ -3110,17 +3083,16 @@
         "iconSize": 14
       }
     ],
-    "primaryColor": "#0881a6",
-    "secondaryColor": "#1609bf",
+    "presetKey": "personal_website_hd",
+    "exportFormat": "png",
     "backgroundColor": "#080a12",
     "accentColor": "#0881a6",
     "glowIntensity": 0.38,
     "backgroundVariant": "aurora",
     "bgAlignment": "behind_device",
-    "canvasRadius": 28,
-    "presetKey": "personal_website_hd",
-    "exportFormat": "png",
-    "textureOverlay": "dots"
+    "customBgImage": null,
+    "textureOverlay": "dots",
+    "canvasRadius": 28
   },
   "document_scanner_app": {
     "slides": [

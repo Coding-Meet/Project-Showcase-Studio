@@ -288,7 +288,7 @@ def build_project_deck(project):
         "backgroundVariant": "aurora",
         "bgAlignment": "behind_device",
         "canvasRadius": 28,
-        "presetKey": "personal_website_hd",
+        "presetKey": "WEBSITE_HD",
         "exportFormat": "png",
         "textureOverlay": "dots"
     }
