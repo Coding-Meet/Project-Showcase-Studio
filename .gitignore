@@ -25,3 +25,4 @@ dist-ssr
 
 # Exports generated at runtime
 exports/
+projects_images/
