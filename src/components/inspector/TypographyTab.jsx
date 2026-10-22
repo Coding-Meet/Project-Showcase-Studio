@@ -13,6 +13,7 @@ import {
 } from './inspectorConstants';
 import GradientColorPicker from './GradientColorPicker';
 import TechIcon, { POPULAR_TECH_LOGOS } from '../common/TechIcon';
+import { LOCAL_LOGOS } from '../../data/localLogos';
 
 export default function TypographyTab({
   slide,
@@ -453,9 +454,21 @@ export default function TypographyTab({
             }
           };
 
-          const filteredLogos = POPULAR_TECH_LOGOS.filter((item) => {
+          const localListFormatted = LOCAL_LOGOS.map((loc) => ({
+            name: loc.label,
+            slug: loc.id,
+            category: '📁 Local Logos',
+            isLocal: true,
+            hasWordmark: loc.hasWordmark,
+          }));
+
+          const filteredLogos = (
+            selectedCategory === '📁 Local Logos' ? localListFormatted : POPULAR_TECH_LOGOS
+          ).filter((item) => {
             const matchesCat =
-              selectedCategory === 'All' || item.category === selectedCategory;
+              selectedCategory === 'All' ||
+              selectedCategory === '📁 Local Logos' ||
+              item.category === selectedCategory;
             const matchesSearch =
               !logoSearch ||
               item.name.toLowerCase().includes(logoSearch.toLowerCase()) ||
@@ -477,7 +490,11 @@ export default function TypographyTab({
                       key={idx}
                       className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/[0.06] border border-white/10 text-[11px] text-white font-medium shadow-sm group hover:border-white/20 transition-all"
                     >
-                      <TechIcon name={tech} className="w-3 h-3 flex-shrink-0" />
+                      <TechIcon
+                        name={tech}
+                        variant={slide.techLogoVariant || 'icon'}
+                        className="w-3 h-3 flex-shrink-0"
+                      />
                       <span>{tech}</span>
                       <button
                         onClick={() => removeTech(idx)}
@@ -491,6 +508,40 @@ export default function TypographyTab({
                 )}
               </div>
 
+              {/* Logo Asset Style Toggle: Icon Only (_logo.png) vs Logo with Name (_logo_2.png) */}
+              <div className="flex items-center justify-between p-2 rounded-lg bg-black/30 border border-white/[0.06]">
+                <div>
+                  <span className="text-[11px] text-slate-300 font-semibold block">Logo Asset Style</span>
+                  <span className="text-[9px] text-slate-500">
+                    {(slide.techLogoVariant || 'icon') === 'wordmark'
+                      ? 'logoname_logo_2.png (Logo with name)'
+                      : 'logoname_logo.png (Only logo icon)'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 bg-white/[0.04] p-0.5 rounded-lg border border-white/10">
+                  <button
+                    onClick={() => onUpdateSlide({ techLogoVariant: 'icon' })}
+                    className={`px-2 py-0.5 text-[10px] font-semibold rounded-md transition-all cursor-pointer ${
+                      (slide.techLogoVariant || 'icon') === 'icon'
+                        ? 'bg-indigo-600 text-white shadow-sm'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    Icon Only
+                  </button>
+                  <button
+                    onClick={() => onUpdateSlide({ techLogoVariant: 'wordmark' })}
+                    className={`px-2 py-0.5 text-[10px] font-semibold rounded-md transition-all cursor-pointer ${
+                      slide.techLogoVariant === 'wordmark'
+                        ? 'bg-indigo-600 text-white shadow-sm'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    Logo + Name
+                  </button>
+                </div>
+              </div>
+
               {/* Logo Browser Expand Toggle */}
               <div className="flex items-center justify-between pt-1">
                 <button
@@ -501,16 +552,16 @@ export default function TypographyTab({
                   <Sparkles className="w-3 h-3 text-indigo-400" />
                   <span>
                     {showLogoBrowser
-                      ? 'Hide theSVG Logo Picker'
-                      : 'Browse 7,600+ Brand Logos'}
+                      ? 'Hide Logo Explorer'
+                      : `Browse Logos (${LOCAL_LOGOS.length} Local + theSVG)`}
                   </span>
                 </button>
                 <span className="text-[10px] text-slate-500 font-mono">
-                  {POPULAR_TECH_LOGOS.length} presets + CDN
+                  {selectedCategory === '📁 Local Logos' ? `${LOCAL_LOGOS.length} local` : '7,600+ CDN'}
                 </span>
               </div>
 
-              {/* Collapsible theSVG Logo Library Browser */}
+              {/* Collapsible Logo Library Browser */}
               {showLogoBrowser && (
                 <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.08] space-y-2">
                   {/* Search Input */}
@@ -520,7 +571,7 @@ export default function TypographyTab({
                       type="text"
                       value={logoSearch}
                       onChange={(e) => setLogoSearch(e.target.value)}
-                      placeholder="Search brands (e.g. Docker, AWS, Stripe)..."
+                      placeholder="Search brands (e.g. Kotlin, Docker, AWS, Firebase)..."
                       className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-black/50 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-medium"
                     />
                     {logoSearch && (
@@ -537,6 +588,7 @@ export default function TypographyTab({
                   <div className="flex items-center gap-1 overflow-x-auto pb-1 no-scrollbar text-[10px]">
                     {[
                       'All',
+                      '📁 Local Logos',
                       'Mobile',
                       'Frontend',
                       'Backend',
@@ -559,8 +611,8 @@ export default function TypographyTab({
                     ))}
                   </div>
 
-                  {/* Quick-Click Logo Grid with Live SVG Icons */}
-                  <div className="grid grid-cols-2 gap-1.5 max-h-48 overflow-y-auto pr-1">
+                  {/* Quick-Click Logo Grid with Live SVG & PNG Icons */}
+                  <div className="grid grid-cols-2 gap-1.5 max-h-52 overflow-y-auto pr-1">
                     {filteredLogos.map((item) => {
                       const isAdded = activeTechList.some(
                         (t) => t.toLowerCase() === item.name.toLowerCase()
@@ -575,10 +627,19 @@ export default function TypographyTab({
                               : 'bg-white/[0.02] border-white/[0.06] text-slate-300 hover:bg-white/[0.05] hover:border-white/15'
                           }`}
                         >
-                          <TechIcon name={item.slug} className="w-3.5 h-3.5 flex-shrink-0" />
+                          <TechIcon
+                            name={item.slug || item.name}
+                            variant={slide.techLogoVariant || 'icon'}
+                            className="w-3.5 h-3.5 flex-shrink-0"
+                          />
                           <span className="text-[11px] font-semibold truncate flex-1">
                             {item.name}
                           </span>
+                          {item.hasWordmark && (
+                            <span className="text-[8px] px-1 py-0.2 rounded bg-indigo-500/20 text-indigo-300 font-mono" title="Has wordmark logo_2.png">
+                              +2
+                            </span>
+                          )}
                           {isAdded ? (
                             <span className="text-[10px] text-indigo-400 font-bold">✓</span>
                           ) : (

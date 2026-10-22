@@ -238,16 +238,39 @@ export function getLocalTechSvg(techName) {
   return null;
 }
 
-export default function TechIcon({ name, className = 'w-3.5 h-3.5 inline-block', variant = 'default' }) {
-  const [hasError, setHasError] = useState(false);
-  const localSvg = getLocalTechSvg(name);
+import { findLocalLogo, resolveLocalLogoSrc, LOCAL_LOGOS } from '../../data/localLogos';
 
-  // 1. If local vector SVG is matched (Compose, Kotlin, Android, Apple), render immediately
+export default function TechIcon({
+  name,
+  className = 'w-3.5 h-3.5 inline-block',
+  variant = 'icon', // 'icon' (logoname_logo.png) | 'wordmark' (logoname_logo_2.png) | 'default'
+}) {
+  const [hasError, setHasError] = useState(false);
+
+  // 1. Check local project ./logo/ folder first (user-provided assets)
+  // logoname_logo.png = icon only, logoname_logo_2.png = logo with name
+  const localLogoSrc = resolveLocalLogoSrc(name, variant === 'wordmark' ? 'wordmark' : 'icon');
+  if (localLogoSrc && !hasError) {
+    return (
+      <span className={`inline-flex items-center justify-center flex-shrink-0 ${className}`}>
+        <img
+          src={localLogoSrc}
+          alt={name}
+          crossOrigin="anonymous"
+          onError={() => setHasError(true)}
+          className="w-full h-full object-contain block pointer-events-none select-none"
+        />
+      </span>
+    );
+  }
+
+  // 2. If custom local vector SVG is matched, render directly
+  const localSvg = getLocalTechSvg(name);
   if (localSvg) {
     return <span className={`inline-flex items-center justify-center flex-shrink-0 ${className}`}>{localSvg}</span>;
   }
 
-  // 2. Resolve theSVG CDN slug
+  // 3. Resolve theSVG CDN slug (7,600+ brand logos)
   const slug = resolveTheSvgSlug(name);
   if (!slug || hasError) {
     // Clean default code chip fallback
@@ -261,7 +284,7 @@ export default function TechIcon({ name, className = 'w-3.5 h-3.5 inline-block',
     );
   }
 
-  // 3. Render official SVG from theSVG open library CDN (7,600+ brand logos)
+  // 4. Render official SVG from theSVG open library CDN
   const cdnUrl = `https://thesvg.org/icons/${slug}/${variant === 'mono' ? 'mono' : 'default'}.svg`;
 
   return (

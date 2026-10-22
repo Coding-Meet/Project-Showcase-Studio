@@ -50,6 +50,7 @@ export const COMMON_SLIDE_DEFAULTS = {
   storeBadgeType: 'both',
   storeBadgeStyle: 'official',
   showTechIcons: true,
+  techLogoVariant: 'icon',
   showMetricPill: false,
   metricText: '4.9 ★ Rating • 50K+ Downloads',
   metricIcon: 'star',

@@ -156,24 +156,38 @@ export default function HeroCoverSlide({
           </div>
         )}
 
-        {/* Tech Stack Chips with Vector SVG Logos */}
+        {/* Tech Stack Chips with Vector & Local Logos */}
         <div className="flex flex-wrap gap-1.5 pt-0.5">
-          {technologies.slice(0, 6).map((tech, i) => (
-            <span
-              key={i}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium bg-white/[0.05] border shadow-sm transition-all hover:bg-white/[0.08]"
-              style={{
-                fontSize: `${calcTech}px`,
-                color: '#e2e8f0',
-                borderColor: 'rgba(255,255,255,0.1)',
-              }}
-            >
-              {slideData.showTechIcons !== false && (
-                <TechIcon name={tech} className="w-3.5 h-3.5 flex-shrink-0" />
-              )}
-              <span>{tech}</span>
-            </span>
-          ))}
+          {technologies.slice(0, 6).map((tech, i) => {
+            const isWordmark = slideData.techLogoVariant === 'wordmark';
+            return (
+              <span
+                key={i}
+                className={`inline-flex items-center gap-1.5 rounded-lg font-medium shadow-sm transition-all hover:bg-white/[0.08] ${
+                  isWordmark
+                    ? 'px-2 py-1 bg-white/[0.06] border border-white/10'
+                    : 'px-2.5 py-1 bg-white/[0.05] border border-white/[0.1]'
+                }`}
+                style={{
+                  fontSize: `${calcTech}px`,
+                  color: '#e2e8f0',
+                }}
+              >
+                {slideData.showTechIcons !== false && (
+                  <TechIcon
+                    name={tech}
+                    variant={isWordmark ? 'wordmark' : 'icon'}
+                    className={
+                      isWordmark
+                        ? 'h-4 w-auto max-w-[95px] object-contain'
+                        : 'w-3.5 h-3.5 flex-shrink-0'
+                    }
+                  />
+                )}
+                {!isWordmark && <span>{tech}</span>}
+              </span>
+            );
+          })}
         </div>
 
         {/* App Store & Google Play Conversion Badges */}

@@ -171,8 +171,9 @@ Click the **Canvas** tab in the Inspector:
 | `subtitleGradientAngle`| Slider / Quick Pills | `0°` to `360°` | Subtitle custom gradient angle |
 | `storeBadgeType` | Dropdown | `none`, `both`, `app_store`, `google_play` | **App Store & Google Play Badges**: Official Apple and Google vector badges |
 | `storeBadgeStyle` | Buttons | `official` (Solid Black), `glass` (Frosted Glass) | Badge visual design theme |
-| `showTechIcons` | Checkbox | `true` / `false` | **theSVG Brand Logos**: Live authentic SVG logos from **theSVG** (7,600+ brand & cloud logos), with smart slug auto-detection |
-| `technologies` | theSVG Browser + Input | Interactive Picker / Comma list | **theSVG Logo Browser**: Live search & 1-click select from 7,600+ brands (Mobile, Frontend, Backend, Cloud, DB, AI, Tools) |
+| `showTechIcons` | Checkbox | `true` / `false` | **Brand Logos**: Toggle tech badges on/off. Priority: Local `./logo/` folder → native vector SVGs → **theSVG** open CDN (7,600+ logos) |
+| `techLogoVariant` | Segmented Toggle | `icon` / `wordmark` | **Logo Asset Style**: `icon` renders only the icon mark (`logoname_logo.png`); `wordmark` renders the full logo with name (`logoname_logo_2.png`) |
+| `technologies` | Interactive Browser + Input | Visual Chip Manager / Comma list | **Tech Stack Manager**: Live chip removal, local logo folder quick-picks (45+ pre-indexed logos), and live theSVG CDN brand search |
 | `showMetricPill` | Checkbox | `true` / `false` | **Social Proof / Metric Pill**: High-converting trust element |
 | `metricText` | Text Input | e.g. `4.9 ★ Rating • 50K+ Downloads` | Custom metric or star rating text |
 | `metricIcon` | Dropdown | `star`, `download`, `users`, `github`, `shield`, `trophy`, `bolt` | Metric icon |

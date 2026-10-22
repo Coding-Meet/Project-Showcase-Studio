@@ -104,19 +104,34 @@ export default function ResponsiveComboSlide({
         </p>
 
         <div className="flex flex-wrap gap-1.5 pt-1">
-          {platforms.map((p, i) => (
-            <span
-              key={i}
-              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg font-medium bg-white/[0.04] border border-white/[0.08] shadow-sm"
-              style={{
-                fontSize: `${calcTech}px`,
-                color: featureColor,
-              }}
-            >
-              <TechIcon name={p} className="w-3.5 h-3.5 flex-shrink-0" />
-              <span>{p}</span>
-            </span>
-          ))}
+          {platforms.map((p, i) => {
+            const isWordmark = slideData.techLogoVariant === 'wordmark';
+            return (
+              <span
+                key={i}
+                className={`inline-flex items-center rounded-lg font-medium bg-white/[0.04] border border-white/[0.08] shadow-sm ${
+                  isWordmark ? 'px-2 py-1 gap-1' : 'px-2.5 py-0.5 gap-1.5'
+                }`}
+                style={{
+                  fontSize: `${calcTech}px`,
+                  color: featureColor,
+                }}
+              >
+                {slideData.showTechIcons !== false && (
+                  <TechIcon
+                    name={p}
+                    variant={isWordmark ? 'wordmark' : 'icon'}
+                    className={
+                      isWordmark
+                        ? 'h-4 w-auto max-w-[95px] object-contain'
+                        : 'w-3.5 h-3.5 flex-shrink-0'
+                    }
+                  />
+                )}
+                {!isWordmark && <span>{p}</span>}
+              </span>
+            );
+          })}
         </div>
       </div>
 
