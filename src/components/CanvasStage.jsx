@@ -13,12 +13,7 @@ export const PRESETS = {
   FIVERR_REC: { label: 'Fiverr Recommended (1280×769)', width: 1280, height: 769, category: 'Fiverr' },
   FIVERR_MIN: { label: 'Fiverr Minimum (712×430)', width: 712, height: 430, category: 'Fiverr' },
   UPWORK: { label: 'Upwork Project Catalog (1000×750, 4:3)', width: 1000, height: 750, category: 'Upwork' },
-  UPWORK_HD: { label: 'Upwork Ultra-Sharp (1600×1200, 4:3)', width: 1600, height: 1200, category: 'Upwork' },
-  personal_website_hd: { label: 'Personal Website HD (1920×1080)', width: 1920, height: 1080, category: 'Website' },
-  personal_website_720p: { label: 'Personal Website 720p (1280×720)', width: 1280, height: 720, category: 'Website' },
-  fiverr_recommended: { label: 'Fiverr Recommended (1280×769)', width: 1280, height: 769, category: 'Fiverr' },
-  fiverr_minimum: { label: 'Fiverr Minimum (712×430)', width: 712, height: 430, category: 'Fiverr' },
-  upwork_catalog: { label: 'Upwork Project Catalog (1000×750, 4:3)', width: 1000, height: 750, category: 'Upwork' },
+  UPWORK_HD: { label: 'Upwork Ultra-Sharp (1600×1200, 4:3)', width: 1600, height: 1200, category: 'Upwork' }
 };
 
 const CanvasStage = forwardRef(function CanvasStage(
