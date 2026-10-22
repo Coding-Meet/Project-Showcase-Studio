@@ -23,6 +23,8 @@ if (!fs.existsSync(EXPORTS_DIR)) {
 // Find Google Chrome path on Mac
 const CHROME_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
+const PROJECT_STORE_PATH = path.join(__dirname, 'src/data/projectStore.json');
+
 // 1. Get projects
 app.get('/api/projects', (req, res) => {
   const projectsPath = path.join(__dirname, 'src/data/projects.json');
@@ -31,6 +33,49 @@ app.get('/api/projects', (req, res) => {
     res.json(data);
   } else {
     res.json([]);
+  }
+});
+
+// 1b. Get permanently saved project store from disk
+app.get('/api/project-store', (req, res) => {
+  try {
+    if (fs.existsSync(PROJECT_STORE_PATH)) {
+      const data = JSON.parse(fs.readFileSync(PROJECT_STORE_PATH, 'utf-8'));
+      res.json(data);
+    } else {
+      res.json({});
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 1c. Save project store permanently to disk (src/data/projectStore.json)
+app.post('/api/project-store', (req, res) => {
+  try {
+    const { projectStore } = req.body;
+    if (!projectStore || typeof projectStore !== 'object') {
+      return res.status(400).json({ error: 'Invalid projectStore object' });
+    }
+    fs.writeFileSync(PROJECT_STORE_PATH, JSON.stringify(projectStore, null, 2), 'utf-8');
+    res.json({ success: true, count: Object.keys(projectStore).length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 1d. Serve local image file from disk path
+app.get('/api/file', (req, res) => {
+  try {
+    const rawPath = req.query.path;
+    if (!rawPath) return res.status(400).send('Path required');
+    const cleanPath = path.resolve(rawPath.replace(/^file:\/\//, ''));
+    if (!fs.existsSync(cleanPath)) {
+      return res.status(404).send('File not found: ' + cleanPath);
+    }
+    res.sendFile(cleanPath);
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 });
 
