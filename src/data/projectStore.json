@@ -54,11 +54,11 @@
     "backgroundColor": "#000000",
     "accentColor": "#38bdf8",
     "glowIntensity": 0.35,
-    "backgroundVariant": "split_horizon",
+    "backgroundVariant": "spotlight",
     "bgAlignment": "behind_device",
     "customBgImage": null,
     "textureOverlay": "dots",
-    "canvasRadius": 28
+    "canvasRadius": 0
   },
   "shader_compose_multiplatform_app": {
     "slides": [
