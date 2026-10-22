@@ -1,15 +1,8 @@
 import React from 'react';
 import DeviceMockup from '../DeviceMockup';
-import { Sparkles, Flame, Star, Shield, Terminal } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { resolveTextGradientStyle } from '../../data/typographyPresets';
-
-const ICONS = {
-  sparkles: Sparkles,
-  flame: Flame,
-  star: Star,
-  shield: Shield,
-  terminal: Terminal,
-};
+import { EYEBROW_ICONS_MAP } from '../inspector/inspectorConstants';
 
 export default function HeroCoverSlide({
   slideData,
@@ -50,7 +43,7 @@ export default function HeroCoverSlide({
   const technologies = projectData.technologies || ['Kotlin', 'Compose', 'MVI'];
   const platforms = projectData.platform || ['Android'];
 
-  const EyebrowIcon = ICONS[eyebrowIcon] || Sparkles;
+  const EyebrowIcon = EYEBROW_ICONS_MAP[eyebrowIcon] || Sparkles;
 
   const titleStyleObj = resolveTextGradientStyle({
     gradient: titleGradient,

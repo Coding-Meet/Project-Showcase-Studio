@@ -340,6 +340,92 @@ const CanvasStage = forwardRef(function CanvasStage(
             />
           )}
 
+          {/* BACKGROUND VARIANT 6: SUNSET GLOW (WARM DUAL-TONE AMBIENCE) */}
+          {backgroundVariant === 'mesh_sunset' && !customBgImage && (
+            <>
+              <div
+                className="ambient-glow aspect-square transform -translate-x-1/2 -translate-y-1/2"
+                style={{
+                  width: '75%',
+                  left: `${focusX}%`,
+                  top: `${focusY}%`,
+                  backgroundColor: accentColor,
+                  opacity: glowIntensity * 1.2,
+                  filter: 'blur(100px)',
+                }}
+              />
+              <div
+                className="ambient-glow aspect-square transform -translate-x-1/2 -translate-y-1/2"
+                style={{
+                  width: '55%',
+                  left: `${focusX > 50 ? focusX - 25 : focusX + 25}%`,
+                  top: `${focusY > 50 ? focusY - 20 : focusY + 20}%`,
+                  backgroundColor: '#f59e0b',
+                  opacity: glowIntensity * 0.45,
+                  filter: 'blur(110px)',
+                }}
+              />
+            </>
+          )}
+
+          {/* BACKGROUND VARIANT 7: CONCENTRIC RADAR RINGS */}
+          {backgroundVariant === 'cyber_rings' && !customBgImage && (
+            <>
+              <div
+                className="ambient-glow aspect-square transform -translate-x-1/2 -translate-y-1/2"
+                style={{
+                  width: '65%',
+                  left: `${focusX}%`,
+                  top: `${focusY}%`,
+                  backgroundColor: accentColor,
+                  opacity: glowIntensity * 0.9,
+                  filter: 'blur(90px)',
+                }}
+              />
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage: `radial-gradient(circle at ${focusX}% ${focusY}%, transparent 90px, rgba(255,255,255,0.08) 91px, transparent 93px, transparent 180px, rgba(255,255,255,0.06) 181px, transparent 183px, transparent 270px, rgba(255,255,255,0.04) 271px, transparent 273px, transparent 360px, rgba(255,255,255,0.03) 361px, transparent 363px)`,
+                }}
+              />
+            </>
+          )}
+
+          {/* BACKGROUND VARIANT 8: STUDIO VIGNETTE (DEEP CLEAN DROPOFF) */}
+          {backgroundVariant === 'deep_void' && !customBgImage && (
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: `radial-gradient(ellipse 95% 85% at ${focusX}% ${focusY}%, ${accentColor} 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0.98) 100%)`,
+                opacity: Math.min(1, glowIntensity * 1.5),
+              }}
+            />
+          )}
+
+          {/* BACKGROUND VARIANT 9: HORIZON RAY (CINEMATIC SPLIT BEAM) */}
+          {backgroundVariant === 'split_horizon' && !customBgImage && (
+            <>
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: `linear-gradient(180deg, transparent 0%, ${accentColor} 50%, transparent 100%)`,
+                  opacity: Math.min(1, glowIntensity * 0.45),
+                }}
+              />
+              <div
+                className="ambient-glow aspect-square transform -translate-x-1/2 -translate-y-1/2"
+                style={{
+                  width: '80%',
+                  left: `${focusX}%`,
+                  top: `${focusY}%`,
+                  backgroundColor: accentColor,
+                  opacity: glowIntensity * 1.1,
+                  filter: 'blur(100px)',
+                }}
+              />
+            </>
+          )}
+
           {/* TEXTURE OVERLAYS */}
           {textureOverlay === 'dots' && (
             <div

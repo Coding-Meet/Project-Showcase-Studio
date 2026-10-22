@@ -149,8 +149,8 @@ export default function TypographyTab({
             placeholder={project.platform?.join(' • ') || 'Platform tag'}
             className="w-full px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
           />
-          <div className="flex items-center gap-1.5 pt-1">
-            <span className="text-[10px] text-slate-400 mr-1">Icon:</span>
+          <div className="flex items-center gap-1 pt-1 flex-wrap">
+            <span className="text-[10px] text-slate-400 mr-1 block w-full mb-0.5">Icon:</span>
             {EYEBROW_ICONS.map((item) => {
               const Icon = item.icon;
               return (
@@ -159,8 +159,8 @@ export default function TypographyTab({
                   onClick={() => onChangeEyebrowIcon(item.id)}
                   className={`p-1.5 rounded-lg transition-all cursor-pointer ${
                     eyebrowIcon === item.id
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-white/[0.03] text-slate-400 hover:text-white'
+                      ? 'bg-indigo-600 text-white shadow-sm ring-1 ring-white/20'
+                      : 'bg-white/[0.03] text-slate-400 hover:text-white hover:bg-white/[0.06]'
                   }`}
                   title={item.label}
                 >
@@ -357,14 +357,14 @@ export default function TypographyTab({
           <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
             Headline Boldness
           </label>
-          <div className="grid grid-cols-4 gap-1">
+          <div className="grid grid-cols-3 gap-1.5">
             {WEIGHTS.map((w) => (
               <button
                 key={w.id}
                 onClick={() => onChangeFontWeight(w.id)}
                 className={`py-1.5 rounded-lg text-[11px] font-medium transition-all cursor-pointer ${
                   fontWeight === w.id
-                    ? 'bg-indigo-600 text-white font-bold'
+                    ? 'bg-indigo-600 text-white font-bold shadow-sm'
                     : 'bg-white/[0.03] text-slate-400 hover:text-white'
                 }`}
               >
