@@ -2,6 +2,7 @@ import React from 'react';
 import DeviceMockup from '../DeviceMockup';
 import { Smartphone, Monitor } from 'lucide-react';
 import { resolveTextGradientStyle } from '../../data/typographyPresets';
+import TechIcon from '../common/TechIcon';
 
 export default function ResponsiveComboSlide({
   slideData,
@@ -106,13 +107,14 @@ export default function ResponsiveComboSlide({
           {platforms.map((p, i) => (
             <span
               key={i}
-              className="px-2.5 py-0.5 rounded-lg font-medium bg-white/[0.04] border border-white/[0.08] shadow-sm"
+              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg font-medium bg-white/[0.04] border border-white/[0.08] shadow-sm"
               style={{
                 fontSize: `${calcTech}px`,
                 color: featureColor,
               }}
             >
-              {p}
+              <TechIcon name={p} className="w-3.5 h-3.5 flex-shrink-0" />
+              <span>{p}</span>
             </span>
           ))}
         </div>

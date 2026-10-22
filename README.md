@@ -171,8 +171,8 @@ Click the **Canvas** tab in the Inspector:
 | `subtitleGradientAngle`| Slider / Quick Pills | `0°` to `360°` | Subtitle custom gradient angle |
 | `storeBadgeType` | Dropdown | `none`, `both`, `app_store`, `google_play` | **App Store & Google Play Badges**: Official Apple and Google vector badges |
 | `storeBadgeStyle` | Buttons | `official` (Solid Black), `glass` (Frosted Glass) | Badge visual design theme |
-| `showTechIcons` | Checkbox | `true` / `false` | **Vector Tech Logos**: Renders authentic vector icons for Kotlin, Compose, Swift, React, Flutter, Android, iOS, Python, Firebase, etc. |
-| `technologies` | Text Input | Comma-separated list | Custom technology stack chips |
+| `showTechIcons` | Checkbox | `true` / `false` | **theSVG Brand Logos**: Live authentic SVG logos from **theSVG** (7,600+ brand & cloud logos), with smart slug auto-detection |
+| `technologies` | theSVG Browser + Input | Interactive Picker / Comma list | **theSVG Logo Browser**: Live search & 1-click select from 7,600+ brands (Mobile, Frontend, Backend, Cloud, DB, AI, Tools) |
 | `showMetricPill` | Checkbox | `true` / `false` | **Social Proof / Metric Pill**: High-converting trust element |
 | `metricText` | Text Input | e.g. `4.9 ★ Rating • 50K+ Downloads` | Custom metric or star rating text |
 | `metricIcon` | Dropdown | `star`, `download`, `users`, `github`, `shield`, `trophy`, `bolt` | Metric icon |

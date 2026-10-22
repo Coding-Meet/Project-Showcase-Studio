@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Search, Plus, X, Sparkles, Layers } from 'lucide-react';
 import { TEXT_GRADIENTS, SOLID_COLOR_SWATCHES } from '../../data/typographyPresets';
 import {
   FONTS,
@@ -11,6 +12,7 @@ import {
   METRIC_STYLES,
 } from './inspectorConstants';
 import GradientColorPicker from './GradientColorPicker';
+import TechIcon, { POPULAR_TECH_LOGOS } from '../common/TechIcon';
 
 export default function TypographyTab({
   slide,
@@ -53,6 +55,10 @@ export default function TypographyTab({
   statusBadge,
   onChangeStatusBadge,
 }) {
+  const [logoSearch, setLogoSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [showLogoBrowser, setShowLogoBrowser] = useState(false);
+
   const variant = slide.variant || 'hero_cover';
   const activeTemplate = VARIANTS.find((v) => v.id === variant) || VARIANTS[0];
 
@@ -393,17 +399,19 @@ export default function TypographyTab({
         )}
       </div>
 
-      {/* 5c. Tech Stack Chips & Vector SVG Logos */}
-      <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2.5">
+      {/* 5c. Tech Stack Chips & Vector SVG Logos (Powered by theSVG 7,600+ Logos) */}
+      <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-3">
         <div className="flex items-center justify-between">
           <div>
             <span className="text-xs font-bold text-white uppercase tracking-wider block">
-              Tech Stack & Icons
+              Tech Stack & Brand Logos
             </span>
-            <span className="text-[10px] text-slate-400">Authentic vector logos</span>
+            <span className="text-[10px] text-slate-400">
+              Powered by <strong className="text-indigo-400">theSVG</strong> (7,600+ SVGs)
+            </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] text-slate-400">Logos</span>
+            <span className="text-[10px] text-slate-400 font-semibold">Show Logos</span>
             <input
               type="checkbox"
               checked={slide.showTechIcons !== false}
@@ -413,26 +421,213 @@ export default function TypographyTab({
           </div>
         </div>
 
-        <div>
-          <label className="text-[10px] text-slate-400 block mb-1">
-            Technologies (comma separated)
-          </label>
-          <input
-            type="text"
-            value={
-              slide.technologies !== undefined
-                ? (Array.isArray(slide.technologies) ? slide.technologies.join(', ') : slide.technologies)
-                : ((project.technologies || ['Kotlin', 'Compose', 'MVI']).join(', '))
+        {/* Active Tech Stack Badges with Live Logos */}
+        {(() => {
+          const rawTechs =
+            slide.technologies !== undefined
+              ? slide.technologies
+              : project.technologies || ['Kotlin', 'Compose', 'MVI'];
+          const activeTechList = Array.isArray(rawTechs)
+            ? rawTechs
+            : typeof rawTechs === 'string'
+              ? rawTechs.split(',').map((s) => s.trim()).filter(Boolean)
+              : ['Kotlin', 'Compose', 'MVI'];
+
+          const removeTech = (indexToRemove) => {
+            const updated = activeTechList.filter((_, idx) => idx !== indexToRemove);
+            onUpdateSlide({ technologies: updated });
+          };
+
+          const addOrToggleTech = (techName) => {
+            const exists = activeTechList.some(
+              (t) => t.toLowerCase() === techName.toLowerCase()
+            );
+            if (exists) {
+              onUpdateSlide({
+                technologies: activeTechList.filter(
+                  (t) => t.toLowerCase() !== techName.toLowerCase()
+                ),
+              });
+            } else {
+              onUpdateSlide({ technologies: [...activeTechList, techName] });
             }
-            onChange={(e) => {
-              const raw = e.target.value;
-              const arr = raw.split(',').map((s) => s.trim()).filter(Boolean);
-              onUpdateSlide({ technologies: arr });
-            }}
-            placeholder="e.g. Kotlin, Jetpack Compose, MVI, Android"
-            className="w-full px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono"
-          />
-        </div>
+          };
+
+          const filteredLogos = POPULAR_TECH_LOGOS.filter((item) => {
+            const matchesCat =
+              selectedCategory === 'All' || item.category === selectedCategory;
+            const matchesSearch =
+              !logoSearch ||
+              item.name.toLowerCase().includes(logoSearch.toLowerCase()) ||
+              item.slug.toLowerCase().includes(logoSearch.toLowerCase());
+            return matchesCat && matchesSearch;
+          });
+
+          return (
+            <div className="space-y-2.5">
+              {/* Current Active Chips */}
+              <div className="flex flex-wrap gap-1.5 p-2 rounded-xl bg-black/40 border border-white/[0.08] min-h-[38px] items-center">
+                {activeTechList.length === 0 ? (
+                  <span className="text-[11px] text-slate-500 italic px-1">
+                    No technologies added yet. Select from below or type.
+                  </span>
+                ) : (
+                  activeTechList.map((tech, idx) => (
+                    <span
+                      key={idx}
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/[0.06] border border-white/10 text-[11px] text-white font-medium shadow-sm group hover:border-white/20 transition-all"
+                    >
+                      <TechIcon name={tech} className="w-3 h-3 flex-shrink-0" />
+                      <span>{tech}</span>
+                      <button
+                        onClick={() => removeTech(idx)}
+                        className="text-slate-400 hover:text-rose-400 ml-0.5 cursor-pointer p-0.5"
+                        title={`Remove ${tech}`}
+                      >
+                        <X className="w-2.5 h-2.5" />
+                      </button>
+                    </span>
+                  ))
+                )}
+              </div>
+
+              {/* Logo Browser Expand Toggle */}
+              <div className="flex items-center justify-between pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowLogoBrowser(!showLogoBrowser)}
+                  className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Sparkles className="w-3 h-3 text-indigo-400" />
+                  <span>
+                    {showLogoBrowser
+                      ? 'Hide theSVG Logo Picker'
+                      : 'Browse 7,600+ Brand Logos'}
+                  </span>
+                </button>
+                <span className="text-[10px] text-slate-500 font-mono">
+                  {POPULAR_TECH_LOGOS.length} presets + CDN
+                </span>
+              </div>
+
+              {/* Collapsible theSVG Logo Library Browser */}
+              {showLogoBrowser && (
+                <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.08] space-y-2">
+                  {/* Search Input */}
+                  <div className="relative">
+                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                    <input
+                      type="text"
+                      value={logoSearch}
+                      onChange={(e) => setLogoSearch(e.target.value)}
+                      placeholder="Search brands (e.g. Docker, AWS, Stripe)..."
+                      className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-black/50 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-medium"
+                    />
+                    {logoSearch && (
+                      <button
+                        onClick={() => setLogoSearch('')}
+                        className="absolute right-2 top-2 text-slate-400 hover:text-white"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Category Pills */}
+                  <div className="flex items-center gap-1 overflow-x-auto pb-1 no-scrollbar text-[10px]">
+                    {[
+                      'All',
+                      'Mobile',
+                      'Frontend',
+                      'Backend',
+                      'Cloud',
+                      'Database',
+                      'AI',
+                      'Tools',
+                    ].map((cat) => (
+                      <button
+                        key={cat}
+                        onClick={() => setSelectedCategory(cat)}
+                        className={`px-2 py-0.5 rounded-full font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                          selectedCategory === cat
+                            ? 'bg-indigo-600 text-white shadow-sm'
+                            : 'bg-white/[0.03] text-slate-400 hover:text-white hover:bg-white/[0.06]'
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Quick-Click Logo Grid with Live SVG Icons */}
+                  <div className="grid grid-cols-2 gap-1.5 max-h-48 overflow-y-auto pr-1">
+                    {filteredLogos.map((item) => {
+                      const isAdded = activeTechList.some(
+                        (t) => t.toLowerCase() === item.name.toLowerCase()
+                      );
+                      return (
+                        <button
+                          key={item.name}
+                          onClick={() => addOrToggleTech(item.name)}
+                          className={`flex items-center gap-2 p-1.5 rounded-lg border text-left transition-all cursor-pointer ${
+                            isAdded
+                              ? 'bg-indigo-600/20 border-indigo-500 text-white ring-1 ring-indigo-500/40'
+                              : 'bg-white/[0.02] border-white/[0.06] text-slate-300 hover:bg-white/[0.05] hover:border-white/15'
+                          }`}
+                        >
+                          <TechIcon name={item.slug} className="w-3.5 h-3.5 flex-shrink-0" />
+                          <span className="text-[11px] font-semibold truncate flex-1">
+                            {item.name}
+                          </span>
+                          {isAdded ? (
+                            <span className="text-[10px] text-indigo-400 font-bold">✓</span>
+                          ) : (
+                            <Plus className="w-3 h-3 text-slate-500 group-hover:text-white" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Custom Search Query Adder (add ANY brand among 7,600+ theSVG logos) */}
+                  {logoSearch && (
+                    <button
+                      onClick={() => {
+                        addOrToggleTech(logoSearch.trim());
+                        setLogoSearch('');
+                      }}
+                      className="w-full py-1.5 px-2 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-indigo-300 text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all"
+                    >
+                      <Plus className="w-3 h-3" />
+                      <span>Add &quot;{logoSearch}&quot; from theSVG Library</span>
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Direct comma-separated input for power users */}
+              <div>
+                <label className="text-[10px] text-slate-400 block mb-1">
+                  Manual Tech List (comma separated)
+                </label>
+                <input
+                  type="text"
+                  value={activeTechList.join(', ')}
+                  onChange={(e) => {
+                    const raw = e.target.value;
+                    const arr = raw
+                      .split(',')
+                      .map((s) => s.trim())
+                      .filter(Boolean);
+                    onUpdateSlide({ technologies: arr });
+                  }}
+                  placeholder="e.g. Kotlin, Compose, AWS, Docker"
+                  className="w-full px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono"
+                />
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       {/* 5d. Social Proof & Conversion Metric Pill */}
