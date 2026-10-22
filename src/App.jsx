@@ -31,13 +31,30 @@ export default function App() {
 
   // Helper to create initial default slides for a project
   const createDefaultSlides = (proj) => {
-    const isDesktop = proj.platform?.includes('Desktop');
+    const isDesktop = proj.platform?.includes('Desktop') && !proj.platform?.includes('Android');
+    const prim = proj.primaryColor || '#6366f1';
+    const sec = proj.secondaryColor || '#38bdf8';
     return [
       {
         id: 'slide-1',
         variant: isDesktop ? 'desktop_dashboard' : 'hero_cover',
         title: proj.title || '',
         tagline: proj.shortDescription || '',
+        titleColor: '#ffffff',
+        titleGradient: 'custom',
+        titleGradientFrom: '#ffffff',
+        titleGradientTo: prim,
+        subtitleGradientTo: sec,
+        accentColor: prim,
+        badgeColor: prim,
+        eyebrowText: proj.platform?.includes('iOS') ? 'Kotlin Multiplatform' : 'Android Engineering',
+        eyebrowIcon: 'sparkles',
+        statusBadge: '⭐ Production Ready • Clean MVVM',
+        technologies: (proj.technologies || []).slice(0, 6),
+        techLogoVariant: 'icon',
+        showTechIcons: true,
+        showStoreBadges: !isDesktop,
+        storeBadgeType: proj.platform?.includes('iOS') ? 'both' : 'google_play',
         imageSrc: null,
         hasFrame: false,
         deviceType: isDesktop ? 'desktop' : 'android',
@@ -47,19 +64,34 @@ export default function App() {
         variant: 'feature_deep_dive',
         title: 'Core Architecture & Capabilities',
         tagline: 'Built with scalable patterns and modern tooling.',
+        titleColor: '#ffffff',
+        titleGradientTo: prim,
+        subtitleGradientTo: sec,
+        accentColor: prim,
+        badgeColor: prim,
         features: (proj.features || []).slice(0, 3),
+        technologies: (proj.technologies || []).slice(0, 6),
+        showTechIcons: true,
         imageSrc: null,
         hasFrame: false,
         deviceType: isDesktop ? 'desktop' : 'android',
       },
       {
         id: 'slide-3',
-        variant: isDesktop ? 'minimal_focus' : 'dual_screen',
+        variant: isDesktop ? 'minimal_focus' : (proj.platform?.length > 1 ? 'responsive_combo' : 'dual_screen'),
         title: isDesktop
           ? 'Intuitive Workspace Diagnostics'
           : 'Seamless User Journey & Experience',
         tagline: 'Engineered for smooth navigation and reactive state management.',
+        titleColor: '#ffffff',
+        titleGradientTo: prim,
+        subtitleGradientTo: sec,
+        accentColor: prim,
+        badgeColor: prim,
+        platforms: proj.platform || ['Android'],
         features: (proj.features || []).slice(3, 6),
+        technologies: (proj.technologies || []).slice(0, 6),
+        showTechIcons: true,
         imageSrc: null,
         secondaryImageSrc: null,
         hasFrame: false,

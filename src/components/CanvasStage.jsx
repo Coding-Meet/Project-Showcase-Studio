@@ -13,7 +13,7 @@ export const PRESETS = {
   FIVERR_REC: { label: 'Fiverr Recommended (1280×769)', width: 1280, height: 769, category: 'Fiverr' },
   FIVERR_MIN: { label: 'Fiverr Minimum (712×430)', width: 712, height: 430, category: 'Fiverr' },
   UPWORK: { label: 'Upwork Project Catalog (1000×750, 4:3)', width: 1000, height: 750, category: 'Upwork' },
-  UPWORK_HD: { label: 'Upwork Ultra-Sharp (1600×1200, 4:3)', width: 1600, height: 1200, category: 'Upwork' },
+  UPWORK_HD: { label: 'Upwork Ultra-Sharp (1600×1200, 4:3)', width: 1600, height: 1200, category: 'Upwork' }
 };
 
 const CanvasStage = forwardRef(function CanvasStage(
@@ -69,8 +69,9 @@ const CanvasStage = forwardRef(function CanvasStage(
   const containerRef = useRef(null);
   const [stageScale, setStageScale] = useState(0.5);
 
-  const targetWidth = presetKey === 'CUSTOM' ? customSize.width : PRESETS[presetKey].width;
-  const targetHeight = presetKey === 'CUSTOM' ? customSize.height : PRESETS[presetKey].height;
+  const currentPreset = (presetKey && PRESETS[presetKey]) || (presetKey && PRESETS[presetKey.toUpperCase()]) || PRESETS.WEBSITE_HD;
+  const targetWidth = presetKey === 'CUSTOM' ? (customSize?.width || 1920) : currentPreset.width;
+  const targetHeight = presetKey === 'CUSTOM' ? (customSize?.height || 1080) : currentPreset.height;
 
   useEffect(() => {
     function updateScale() {

@@ -4,7 +4,7 @@
  */
 
 export const GLOBAL_CANVAS_DEFAULTS = {
-  presetKey: 'personal_website_hd',
+  presetKey: 'WEBSITE_HD',
   exportFormat: 'png',
   backgroundColor: '#080a12',
   accentColor: '#6366f1',
