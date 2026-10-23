@@ -225,11 +225,13 @@ const CanvasStage = forwardRef(function CanvasStage(
           style={{
             width: `${targetWidth}px`,
             height: `${targetHeight}px`,
-            transform: `scale(${stageScale})`,
+            transform: `scale(${stageScale}) translateZ(0)`,
             transformOrigin: 'top left',
             backgroundColor: backgroundColor,
             borderRadius: `${canvasRadius}px`,
             fontFamily: `${fontFamily}, sans-serif`,
+            imageRendering: '-webkit-optimize-contrast',
+            WebkitBackfaceVisibility: 'hidden',
           }}
           className="absolute top-0 left-0 overflow-hidden select-none shadow-2xl ring-1 ring-white/10"
         >
