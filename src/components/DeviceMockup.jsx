@@ -93,6 +93,9 @@ export default function DeviceMockup({
     }`,
     transformStyle: 'preserve-3d',
     transition: 'transform 0.25s ease',
+    willChange: 'transform',
+    backfaceVisibility: 'hidden',
+    WebkitBackfaceVisibility: 'hidden',
   };
 
   // Reflection gloss overlay element
@@ -125,6 +128,10 @@ export default function DeviceMockup({
             alt="Device Screenshot"
             className="w-auto max-h-[520px] object-contain block select-none pointer-events-none"
             crossOrigin="anonymous"
+            style={{
+              imageRendering: 'high-quality',
+              WebkitBackfaceVisibility: 'hidden',
+            }}
           />
           <ReflectionOverlay />
           {frameGleam && (
@@ -160,6 +167,10 @@ export default function DeviceMockup({
             alt="Screenshot"
             className="w-auto max-h-[500px] object-cover block select-none pointer-events-none"
             crossOrigin="anonymous"
+            style={{
+              imageRendering: 'high-quality',
+              WebkitBackfaceVisibility: 'hidden',
+            }}
           />
           <ReflectionOverlay />
           {frameGleam && (
@@ -213,6 +224,7 @@ export default function DeviceMockup({
           viewBox={`0 0 ${spec.frameSize.width} ${spec.frameSize.height}`}
           width={isDesktop ? '100%' : targetW}
           height={isDesktop ? undefined : maxH}
+          shapeRendering="geometricPrecision"
           style={{
             width: isDesktop ? '100%' : `${targetW}px`,
             height: isDesktop ? 'auto' : `${maxH}px`,
@@ -220,6 +232,7 @@ export default function DeviceMockup({
             maxWidth: '100%',
             aspectRatio: `${spec.frameSize.width} / ${spec.frameSize.height}`,
             display: 'block',
+            imageRendering: 'high-quality',
           }}
           className="select-none pointer-events-none"
         >
@@ -257,6 +270,11 @@ export default function DeviceMockup({
                 width={spec.portraitSize.width}
                 height={spec.portraitSize.height}
                 preserveAspectRatio="xMidYMid slice"
+                imageRendering="optimizeQuality"
+                style={{
+                  imageRendering: 'high-quality',
+                  WebkitBackfaceVisibility: 'hidden',
+                }}
               />
             </g>
           </g>

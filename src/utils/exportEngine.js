@@ -7,17 +7,19 @@ import JSZip from 'jszip';
 export async function captureNode(node, format = 'png', targetWidth = 1920, targetHeight = 1080) {
   if (!node) throw new Error('Target node not found');
 
-  // Compute scale multiplier for pixel precision
-  const pixelRatio = 2; // 2x Retina scale
+  // Compute scale multiplier for ultra-sharp 100% crisp pixel precision
+  const pixelRatio = 3; // 3x Ultra-Sharp Retina scale
 
   const options = {
-    quality: 0.95,
+    quality: 1.0, // 100% full uncompressed maximum quality
     pixelRatio: pixelRatio,
     backgroundColor: null,
     cacheBust: true,
     style: {
       transform: 'none',
       transformOrigin: 'top left',
+      imageRendering: 'high-quality',
+      WebkitFontSmoothing: 'antialiased',
     },
   };
 
