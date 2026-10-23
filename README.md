@@ -295,6 +295,12 @@ Project Showcase Studio uses a clean, 100% modular architecture where **each pro
   ```
   Scans all mockup screenshots in `projects_images/images/<project_id>/`, filters noise and device bezels, calculates the dominant `primaryColor` and `secondaryColor`, and updates `src/data/decks/<project_id>.json` directly.
 
+- **Apple Vision OCR Mockup Recognizer (macOS Native):**
+  ```bash
+  swift scripts/ocr_recognize_mockups.swift [optional_directory]
+  ```
+  Uses macOS native Apple Vision Neural Engine (`VNRecognizeTextRequest`) to read text inside phone/desktop screenshots to instantly identify unclassified app mockups without third-party dependencies.
+
 ---
 
 ## 🛠️ Tech Stack
