@@ -19,16 +19,16 @@ import FoundationModels
  *
  * Usage:
  *   # Full AI analysis, color extraction & deck update:
- *   swift scripts/ocr_recognize_mockups.swift [optional_dir_path]
+ *   swift scripts/mockup_analyzer.swift [optional_dir_path]
  *
  *   # Fast color extraction & deck sync only (skips AI LLM reasoning):
- *   swift scripts/ocr_recognize_mockups.swift --colors-only
+ *   swift scripts/mockup_analyzer.swift --colors-only
  *
  *   # Preview what filenames will be renamed to (Dry-Run):
- *   swift scripts/ocr_recognize_mockups.swift [optional_dir_path] --preview-rename
+ *   swift scripts/mockup_analyzer.swift [optional_dir_path] --preview-rename
  *
  *   # Auto-rename files safely on disk based on AI recognition:
- *   swift scripts/ocr_recognize_mockups.swift [optional_dir_path] --rename
+ *   swift scripts/mockup_analyzer.swift [optional_dir_path] --rename
  */
 
 // MARK: - Data Models

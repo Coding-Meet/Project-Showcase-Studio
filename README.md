@@ -335,16 +335,16 @@ To inspect the complete, fully commented specification of all available fields a
 - **Apple On-Device AI Mockup Analyzer & Color Extractor (macOS Native Vision + FoundationModels + CoreGraphics):**
   ```bash
   # 1. Fast Color Extraction & Deck Synchronization only (CoreGraphics sub-second speed):
-  swift scripts/ocr_recognize_mockups.swift --colors-only
+  swift scripts/mockup_analyzer.swift --colors-only
 
   # 2. Full Apple Vision OCR + Apple FoundationModels AI analysis + Color Extraction:
-  swift scripts/ocr_recognize_mockups.swift [optional_directory]
+  swift scripts/mockup_analyzer.swift [optional_directory]
 
   # 3. Preview AI-suggested filename cleanups (Dry-Run):
-  swift scripts/ocr_recognize_mockups.swift [optional_directory] --preview-rename
+  swift scripts/mockup_analyzer.swift [optional_directory] --preview-rename
 
   # 4. Auto-rename files safely on disk based on AI recognition:
-  swift scripts/ocr_recognize_mockups.swift [optional_directory] --rename
+  swift scripts/mockup_analyzer.swift [optional_directory] --rename
   ```
   Uses macOS native **Apple Vision Framework** (`VNRecognizeTextRequest`), **Apple FoundationModels** (`LanguageModelSession`), and **CoreGraphics** with **zero hardcoded conditions & zero fallback dictionaries**:
   - **Dominant Color Extraction:** High-precision pixel sampling (hue binning + vibrance enhancement) from mockups.
