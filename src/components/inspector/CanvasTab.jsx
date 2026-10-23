@@ -1,6 +1,7 @@
 import React from 'react';
-import { Upload } from 'lucide-react';
+import { Upload, Download, Sparkles, Sliders } from 'lucide-react';
 import { BG_VARIANTS, COLOR_PRESETS } from './inspectorConstants';
+import { PRESETS } from '../CanvasStage';
 
 export default function CanvasTab({
   backgroundVariant,
@@ -19,7 +20,20 @@ export default function CanvasTab({
   onChangeTextureOverlay,
   canvasRadius,
   onChangeCanvasRadius,
+  exportScale = 2,
+  onChangeExportScale,
+  exportQuality = 1.0,
+  onChangeExportQuality,
+  exportFormat = 'png',
+  onChangeExportFormat,
+  presetKey = 'WEBSITE_HD',
 }) {
+  const currentPreset = (presetKey && PRESETS[presetKey]) || (presetKey && PRESETS[presetKey.toUpperCase()]) || PRESETS.WEBSITE_HD;
+  const baseW = currentPreset?.width || 1920;
+  const baseH = currentPreset?.height || 1080;
+  const calculatedW = baseW * exportScale;
+  const calculatedH = baseH * exportScale;
+
   return (
     <section className="space-y-4">
       {/* Background Lighting Styles */}
@@ -245,6 +259,78 @@ export default function CanvasTab({
           />
         </div>
       </div>
+
+      {/* Export Output Resolution & Size Settings */}
+      {onChangeExportScale && (
+        <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <Download className="w-3.5 h-3.5 text-indigo-400" />
+              <span className="text-xs font-bold text-white uppercase tracking-wider">
+                Export Resolution & Size
+              </span>
+            </div>
+            <span className="text-[10px] font-mono font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+              {calculatedW} × {calculatedH} px
+            </span>
+          </div>
+
+          <p className="text-[11px] text-slate-400 leading-snug">
+            Choose how much to upscale the canvas when exporting. 2x is recommended for crisp 4K Retina, 4x produces full 8K studio prints.
+          </p>
+
+          {/* Scale Multiplier Pills */}
+          <div className="grid grid-cols-4 gap-1.5 pt-1">
+            {[
+              { scale: 1, label: '1x', name: '1080p Standard' },
+              { scale: 2, label: '2x', name: '4K Retina' },
+              { scale: 3, label: '3x', name: '6K Ultra' },
+              { scale: 4, label: '4x', name: '8K Master' },
+            ].map((s) => (
+              <button
+                key={s.scale}
+                type="button"
+                onClick={() => onChangeExportScale(s.scale)}
+                className={`py-2 px-1 rounded-xl text-center transition-all cursor-pointer border ${
+                  exportScale === s.scale
+                    ? 'bg-indigo-600 text-white border-indigo-400 shadow-md ring-1 ring-indigo-500/30'
+                    : 'bg-white/[0.03] border-white/[0.06] text-slate-400 hover:text-white hover:bg-white/[0.06]'
+                }`}
+              >
+                <div className="text-xs font-bold">{s.label}</div>
+                <div className="text-[9px] text-slate-400 truncate">{s.name}</div>
+              </button>
+            ))}
+          </div>
+
+          {/* Compression Quality Slider (for JPG & WebP) */}
+          {onChangeExportQuality && (
+            <div className="pt-2 border-t border-white/[0.06] space-y-1.5">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-300 font-medium">Quality Fidelity</span>
+                <span className="font-mono text-indigo-400 text-[11px] font-semibold">
+                  {Math.round(exportQuality * 100)}%
+                  {exportQuality === 1.0 && ' (100% Lossless)'}
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0.7"
+                max="1.0"
+                step="0.05"
+                value={exportQuality}
+                onChange={(e) => onChangeExportQuality(parseFloat(e.target.value))}
+                className="w-full accent-indigo-500 h-1.5 bg-white/10 rounded-lg cursor-pointer"
+              />
+              <div className="flex justify-between text-[10px] text-slate-500">
+                <span>70% (Small)</span>
+                <span>90% (Crisp)</span>
+                <span>100% (Lossless Master)</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </section>
   );
 }

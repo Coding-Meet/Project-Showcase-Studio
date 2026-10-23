@@ -20,6 +20,8 @@ export default function Header({
   onToggleThumbnailPreview,
   exportFormat,
   onSelectExportFormat,
+  exportScale = 2,
+  onSelectExportScale,
   onExportCurrentSlide,
   onExportAllSlides,
   isExporting,
@@ -105,6 +107,21 @@ export default function Header({
           <option value="webp" className="bg-[#0f141f]">WebP</option>
           <option value="jpg" className="bg-[#0f141f]">JPG</option>
         </select>
+
+        {/* Resolution Scale Multiplier (1x, 2x, 3x, 4x) */}
+        {onSelectExportScale && (
+          <select
+            value={exportScale}
+            onChange={(e) => onSelectExportScale(parseInt(e.target.value, 10))}
+            className="px-2.5 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-xs font-semibold text-indigo-300 hover:bg-indigo-500/20 focus:outline-none cursor-pointer transition-colors"
+            title="Output Resolution Scale Multiplier (1x to 4x)"
+          >
+            <option value={1} className="bg-[#0f141f] text-slate-200">1x (Standard)</option>
+            <option value={2} className="bg-[#0f141f] text-slate-200">2x (Retina 4K)</option>
+            <option value={3} className="bg-[#0f141f] text-slate-200">3x (Ultra 6K)</option>
+            <option value={4} className="bg-[#0f141f] text-slate-200">4x (Studio 8K)</option>
+          </select>
+        )}
 
         {/* Save to Project File (src/data/projectStore.json) */}
         <button

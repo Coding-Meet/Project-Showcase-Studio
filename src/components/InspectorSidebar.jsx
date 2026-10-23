@@ -40,6 +40,13 @@ export default function InspectorSidebar({
   onChangeTextureOverlay,
   canvasRadius,
   onChangeCanvasRadius,
+  exportScale = 2,
+  onChangeExportScale,
+  exportQuality = 1.0,
+  onChangeExportQuality,
+  exportFormat = 'png',
+  onChangeExportFormat,
+  presetKey,
 }) {
   const [activeTab, setActiveTab] = useState('template'); // 'template' | 'mockup' | 'typography' | 'canvas'
 
@@ -201,6 +208,13 @@ export default function InspectorSidebar({
             onChangeTextureOverlay={onChangeTextureOverlay}
             canvasRadius={canvasRadius}
             onChangeCanvasRadius={onChangeCanvasRadius}
+            exportScale={exportScale}
+            onChangeExportScale={onChangeExportScale}
+            exportQuality={exportQuality}
+            onChangeExportQuality={onChangeExportQuality}
+            exportFormat={exportFormat}
+            onChangeExportFormat={onChangeExportFormat}
+            presetKey={presetKey}
           />
         )}
       </div>

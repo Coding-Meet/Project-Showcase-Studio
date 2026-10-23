@@ -211,6 +211,9 @@ Click the **Canvas** tab in the Inspector:
 | `customBgImage` | File Upload | `null` | Image URL / Base64 | Custom uploaded background wallpaper or texture |
 | `textureOverlay` | Buttons | `dots` | `dots`, `grid`, `none` | Subtle texture grid or dot matrix overlay on canvas |
 | `canvasRadius` | Slider | `28px` | `0px` - `48px` | Corner roundness of the exported canvas |
+| `exportScale` | Dropdown + 4 Pills | `2` (4K) | `1` (1080p), `2` (4K Retina), `3` (6K Ultra), `4` (8K Master) | **Export Resolution Multiplier**: Upscale factor for exported slides and ZIP decks |
+| `exportQuality` | Slider | `1.0` (100%) | `0.7` (70%) to `1.0` (100% Lossless) | Compression quality for JPG and WebP export formats |
+| `exportFormat` | Dropdown | `png` | `png`, `webp`, `jpg` | Image output file encoding format |
 
 ---
 

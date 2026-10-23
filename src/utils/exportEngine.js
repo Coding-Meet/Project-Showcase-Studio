@@ -4,14 +4,21 @@ import JSZip from 'jszip';
 /**
  * Capture high-resolution image of a DOM node
  */
-export async function captureNode(node, format = 'png', targetWidth = 1920, targetHeight = 1080) {
+export async function captureNode(
+  node,
+  format = 'png',
+  targetWidth = 1920,
+  targetHeight = 1080,
+  customOptions = {}
+) {
   if (!node) throw new Error('Target node not found');
 
-  // Compute scale multiplier for ultra-sharp 100% crisp pixel precision
-  const pixelRatio = 3; // 3x Ultra-Sharp Retina scale
+  // User-customizable resolution scale multiplier (1x = 1080p, 2x = 4K, 3x = 6K, 4x = 8K)
+  const pixelRatio = customOptions.pixelRatio || customOptions.scale || 2;
+  const quality = customOptions.quality !== undefined ? customOptions.quality : 1.0;
 
   const options = {
-    quality: 1.0, // 100% full uncompressed maximum quality
+    quality: Math.min(1.0, Math.max(0.1, quality)),
     pixelRatio: pixelRatio,
     backgroundColor: null,
     cacheBust: true,
@@ -30,7 +37,7 @@ export async function captureNode(node, format = 'png', targetWidth = 1920, targ
     }
   } catch (e) {}
 
-  if (format === 'jpg') {
+  if (format === 'jpg' || format === 'jpeg') {
     return await toJpeg(node, options);
   }
   return await toPng(node, options);

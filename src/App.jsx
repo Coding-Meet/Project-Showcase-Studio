@@ -130,6 +130,8 @@ export default function App() {
   // Global Presets & Formats
   const [presetKey, setPresetKey] = useState(initialData.presetKey || GLOBAL_CANVAS_DEFAULTS.presetKey);
   const [exportFormat, setExportFormat] = useState(initialData.exportFormat || GLOBAL_CANVAS_DEFAULTS.exportFormat);
+  const [exportScale, setExportScale] = useState(initialData.exportScale || 2);
+  const [exportQuality, setExportQuality] = useState(initialData.exportQuality !== undefined ? initialData.exportQuality : 1.0);
   const [isThumbnailPreview, setIsThumbnailPreview] = useState(false);
 
   // Global Canvas Atmosphere & Lighting Settings
@@ -157,6 +159,8 @@ export default function App() {
       if (saved.slides) setSlides(saved.slides);
       if (saved.presetKey) setPresetKey(saved.presetKey);
       if (saved.exportFormat) setExportFormat(saved.exportFormat);
+      if (saved.exportScale) setExportScale(saved.exportScale);
+      if (saved.exportQuality !== undefined) setExportQuality(saved.exportQuality);
       if (saved.backgroundColor) setBackgroundColor(saved.backgroundColor);
       if (saved.accentColor) setAccentColor(saved.accentColor);
       if (saved.glowIntensity !== undefined) setGlowIntensity(saved.glowIntensity);
@@ -325,7 +329,10 @@ export default function App() {
       const target = document.getElementById('showcase-canvas-target');
       if (!target) return;
 
-      const dataUrl = await captureNode(target, exportFormat);
+      const dataUrl = await captureNode(target, exportFormat, undefined, undefined, {
+        pixelRatio: exportScale,
+        quality: exportQuality,
+      });
       const cleanTitle = (slides[activeSlideIndex]?.title || 'showcase_slide')
         .toLowerCase()
         .replace(/[^a-z0-9_-]+/g, '_');
@@ -358,7 +365,10 @@ export default function App() {
 
         const target = document.getElementById('showcase-canvas-target');
         if (target) {
-          const dataUrl = await captureNode(target, exportFormat);
+          const dataUrl = await captureNode(target, exportFormat, undefined, undefined, {
+            pixelRatio: exportScale,
+            quality: exportQuality,
+          });
           renderedSlides.push({
             title: slides[i].title || `slide_${i + 1}`,
             dataUrl,
@@ -373,6 +383,8 @@ export default function App() {
         title: activeProject.title,
         platformPreset: presetKey,
         exportFormat,
+        exportScale,
+        exportQuality,
         backgroundColor,
         accentColor,
         backgroundVariant,
@@ -449,6 +461,10 @@ export default function App() {
         onToggleThumbnailPreview={() => setIsThumbnailPreview(!isThumbnailPreview)}
         exportFormat={exportFormat}
         onSelectExportFormat={setExportFormat}
+        exportScale={exportScale}
+        onSelectExportScale={setExportScale}
+        exportQuality={exportQuality}
+        onSelectExportQuality={setExportQuality}
         onExportCurrentSlide={handleExportCurrentSlide}
         onExportAllSlides={handleExportAllSlides}
         isExporting={isExporting}
@@ -509,6 +525,13 @@ export default function App() {
           onChangeTextureOverlay={setTextureOverlay}
           canvasRadius={canvasRadius}
           onChangeCanvasRadius={setCanvasRadius}
+          exportScale={exportScale}
+          onChangeExportScale={setExportScale}
+          exportQuality={exportQuality}
+          onChangeExportQuality={setExportQuality}
+          exportFormat={exportFormat}
+          onChangeExportFormat={setExportFormat}
+          presetKey={presetKey}
         />
       </div>
 
