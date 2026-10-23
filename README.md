@@ -307,15 +307,31 @@ Project Showcase Studio uses a clean, 100% modular architecture where **each pro
   - `technologies`: Full architecture aur tech stack items (`Kotlin`, `Compose Multiplatform`, `Room`, `Ktor`, `QiSDK`, etc.).
   - `platform`: Target operating systems (`Android`, `iOS`, `Windows`, `macOS`, `Linux`).
 
-### 2. `src/data/decks/<project_id>.json` (Studio 3-Slide Visual Decks)
-- Each project has its own dedicated file containing all project metadata and slide configurations:
+### 2. `src/data/decks/<project_id>.json` (Studio Multi-Slide Visual Decks)
+- Each project has its own dedicated file containing all project metadata, global atmosphere, and slide configurations:
   - **Metadata:** `id`, `title`, `shortDescription`, `features`, `technologies`, `platform`, `primaryColor`, `secondaryColor`.
-  - **Slide 1 (`hero_cover` / `desktop_dashboard` / `featured_card`):** Cover slide with 3D isometric tilt, project headline, tagline, trust pill, and real app screenshot.
-  - **Slide 2 (`feature_deep_dive`):** 3 key feature highlight cards, accent glow, and secondary screen.
-  - **Slide 3 (`responsive_combo` / `dual_screen`):** Multiplatform layout showing mobile and desktop variants side by side.
-  - **Visual Atmosphere:** Canvas lighting theme (`aurora`), accent glow, 3D tilt angles, custom gradient angles, hardware finish (`natural_titanium`), and store badges.
+  - **Global Backdrop:** `presetKey`, `exportFormat`, `exportScale`, `exportQuality`, `backgroundColor`, `accentColor`, `glowIntensity`, `backgroundVariant`, `bgAlignment`, `textureOverlay`, `textureOpacity`, `canvasRadius`.
+  - **Multi-Slide Layouts:** `hero_cover`, `feature_deep_dive`, `dual_screen`, `desktop_dashboard`, `responsive_combo`, `minimal_focus`.
+  - **Multi-Device Support:** Primary device and secondary device controls (`secondaryDeviceType`, `secondaryImageSrc`, `secondaryRotation`, `secondaryTilt`, etc.).
 
-### 2. Automation Scripts (`scripts/`)
+---
+
+### 3. 📋 Project Deck Schema & Reference Template
+
+To inspect the complete, fully commented specification of all available fields and supported values, refer directly to the dedicated schema files:
+- 📄 **[sample_deck_schema.jsonc](src/data/decks/sample_deck_schema.jsonc)** — Full schema with inline documentation (`//`) explaining every single property, range, and allowed preset.
+- 📄 **[sample_deck_schema.json](src/data/decks/sample_deck_schema.json)** — 100% valid JSON template ready to copy and use for new project decks.
+
+#### Key Schema Sections:
+- **`[1] Project Metadata:`** `id`, `title`, `shortDescription`, `technologies`, `features`, `platform`, `primaryColor`, `secondaryColor`.
+- **`[2] Global Canvas & Atmosphere:`** `presetKey` *(Fiverr, Upwork, 16:9, etc.)*, `exportFormat` *(PNG, JPG, WebP)*, `exportScale` *(1x–4x)*, `backgroundColor`, `accentColor`, `glowIntensity`, `backgroundVariant` *(Aurora, Spotlight, Radial, Cyber Matrix, etc.)*, `bgAlignment`, `textureOverlay` *(Dots, Grid, Crosshairs, etc.)*, `textureOpacity`, `canvasRadius`.
+- **`[3] Multi-Slide Layouts:`** 6 layout templates (`hero_cover`, `feature_deep_dive`, `dual_screen`, `desktop_dashboard`, `responsive_combo`, `minimal_focus`).
+- **`[4] Hardware & Dual-Device Mockups:`** Primary & secondary device controls (`deviceType`, `deviceFinish`, `hasFrame`, `frameGleam`, `tilt`, `tiltAngle`, `pitchAngle`, `rotation`, `deviceScale`, `offsetX`, `offsetY`, `shadowStyle`, `screenReflection`).
+- **`[5] Responsive Sizing & Auto-Fit:`** `layoutSplit`, `autoScaleEnabled`, `autoScaleIntensity`, `deviceAutoFit`, `perspective`.
+
+---
+
+### 4. Automation Scripts (`scripts/`)
 - **Extract Colors from Mockups:**
   ```bash
   python3 scripts/extract_project_colors.py

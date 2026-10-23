@@ -1,0 +1,412 @@
+{
+  // =========================================================================
+  // SHOWCASE STUDIO - 100% EXHAUSTIVE SPECIFICATION & SCHEMA TEMPLATE
+  // =========================================================================
+  // Ye template Showcase Studio codebase me support hone wale HAR SINGLE FIELD,
+  // uske exact type, allowed values, presets aur visual effects ko document karta hai.
+  // =========================================================================
+
+  // -------------------------------------------------------------------------
+  // [1] ROOT PROJECT METADATA (Catalog, Filtering & Overview)
+  // -------------------------------------------------------------------------
+  "id": "sample_deck_schema",               // String: Unique folder / slug identifier (e.g. "cryptovault_pro")
+  "title": "CryptoVault Pro",               // String: Main display title of the project
+  "shortDescription": "Cutting-edge mobile & web app with military-grade encryption.", // String: Brief project summary
+  "technologies": [                         // Array<String>: Core technology tags for chips & filtering
+    "Kotlin",
+    "Jetpack Compose",
+    "React",
+    "TailwindCSS"
+  ],
+  "features": [                             // Array<String>: Global project features list
+    "Biometric Fingerprint & Face Unlock",
+    "Real-time Cloud Sync with Offline Fallback",
+    "End-to-End Encrypted Data Vault"
+  ],
+  "platform": [                             // Array<String>: Target OS / device platforms:
+    "Android",                              // Options: "Android", "iOS", "Web", "macOS", "Windows", "Desktop", "Tablet"
+    "iOS",
+    "Web"
+  ],
+  "primaryColor": "#6366f1",                // Hex: Primary brand accent color (e.g. for badges & lighting)
+  "secondaryColor": "#38bdf8",              // Hex: Secondary / complementary color
+
+  // -------------------------------------------------------------------------
+  // [2] GLOBAL CANVAS & ATMOSPHERE SETTINGS (Backdrop, Lighting, Frame, Export)
+  // -------------------------------------------------------------------------
+  "presetKey": "WEBSITE_HD",                // String: Canvas Aspect Ratio & Dimensions:
+                                            // - "WEBSITE_HD"         (1920x1080  | 16:9   | Full HD Presentation)
+                                            // - "FIVERR_REC"         (1280x769   | ~16:10 | Fiverr Gig Image Recommended)
+                                            // - "DRIBBBLE_SHOT"      (1600x1200  | 4:3    | Dribbble Studio Shot)
+                                            // - "UPWORK_PROJECT"     (1000x750   | 4:3    | Upwork Portfolio Project)
+                                            // - "LINKEDIN_POST"      (1200x628   | ~1.9:1 | LinkedIn Post Feed)
+                                            // - "TWITTER_BANNER"     (1500x500   | 3:1    | X/Twitter Header)
+                                            // - "INSTAGRAM_PORTRAIT" (1080x1350  | 4:5    | Instagram Portrait Feed)
+                                            // - "INSTAGRAM_SQUARE"   (1080x1080  | 1:1    | Square Tile)
+
+  "exportFormat": "png",                    // String: "png" (lossless crisp) | "jpg" (compact size) | "webp" (modern web)
+  "exportScale": 2,                         // Integer: Upscale Multiplier:
+                                            // 1 = 1x Standard (1080p)
+                                            // 2 = 2x Retina (4K Studio - Recommended)
+                                            // 3 = 3x Ultra (6K Display)
+                                            // 4 = 4x Master (8K Print Quality)
+
+  "exportQuality": 1.0,                     // Float: 0.70 to 1.0 (Only applies to "jpg" and "webp", 1.0 = Max fidelity)
+
+  "backgroundColor": "#080a12",             // Hex: Canvas solid base color (e.g. "#080a12", "#000000", "#0e1117")
+  "accentColor": "#6366f1",                 // Hex: Glow tint & active ambient lighting color
+  "glowIntensity": 0.35,                    // Float: Ambient lighting wash intensity (0.10 to 0.80, default: 0.35)
+
+  "backgroundVariant": "aurora",            // String: Ambient Lighting Effect Style:
+                                            // - "aurora"        (Soft ambient dual-orb blur mesh)
+                                            // - "spotlight"     (Aceternity diagonal cone ray focusing on device)
+                                            // - "radial"        (Apple studio center backlight)
+                                            // - "grid"          (Cyber Matrix tech glow backdrop)
+                                            // - "linear"        (Smooth directional gradient wash)
+                                            // - "mesh_sunset"   (Warm dual-tone sunset glow)
+                                            // - "cyber_rings"   (Concentric radar target circles)
+                                            // - "deep_void"     (Studio vignette minimal dropoff)
+                                            // - "split_horizon" (Cinematic horizontal split beam)
+                                            // - "none"          (Pure Solid - clean solid base without glow wash)
+
+  "bgAlignment": "behind_device",           // String: Ambient light focus direction:
+                                            // - "behind_device" (Auto-calculated position directly behind 3D device)
+                                            // - "top_left", "top_center", "top_right"
+                                            // - "center_left", "center", "center_right"
+                                            // - "bottom_left", "bottom_center", "bottom_right"
+
+  "customBgImage": null,                    // String | null: Base64 data URL or image path for custom background wallpaper
+
+  "textureOverlay": "dots",                 // String: Surface Geometric Pattern Overlay:
+                                            // - "dots"       (Dot Matrix - 1.5px sharpened dots on 24px grid)
+                                            // - "grid"       (Blueprint Grid - 40px architectural technical grid)
+                                            // - "plus"       (Crosshairs - 36px subtle tech alignment plus marks)
+                                            // - "isometric"  (Isometric 3D - 40x69px geometric cube mesh)
+                                            // - "diagonal"   (Carbon Mesh - 45° diagonal woven technical pattern)
+                                            // - "honeycomb"  (Honeycomb - hexagonal futuristic mesh)
+                                            // - "topography" (Topography - organic contour heightmap curves)
+                                            // - "noise"      (Film Grain - analog textured grain overlay)
+                                            // - "none"       (Clean smooth backdrop without pattern)
+
+  "textureOpacity": 0.20,                   // Float: Texture overlay transparency / intensity (0.05 to 0.60, default: 0.20)
+  "canvasRadius": 28,                       // Integer: Outer canvas frame corner radius in px (0 to 44, default: 28)
+  "showCenterGuides": false,                // Boolean: Horizontal & vertical crosshair alignment guides (ignored on export)
+
+  // -------------------------------------------------------------------------
+  // [3] SLIDES ARRAY (Slide-Specific Configurations)
+  // -------------------------------------------------------------------------
+  "slides": [
+    // =======================================================================
+    // SLIDE 1: HERO COVER (Primary Cover Slide with 3D Angled Hardware Mockup)
+    // =======================================================================
+    {
+      "id": "slide-1",                      // String: Unique slide identifier within the deck
+      "variant": "hero_cover",              // String: Slide Layout Template:
+                                            // - "hero_cover"        (Hero title + 3D angled device + trust badges)
+                                            // - "feature_deep_dive" (Device + 3 floating glassmorphic feature cards)
+                                            // - "dual_screen"       (Two mobile phones side-by-side with staggered depth)
+                                            // - "desktop_dashboard" (MacBook Pro / Desktop web command center)
+                                            // - "responsive_combo"  (MacBook Pro screen + floating mobile phone overlay)
+                                            // - "minimal_focus"     (Centered clean showcase with maximum focal weight)
+
+      // Layout Balancing & Sizing
+      "layoutSplit": 48,                    // Integer: Column width ratio: 30 to 70 (48 = 48% Text / 52% Device)
+      "layoutAlign": "left",                // String: "left" (Standard: Text Left, Device Right) | "right" (Reversed: Device Left, Text Right)
+      "autoScaleEnabled": true,             // Boolean: Auto-scale typography & device when canvas preset changes
+      "autoScaleIntensity": 1.0,            // Float: 0.0 (Locked size) to 1.0 (Full auto-scale)
+      "deviceAutoFit": true,                // Boolean: Auto-adjust device scale inside preset bounds
+
+      // Headline & Subtitle Typography
+      "title": "CryptoVault Pro",           // String: Main slide heading
+      "tagline": "Next-generation decentralized finance management with military-grade encryption.", // String: Subheading
+      "titleColor": "#ffffff",              // Hex: Solid title text color
+      "titleGradient": "custom",            // String: Title gradient preset:
+                                            // "none", "metallic", "sunset", "cyber", "ocean", "emerald", "gold", "rose", "custom"
+      "titleGradientFrom": "#ffffff",       // Hex: Custom gradient start color
+      "titleGradientTo": "#6366f1",         // Hex: Custom gradient end color
+      "titleGradientAngle": 90,             // Integer: Gradient angle in degrees (0 to 360)
+      "subtitleColor": "#cbd5e1",           // Hex: Tagline text color
+      "subtitleGradient": "none",           // String: "none" | "custom"
+      "subtitleGradientFrom": "#cbd5e1",    // Hex: Subtitle custom gradient start
+      "subtitleGradientTo": "#38bdf8",      // Hex: Subtitle custom gradient end
+      "subtitleGradientAngle": 90,          // Integer: Subtitle gradient angle in degrees
+
+      // Font Family & Weight
+      "fontFamily": "Plus Jakarta Sans",     // String: Google Font Family:
+                                            // - "Plus Jakarta Sans" (Modern Clean)
+                                            // - "Outfit"            (Geometric Display)
+                                            // - "Inter"             (Developer Tech)
+                                            // - "Cabinet Grotesk"   (Heavy Bold)
+                                            // - "Space Grotesk"     (Cyberpunk / Futuristic)
+                                            // - "Poppins"           (Friendly Rounded)
+                                            // - "JetBrains Mono"    (Developer Code)
+
+      "fontWeight": "800",                  // String: "400" (Regular), "500" (Medium), "600" (SemiBold), "700" (Bold), "800" (ExtraBold), "900" (Black)
+      "textScale": 1.0,                     // Float: Multiplier for all text sizes on this slide (0.8 to 1.6)
+      "titleSize": 56,                      // Integer: Main title font size in px (32 to 72)
+      "subtitleSize": 20,                   // Integer: Tagline font size in px (12 to 28)
+      "badgeSize": 14,                      // Integer: Category eyebrow & status badge font size in px (10 to 20)
+      "featureSize": 13,                    // Integer: Feature cards text font size in px (10 to 20)
+      "techChipSize": 14,                   // Integer: Tech chip logo dimensions in px (10 to 24)
+      "iconSize": 20,                       // Integer: Eyebrow icon dimensions in px (12 to 32)
+
+      // Eyebrow Domain Pill & Status Badge
+      "eyebrowText": "FINTECH & WEB3",      // String: Uppercase category tag above heading (e.g. "MOBILE APP", "SAAS")
+      "eyebrowIcon": "shield",              // String: Lucide Icon name:
+                                            // "sparkles", "flame", "star", "shield", "terminal", "zap", "rocket",
+                                            // "award", "crown", "code", "globe", "cpu", "heart", "lock", "check",
+                                            // "trend", "layers", "phone"
+
+      "statusBadge": "⚡ Production Ready • 100% Kotlin", // String: Pill text on top of title
+      "badgeColor": "#6366f1",              // Hex: Color tint for eyebrow chip and status badge
+
+      // Tech Stack Chips
+      "technologies": [                     // Array<String>: Supported technology logos (matches localLogos.js catalogue)
+        "Kotlin",
+        "Compose",
+        "React",
+        "TailwindCSS"
+      ],
+      "showTechIcons": true,                // Boolean: Render tech stack pills on slide
+      "techLogoVariant": "icon",            // String: "icon" (Logo icon only) | "wordmark" (Icon + Brand Name text)
+
+      // Store Conversion Badges (App Store / Google Play)
+      "showStoreBadges": true,              // Boolean: Show official app store download buttons
+      "storeBadgeType": "google_play",      // String: "none" | "both" | "app_store" | "google_play"
+      "storeBadgeStyle": "official",        // String: "official" (Standard high-contrast button) | "glass" (Frosted glassmorphic)
+
+      // Social Proof / Metric Pill
+      "showMetricPill": true,               // Boolean: Show ratings, downloads, or metric trust badge
+      "metricText": "4.9 ★ • 100K+ Active Users", // String: Metric pill text copy
+      "metricIcon": "star",                 // String: "star" | "download" | "users" | "github" | "shield" | "trophy" | "bolt"
+      "metricStyle": "gold",                // String: "gold" (Luxury Amber) | "emerald" (Mint Green) | "indigo" (Electric Purple) | "glass" (Frosted) | "ruby" (Red)
+
+      // Primary Hardware Mockup Configuration
+      "deviceType": "google-pixel-9",       // String: Hardware chassis model:
+                                            // Phone Models:
+                                            // - "google-pixel-9"            (Google Pixel 9 Pro camera visor)
+                                            // - "google-pixel-10"           (Google Pixel 10)
+                                            // - "google-pixel-10-pro-fold"  (Pixel Foldable)
+                                            // - "apple-iphone-16-pro"       (iPhone 16 Pro Dynamic Island)
+                                            // - "apple-iphone-16-pro-max"   (iPhone 16 Pro Max Large)
+                                            // - "apple-iphone-16"           (iPhone 16 Dual Camera)
+                                            // - "apple-iphone-17-pro"       (iPhone 17 Pro Next-Gen)
+                                            // - "samsung-galaxy-s24"        (Samsung Galaxy S24)
+                                            // - "samsung-galaxy-s25"        (Samsung Galaxy S25)
+                                            // Tablet & Desktop Models:
+                                            // - "apple-ipad-pro-11-m4"      (Apple iPad Pro M4)
+                                            // - "desktop-large"             (MacBook Pro 16" / Desktop Browser)
+                                            // - "desktop-small"             (MacBook Air 13")
+                                            // Aliases: "android", "iphone", "desktop", "tablet"
+
+      "deviceFinish": "natural_titanium",   // String: Metallic chassis bezel finish:
+                                            // - "natural_titanium" (Raw brushed titanium grey)
+                                            // - "desert_titanium"  (Warm champagne bronze titanium)
+                                            // - "white_titanium"   (Pure white ceramic titanium)
+                                            // - "black_titanium"   (Stealth matte black titanium)
+                                            // - "space_gray"       (Deep space graphite)
+                                            // - "silver_aluminum"  (Bright anodized silver aluminum)
+                                            // - "midnight_navy"    (Deep dark cobalt blue)
+                                            // - "emerald_green"    (Alpine forest emerald)
+                                            // - "cosmic_orange"    (Vibrant radiant orange)
+                                            // - "rose_gold"        (Soft luxury blush rose gold)
+
+      "hasFrame": true,                     // Boolean: Render physical hardware bezel frame (false = borderless raw screenshot)
+      "frameGleam": true,                   // Boolean: Subtle animated metallic specular gleam reflection
+      "deviceCornerRadius": 36,             // Integer: Inner screen corner rounding in px (0 for sharp desktop, 36 for phones)
+      "shadowStyle": "dramatic",            // String: Drop shadow preset: "dramatic" (Deep 3D blur) | "soft" (Ambient) | "glow" (Colored halo) | "none"
+      "shadowIntensity": 0.8,               // Float: Shadow opacity / darkness (0.0 to 1.0)
+      "screenReflection": true,             // Boolean: Diagonal glossy glass sheen reflection over the screen
+
+      // 3D Perspective, Tilt & Offsets
+      "tilt": true,                         // Boolean: Enable 3D perspective orientation
+      "tiltAngle": -14,                     // Float: Y-axis rotation in degrees (-35° to +35°, negative tilts right screen inward)
+      "pitchAngle": 4,                      // Float: X-axis pitch angle in degrees (-25° to +25°)
+      "rotation": 0,                        // Float: 2D planar rotation in degrees (-45° to +45°)
+      "perspective": 1200,                  // Integer: CSS 3D perspective distance in px (800 to 2000, default: 1200)
+      "deviceScale": 1.0,                   // Float: Device size scale factor (0.5 to 2.0, default: 1.0)
+      "offsetX": 0,                         // Integer: Horizontal placement offset in px (-400 to +400)
+      "offsetY": 0,                         // Integer: Vertical placement offset in px (-400 to +400)
+
+      // Screenshot Image
+      "imageSrc": "/projects_images/cryptovault/screen_1.png", // String | null: Primary screenshot image path or base64 URL
+      "deviceImage": "/projects_images/cryptovault/screen_1.png" // String | null: Alias for imageSrc
+    },
+
+    // =======================================================================
+    // SLIDE 2: FEATURE DEEP DIVE (Mockup with 3 Floating Glassmorphic Cards)
+    // =======================================================================
+    {
+      "id": "slide-2",
+      "variant": "feature_deep_dive",
+      "layoutSplit": 48,
+      "layoutAlign": "left",
+      "title": "Core Architecture & Capabilities",
+      "tagline": "Engineered with clean separation of concerns, high performance, and robust tooling.",
+      "features": [                         // Array<String>: The 3 floating feature card descriptions
+        "Biometric Authentication with Hardware Keystore",
+        "Reactive MVI Architecture with Jetpack Compose",
+        "Offline-First Room Database with Live Sync"
+      ],
+      "featureColor": "#e2e8f0",            // Hex: Feature card body text color
+      "titleColor": "#ffffff",
+      "titleGradient": "custom",
+      "titleGradientFrom": "#ffffff",
+      "titleGradientTo": "#38bdf8",
+      "titleGradientAngle": 90,
+      "subtitleColor": "#cbd5e1",
+      "accentColor": "#38bdf8",
+      "badgeColor": "#38bdf8",
+      "eyebrowText": "Key Highlights",
+      "eyebrowIcon": "zap",
+      "technologies": ["Room DB", "Flow", "Hilt DI", "Biometrics"],
+      "showTechIcons": true,
+      "deviceType": "google-pixel-9",
+      "deviceFinish": "black_titanium",
+      "hasFrame": true,
+      "frameGleam": true,
+      "deviceCornerRadius": 36,
+      "shadowStyle": "dramatic",
+      "shadowIntensity": 0.8,
+      "screenReflection": true,
+      "tilt": false,
+      "tiltAngle": 0,
+      "pitchAngle": 0,
+      "rotation": 0,
+      "deviceScale": 1.0,
+      "offsetX": 0,
+      "offsetY": 0,
+      "imageSrc": "/projects_images/cryptovault/screen_2.png",
+      "fontFamily": "Plus Jakarta Sans",
+      "fontWeight": "800",
+      "titleSize": 38,
+      "subtitleSize": 16,
+      "featureSize": 13
+    },
+
+    // =======================================================================
+    // SLIDE 3: DUAL SCREEN FLOW (Two Phones Side-by-Side with Multi-Device Controls)
+    // =======================================================================
+    {
+      "id": "slide-3",
+      "variant": "dual_screen",
+      "title": "Seamless End-to-End Workflow",
+      "tagline": "From instant onboarding to complex transaction approvals with zero friction.",
+      "technologies": ["Kotlin", "Compose", "Navigation"],
+      "showTechIcons": true,
+
+      // Primary (Left) Device Properties
+      "deviceType": "google-pixel-9",
+      "deviceFinish": "natural_titanium",
+      "hasFrame": true,
+      "frameGleam": true,
+      "imageSrc": "/projects_images/cryptovault/screen_1.png",
+      "deviceScale": 0.95,
+      "rotation": -4,                       // Degrees: Left phone angled inward
+      "tilt": false,
+      "tiltAngle": 0,
+      "pitchAngle": 0,
+      "offsetX": 0,
+      "offsetY": 0,
+
+      // Secondary (Right) Device Properties (Multi-Device Inspector Support)
+      "secondaryDeviceType": "apple-iphone-16-pro", // String: Secondary phone hardware model
+      "secondaryDeviceFinish": "desert_titanium",  // String: Secondary phone metallic finish
+      "secondaryHasFrame": true,                   // Boolean: Secondary phone hardware bezel
+      "secondaryFrameGleam": true,                 // Boolean: Secondary metallic reflection
+      "secondaryDeviceCornerRadius": 36,           // Integer: Secondary phone corner radius
+      "secondaryImageSrc": "/projects_images/cryptovault/screen_2.png", // String: Secondary screenshot URL
+      "secondaryRotation": 4,                      // Degrees: Right phone angled outward
+      "secondaryDeviceScale": 0.95,                // Float: Secondary phone scale
+      "secondaryTilt": false,                      // Boolean: Secondary phone 3D tilt
+      "secondaryTiltAngle": 8,                     // Float: Secondary tilt Y-angle
+      "secondaryPitchAngle": 4,                    // Float: Secondary pitch X-angle
+      "secondaryPerspective": 1200,                // Integer: Secondary 3D perspective
+      "secondaryOffsetX": 0,                       // Integer: Secondary horizontal offset
+      "secondaryOffsetY": 0,                       // Integer: Secondary vertical offset
+      "secondaryShadowStyle": "dramatic",          // String: Secondary shadow style
+      "secondaryShadowIntensity": 0.8,             // Float: Secondary shadow opacity
+      "secondaryScreenReflection": true,           // Boolean: Secondary screen glass sheen
+
+      "titleSize": 38,
+      "subtitleSize": 16
+    },
+
+    // =======================================================================
+    // SLIDE 4: DESKTOP DASHBOARD (MacBook Pro Laptop Screen / Web App)
+    // =======================================================================
+    {
+      "id": "slide-4",
+      "variant": "desktop_dashboard",
+      "title": "Full-Featured Web Command Center",
+      "tagline": "Real-time analytics, transaction logs, and team access governance.",
+      "deviceType": "desktop-large",        // String: "desktop-large" (MacBook Pro 16") | "desktop-small" (MacBook Air 13")
+      "deviceFinish": "space_gray",
+      "hasFrame": true,
+      "frameGleam": true,
+      "deviceCornerRadius": 10,
+      "imageSrc": "/projects_images/cryptovault/desktop_web.png", // String: Desktop screenshot URL
+      "desktopImage": "/projects_images/cryptovault/desktop_web.png", // String: Alias
+      "deviceScale": 1.0,
+      "tilt": false,
+      "tiltAngle": 0,
+      "pitchAngle": 0,
+      "rotation": 0,
+      "offsetX": 0,
+      "offsetY": 0,
+      "titleSize": 40,
+      "subtitleSize": 16
+    },
+
+    // =======================================================================
+    // SLIDE 5: RESPONSIVE COMBO (Desktop Display + Mobile Phone Overlay)
+    // =======================================================================
+    {
+      "id": "slide-5",
+      "variant": "responsive_combo",
+      "title": "Cross-Platform Universal Experience",
+      "tagline": "Continuity across desktop web browser and native mobile handheld.",
+
+      // Desktop Mockup (Primary Display)
+      "deviceType": "desktop-large",
+      "deviceFinish": "space_gray",
+      "hasFrame": true,
+      "imageSrc": "/projects_images/cryptovault/desktop_web.png",
+      "rotation": 0,
+      "tilt": false,
+
+      // Mobile Mockup Overlay (Secondary Display)
+      "secondaryDeviceType": "google-pixel-9",
+      "secondaryDeviceFinish": "natural_titanium",
+      "secondaryHasFrame": true,
+      "secondaryImageSrc": "/projects_images/cryptovault/screen_1.png",
+      "secondaryRotation": 0,
+      "secondaryTilt": false,
+
+      "titleSize": 38,
+      "subtitleSize": 16
+    },
+
+    // =======================================================================
+    // SLIDE 6: MINIMAL FOCUS (Centered Showcase with Maximum Focal Weight)
+    // =======================================================================
+    {
+      "id": "slide-6",
+      "variant": "minimal_focus",
+      "title": "Pure Focus on Core Experience",
+      "tagline": "Distraction-free interface built for speed and precision.",
+      "layoutAlign": "center",              // String: "center" (Centers text and device on canvas)
+      "deviceType": "google-pixel-9",
+      "deviceFinish": "natural_titanium",
+      "hasFrame": true,
+      "imageSrc": "/projects_images/cryptovault/screen_1.png",
+      "deviceScale": 1.05,
+      "tilt": false,
+      "tiltAngle": 0,
+      "pitchAngle": 0,
+      "rotation": 0,
+      "titleSize": 42,
+      "subtitleSize": 18
+    }
+  ]
+}
