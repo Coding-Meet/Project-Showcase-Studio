@@ -7,6 +7,7 @@ import {
   Sparkles,
   ChevronDown,
   Save,
+  Crosshair,
 } from 'lucide-react';
 import { PRESETS } from './CanvasStage';
 import { estimateImageFileSize } from '../utils/exportEngine';
@@ -19,6 +20,8 @@ export default function Header({
   onSelectPreset,
   isThumbnailPreview,
   onToggleThumbnailPreview,
+  showCenterGuides = false,
+  onToggleCenterGuides,
   exportFormat,
   onSelectExportFormat,
   exportScale = 2,
@@ -99,6 +102,21 @@ export default function Header({
           <Eye className="w-3 h-3" />
           <span className="text-[11px]">Thumbnail Mode</span>
         </button>
+
+        {onToggleCenterGuides && (
+          <button
+            onClick={onToggleCenterGuides}
+            className={`px-2.5 py-1 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
+              showCenterGuides
+                ? 'bg-cyan-500/20 text-cyan-300 ring-1 ring-cyan-500/50'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+            }`}
+            title="Toggle horizontal & vertical visual center alignment guide lines"
+          >
+            <Crosshair className="w-3.5 h-3.5" />
+            <span className="text-[11px]">Center Guides</span>
+          </button>
+        )}
       </div>
 
       {/* Right: Actions & Export */}

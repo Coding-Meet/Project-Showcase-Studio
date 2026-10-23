@@ -48,6 +48,8 @@ export default function InspectorSidebar({
   exportFormat = 'png',
   onChangeExportFormat,
   presetKey,
+  showCenterGuides = false,
+  onToggleCenterGuides,
 }) {
   const [activeTab, setActiveTab] = useState('template'); // 'template' | 'mockup' | 'typography' | 'canvas'
 
@@ -222,6 +224,8 @@ export default function InspectorSidebar({
             exportFormat={exportFormat}
             onChangeExportFormat={onChangeExportFormat}
             presetKey={presetKey}
+            showCenterGuides={showCenterGuides}
+            onToggleCenterGuides={onToggleCenterGuides}
           />
         )}
       </div>

@@ -38,7 +38,7 @@
       "deviceFinish": "natural_titanium",
       "hasFrame": false,
       "frameGleam": true,
-      "deviceCornerRadius": 36,
+      "deviceCornerRadius": 46,
       "shadowStyle": "dramatic",
       "shadowIntensity": 0.8,
       "screenReflection": true,
@@ -58,7 +58,8 @@
       "badgeSize": 12,
       "featureSize": 12,
       "techChipSize": 12,
-      "iconSize": 14
+      "iconSize": 14,
+      "tiltAngle": -16
     },
     {
       "id": "slide-2",
@@ -183,15 +184,14 @@
       "iconSize": 14
     }
   ],
-  "primaryColor": "#1270fa",
-  "secondaryColor": "#8327fa",
+  "presetKey": "personal_website_hd",
+  "exportFormat": "png",
   "backgroundColor": "#080a12",
   "accentColor": "#1270fa",
   "glowIntensity": 0.38,
   "backgroundVariant": "aurora",
   "bgAlignment": "behind_device",
-  "canvasRadius": 28,
-  "presetKey": "personal_website_hd",
-  "exportFormat": "png",
-  "textureOverlay": "dots"
+  "customBgImage": null,
+  "textureOverlay": "dots",
+  "canvasRadius": 28
 }

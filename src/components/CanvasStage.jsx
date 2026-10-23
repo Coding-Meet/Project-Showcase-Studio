@@ -65,6 +65,7 @@ const CanvasStage = forwardRef(function CanvasStage(
     textureOpacity = 0.04,
     canvasRadius = 28,
     isThumbnailPreview = false,
+    showCenterGuides = false,
   },
   ref
 ) {
@@ -476,6 +477,79 @@ const CanvasStage = forwardRef(function CanvasStage(
 
           {/* Render Slide Variant */}
           {renderVariant()}
+
+          {/* VISUAL CENTER ALIGNMENT GUIDES (Purely for visual reference, ignored during export) */}
+          {showCenterGuides && (
+            <div
+              className="export-ignore absolute inset-0 pointer-events-none z-50 select-none"
+              data-export-ignore="true"
+            >
+              {/* Vertical Center Guide Line (50% X) */}
+              <div
+                className="absolute top-0 bottom-0 left-1/2 w-[1.5px] -translate-x-1/2 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(to bottom, rgba(6, 182, 212, 0.85), rgba(99, 102, 241, 0.85), rgba(6, 182, 212, 0.85))',
+                  boxShadow: '0 0 8px rgba(6, 182, 212, 0.7), 0 0 2px #ffffff',
+                }}
+              >
+                {/* Top Badge */}
+                <div className="absolute top-3 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-md bg-slate-950/90 border border-cyan-400/60 shadow-xl flex items-center gap-1.5 whitespace-nowrap">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+                  <span className="text-[10px] font-mono font-bold text-cyan-300">
+                    CENTER X: 50% ({Math.round(targetWidth / 2)}px)
+                  </span>
+                </div>
+                {/* Bottom Badge */}
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-md bg-slate-950/90 border border-cyan-400/60 shadow-xl whitespace-nowrap">
+                  <span className="text-[10px] font-mono font-semibold text-cyan-300">
+                    50% X
+                  </span>
+                </div>
+              </div>
+
+              {/* Horizontal Center Guide Line (50% Y) */}
+              <div
+                className="absolute left-0 right-0 top-1/2 h-[1.5px] -translate-y-1/2 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(to right, rgba(6, 182, 212, 0.85), rgba(99, 102, 241, 0.85), rgba(6, 182, 212, 0.85))',
+                  boxShadow: '0 0 8px rgba(6, 182, 212, 0.7), 0 0 2px #ffffff',
+                }}
+              >
+                {/* Left Badge */}
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md bg-slate-950/90 border border-cyan-400/60 shadow-xl flex items-center gap-1.5 whitespace-nowrap">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+                  <span className="text-[10px] font-mono font-bold text-cyan-300">
+                    CENTER Y: 50% ({Math.round(targetHeight / 2)}px)
+                  </span>
+                </div>
+                {/* Right Badge */}
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md bg-slate-950/90 border border-cyan-400/60 shadow-xl whitespace-nowrap">
+                  <span className="text-[10px] font-mono font-semibold text-cyan-300">
+                    50% Y
+                  </span>
+                </div>
+              </div>
+
+              {/* Center Crosshair Target Reticle */}
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
+                {/* Outer Ring */}
+                <div className="w-10 h-10 rounded-full border-2 border-cyan-400 bg-cyan-500/10 backdrop-blur-sm flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.6)]">
+                  {/* Inner Target Bullseye */}
+                  <div className="w-3 h-3 rounded-full bg-cyan-300 ring-2 ring-indigo-500 shadow-[0_0_8px_#ffffff]" />
+                </div>
+                {/* Center Coordinates Pill */}
+                <div className="absolute -top-7 px-2.5 py-0.5 rounded-full bg-slate-950/95 border border-cyan-400/60 shadow-2xl text-[10px] font-mono font-bold text-cyan-200 tracking-wider whitespace-nowrap">
+                  EXACT CENTER ({Math.round(targetWidth / 2)} × {Math.round(targetHeight / 2)})
+                </div>
+              </div>
+
+              {/* Golden Ratio / Rule of Thirds subtle lines */}
+              <div className="absolute top-0 bottom-0 left-[33.33%] w-[1px] border-l border-dashed border-cyan-400/25 pointer-events-none" />
+              <div className="absolute top-0 bottom-0 left-[66.67%] w-[1px] border-l border-dashed border-cyan-400/25 pointer-events-none" />
+              <div className="absolute left-0 right-0 top-[33.33%] h-[1px] border-t border-dashed border-cyan-400/25 pointer-events-none" />
+              <div className="absolute left-0 right-0 top-[66.67%] h-[1px] border-t border-dashed border-cyan-400/25 pointer-events-none" />
+            </div>
+          )}
         </div>
       </div>
     </div>

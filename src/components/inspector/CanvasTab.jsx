@@ -1,5 +1,5 @@
 import React from 'react';
-import { Upload, Download, Sparkles, Sliders, HardDrive, FileImage } from 'lucide-react';
+import { Upload, Download, Sparkles, Sliders, HardDrive, FileImage, Crosshair } from 'lucide-react';
 import { BG_VARIANTS, COLOR_PRESETS } from './inspectorConstants';
 import { PRESETS } from '../CanvasStage';
 import { estimateImageFileSize } from '../../utils/exportEngine';
@@ -28,6 +28,8 @@ export default function CanvasTab({
   exportFormat = 'png',
   onChangeExportFormat,
   presetKey = 'WEBSITE_HD',
+  showCenterGuides = false,
+  onToggleCenterGuides,
 }) {
   const currentPreset = (presetKey && PRESETS[presetKey]) || (presetKey && PRESETS[presetKey.toUpperCase()]) || PRESETS.WEBSITE_HD;
   const baseW = currentPreset?.width || 1920;
@@ -262,6 +264,45 @@ export default function CanvasTab({
           />
         </div>
       </div>
+
+      {/* Visual Alignment Guides Toggle */}
+      {onToggleCenterGuides && (
+        <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div
+              className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-colors ${
+                showCenterGuides
+                  ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400'
+                  : 'bg-white/5 border-white/10 text-slate-400'
+              }`}
+            >
+              <Crosshair className="w-4 h-4" />
+            </div>
+            <div>
+              <span className="text-xs font-semibold text-white block">
+                Center Alignment Guides
+              </span>
+              <span className="text-[10px] text-slate-400">
+                Visual vertical & horizontal crosshair lines (ignored during export)
+              </span>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onToggleCenterGuides}
+            className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer flex-shrink-0 ${
+              showCenterGuides ? 'bg-cyan-600' : 'bg-white/10'
+            }`}
+            title="Toggle Center Alignment Guides"
+          >
+            <span
+              className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${
+                showCenterGuides ? 'transform translate-x-5' : ''
+              }`}
+            />
+          </button>
+        </div>
+      )}
 
       {/* Export Output Resolution & Size Settings */}
       {onChangeExportScale && (
