@@ -29,7 +29,7 @@ Open [http://localhost:5173](http://localhost:5173) in Google Chrome or any mode
 ## 📖 Step-by-Step Guide: How to Use the Studio
 
 ### Step 1: Select Your Project
-- In the top header bar, click the **Project Dropdown** to select one of the **30 pre-loaded projects** (sourced from `src/data/projects.json`) or create custom slide decks.
+- In the top header bar, click the **Project Dropdown** to select one of the **30 pre-loaded projects** (sourced dynamically from `src/data/decks/<project_id>.json`) or create custom slide decks.
 - Titles, taglines, technologies, platforms, primary/secondary brand colors, and feature bullets are automatically populated.
 
 ### Step 2: Choose Your Canvas Dimension Preset
@@ -258,21 +258,20 @@ All project customizations are automatically synchronized in real time:
 
 ---
 
-## 📁 Data Architecture: `projects.json` vs `src/data/decks/`
+## 📁 Modular Data Architecture (Single Source of Truth)
 
-Project Showcase Studio uses a clean, two-layer modular data separation:
+Project Showcase Studio uses a clean, 100% modular architecture where **each project is completely self-contained**:
 
 ```text
 /Volumes/Meet/project_showcase/
 ├── src/data/
-│   ├── projects.json          # 1. Master Project Directory & Metadata Catalog (30 projects)
-│   ├── decks/                 # 2. Modular 3-Slide Presentation Decks (Individual JSON per project)
+│   ├── decks/                 # Single Source of Truth: Modular 3-Slide Decks & Project Metadata
 │   │   ├── news_kotlin_multiplatform_app.json
 │   │   ├── pokemon_app_mvi_compose_multiplatform.json
 │   │   ├── devanalyzer.json
-│   │   └── ... (30 individual files, ~160 lines each)
-│   ├── localLogos.js          # 3. 45+ Local Brand Logos Catalog & Wordmark Index
-│   └── deviceSpecs.js         # 4. 33 Hardware Specifications & Bezels
+│   │   └── ... (30 individual files, self-contained)
+│   ├── localLogos.js          # 45+ Local Brand Logos Catalog & Wordmark Index
+│   └── deviceSpecs.js         # 33 Hardware Specifications & Bezels
 ├── projects_images/images/    # Organized Mockup Screenshots by Project ID
 │   ├── news_kotlin_multiplatform_app/
 │   ├── pokemon_app_mvi_compose_multiplatform/
@@ -281,33 +280,25 @@ Project Showcase Studio uses a clean, two-layer modular data separation:
 └── logo/                      # Brand Logo Files (_logo.png vs _logo_2.png)
 ```
 
-### 1. `src/data/projects.json` (Master Metadata Catalog)
-- Contains the static project metadata for all **30 projects**:
-  - `id`: Unique identifier slug (e.g. `news_kotlin_multiplatform_app`).
-  - `title`, `shortDescription`, `longDescription`.
-  - `features`: Array of core features.
-  - `technologies`: Array of tech stack items (`Kotlin`, `Compose Multiplatform`, `Room`, etc.).
-  - `platform`: Target platforms (`Android`, `iOS`, `Desktop`, `macOS`, `Windows`, `Linux`).
-  - `primaryColor` & `secondaryColor`: Dominant brand colors automatically extracted from real app screenshots.
-
-### 2. `src/data/decks/<project_id>.json` (Modular Showcase Decks)
-- Each project has its own dedicated, light (~160 lines) configuration file containing:
+### 1. `src/data/decks/<project_id>.json` (Autonomous Project Decks)
+- Each project has its own dedicated file containing all project metadata and slide configurations:
+  - **Metadata:** `id`, `title`, `shortDescription`, `features`, `technologies`, `platform`, `primaryColor`, `secondaryColor`.
   - **Slide 1 (`hero_cover` / `desktop_dashboard` / `featured_card`):** Cover slide with 3D isometric tilt, project headline, tagline, trust pill, and real app screenshot.
   - **Slide 2 (`feature_deep_dive`):** 3 key feature highlight cards, accent glow, and secondary screen.
   - **Slide 3 (`responsive_combo` / `dual_screen`):** Multiplatform layout showing mobile and desktop variants side by side.
-  - **Visual Styling:** Canvas lighting theme (`aurora`), accent glow, 3D tilt angles, custom gradient angles, hardware finish (`natural_titanium`), and store badges.
+  - **Visual Atmosphere:** Canvas lighting theme (`aurora`), accent glow, 3D tilt angles, custom gradient angles, hardware finish (`natural_titanium`), and store badges.
 
-### 3. Automation Scripts (`scripts/`)
+### 2. Automation Scripts (`scripts/`)
 - **Extract Colors from Mockups:**
   ```bash
   python3 scripts/extract_project_colors.py
   ```
-  Scans all mockup screenshots in `projects_images/images/<project_id>/`, filters noise and device bezels, calculates the dominant `primaryColor` and `secondaryColor`, and updates `src/data/projects.json` and `src/data/decks/`.
+  Scans all mockup screenshots in `projects_images/images/<project_id>/`, filters noise and device bezels, calculates the dominant `primaryColor` and `secondaryColor`, and updates `src/data/decks/<project_id>.json` directly.
 - **Generate Complete 3-Slide Decks:**
   ```bash
   python3 scripts/generate_showcase_decks.py
   ```
-  Automatically compiles production-ready 3-slide decks for all 30 projects with real screenshot mockups, brand gradients, hardware frames, and status pills, saving directly into `src/data/decks/<project_id>.json`.
+  Compiles production-ready 3-slide decks with real screenshot mockups, brand gradients, hardware frames, and status pills into `src/data/decks/<project_id>.json`.
 
 ---
 

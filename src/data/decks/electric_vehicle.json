@@ -197,7 +197,7 @@
   "backgroundVariant": "aurora",
   "bgAlignment": "behind_device",
   "canvasRadius": 28,
-  "presetKey": "WEBSITE_HD",
+  "presetKey": "personal_website_hd",
   "exportFormat": "png",
   "textureOverlay": "dots"
 }

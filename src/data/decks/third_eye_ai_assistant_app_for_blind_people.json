@@ -192,15 +192,14 @@
       "iconSize": 14
     }
   ],
-  "primaryColor": "#8b5cf6",
-  "secondaryColor": "#f59e0b",
+  "presetKey": "personal_website_hd",
+  "exportFormat": "png",
   "backgroundColor": "#080a12",
   "accentColor": "#8b5cf6",
   "glowIntensity": 0.38,
   "backgroundVariant": "aurora",
   "bgAlignment": "behind_device",
-  "canvasRadius": 28,
-  "presetKey": "WEBSITE_HD",
-  "exportFormat": "png",
-  "textureOverlay": "dots"
+  "customBgImage": null,
+  "textureOverlay": "dots",
+  "canvasRadius": 28
 }

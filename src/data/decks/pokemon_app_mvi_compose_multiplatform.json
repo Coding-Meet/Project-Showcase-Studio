@@ -38,10 +38,10 @@
       "metricIcon": "star",
       "metricStyle": "gold",
       "deviceType": "android",
-      "deviceFinish": "natural_titanium",
-      "hasFrame": false,
+      "deviceFinish": "cosmic_orange",
+      "hasFrame": true,
       "frameGleam": true,
-      "deviceCornerRadius": 36,
+      "deviceCornerRadius": 12,
       "shadowStyle": "dramatic",
       "shadowIntensity": 0.8,
       "screenReflection": true,
@@ -194,15 +194,14 @@
       "iconSize": 14
     }
   ],
-  "primaryColor": "#94e965",
-  "secondaryColor": "#fa9850",
+  "presetKey": "personal_website_hd",
+  "exportFormat": "png",
   "backgroundColor": "#080a12",
   "accentColor": "#94e965",
   "glowIntensity": 0.38,
   "backgroundVariant": "aurora",
   "bgAlignment": "behind_device",
-  "canvasRadius": 28,
-  "presetKey": "WEBSITE_HD",
-  "exportFormat": "png",
-  "textureOverlay": "dots"
+  "customBgImage": null,
+  "textureOverlay": "dots",
+  "canvasRadius": 28
 }

@@ -30,14 +30,33 @@ if (!fs.existsSync(DECKS_DIR)) {
   fs.mkdirSync(DECKS_DIR, { recursive: true });
 }
 
-// 1. Get projects
+// 1. Get projects catalog directly from individual deck files in src/data/decks/
 app.get('/api/projects', (req, res) => {
-  const projectsPath = path.join(__dirname, 'src/data/projects.json');
-  if (fs.existsSync(projectsPath)) {
-    const data = JSON.parse(fs.readFileSync(projectsPath, 'utf-8'));
-    res.json(data);
-  } else {
-    res.json([]);
+  try {
+    const projects = [];
+    if (fs.existsSync(DECKS_DIR)) {
+      const files = fs.readdirSync(DECKS_DIR).filter(f => f.endsWith('.json'));
+      for (const file of files) {
+        try {
+          const content = JSON.parse(fs.readFileSync(path.join(DECKS_DIR, file), 'utf-8'));
+          projects.push({
+            id: content.id || path.basename(file, '.json'),
+            title: content.title || path.basename(file, '.json'),
+            shortDescription: content.shortDescription || (content.slides?.[0]?.tagline) || '',
+            features: content.features || (content.slides?.[1]?.featureList) || [],
+            technologies: content.technologies || (content.slides?.[0]?.technologies) || [],
+            platform: content.platform || [],
+            primaryColor: content.primaryColor || '#6366f1',
+            secondaryColor: content.secondaryColor || '#38bdf8'
+          });
+        } catch (e) {
+          console.warn(`Error reading deck file ${file}:`, e.message);
+        }
+      }
+    }
+    res.json(projects);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

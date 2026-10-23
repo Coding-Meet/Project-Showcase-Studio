@@ -2,7 +2,7 @@
 """
 Project Showcase Studio - Project Primary & Secondary Color Extractor
 Extracts dominant brand colors (primary & secondary) from project screenshot mockups
-and updates src/data/projects.json and src/data/projectStore.json.
+and updates src/data/decks/<project_id>.json directly.
 """
 
 import os
@@ -14,7 +14,6 @@ from PIL import Image
 
 WORKSPACE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 IMAGES_BASE_DIR = os.path.join(WORKSPACE_DIR, 'projects_images', 'images')
-PROJECTS_JSON_PATH = os.path.join(WORKSPACE_DIR, 'src', 'data', 'projects.json')
 DECKS_DIR = os.path.join(WORKSPACE_DIR, 'src', 'data', 'decks')
 
 # Aesthetic fallback palettes for projects without screenshot images
@@ -124,29 +123,30 @@ def extract_colors_from_images(dir_path):
 
 def main():
     print("=" * 80)
-    print("🚀 Project Showcase Studio - Primary & Secondary Color Extractor")
+    print("🚀 Project Showcase Studio - Primary & Secondary Color Extractor (src/data/decks/)")
     print("=" * 80)
 
-    # 1. Load projects.json
-    if not os.path.exists(PROJECTS_JSON_PATH):
-        print(f"❌ Error: {PROJECTS_JSON_PATH} not found.")
+    # 1. Check DECKS_DIR
+    if not os.path.exists(DECKS_DIR):
+        print(f"❌ Error: {DECKS_DIR} not found.")
         sys.exit(1)
 
-    with open(PROJECTS_JSON_PATH, 'r', encoding='utf-8') as f:
-        projects = json.load(f)
+    deck_files = sorted([f for f in os.listdir(DECKS_DIR) if f.endswith('.json')])
 
-    # 2. Extract and assign colors for each project
+    # 2. Extract and assign colors directly in each deck file
     updated_count = 0
-    results_map = {}
 
-    print(f"\nScanning {len(projects)} projects in projects.json:")
+    print(f"\nScanning {len(deck_files)} project decks in {DECKS_DIR}:")
     print("-" * 80)
     print(f"{'Project ID':<42} | {'Primary':<9} | {'Secondary':<9} | Source")
     print("-" * 80)
 
-    for p in projects:
-        pid = p.get('id')
-        title = p.get('title', pid)
+    for file_name in deck_files:
+        deck_path = os.path.join(DECKS_DIR, file_name)
+        with open(deck_path, 'r', encoding='utf-8') as f:
+            deck = json.load(f)
+
+        pid = deck.get('id', file_name.replace('.json', ''))
         dir_path = os.path.join(IMAGES_BASE_DIR, pid)
         
         prim, sec = extract_colors_from_images(dir_path)
@@ -157,47 +157,24 @@ def main():
             prim, sec = FALLBACK_PALETTES.get(pid, ('#6366f1', '#38bdf8'))
             source = "🎨 Curated"
 
-        p['primaryColor'] = prim
-        p['secondaryColor'] = sec
-        results_map[pid] = (prim, sec)
+        deck['primaryColor'] = prim
+        deck['secondaryColor'] = sec
+
+        # Update slide visual accents
+        for s in deck.get('slides', []):
+            s['accentColor'] = prim
+            s['badgeColor'] = prim
+            s['titleGradientTo'] = prim
+            s['subtitleGradientTo'] = sec
+
+        with open(deck_path, 'w', encoding='utf-8') as f:
+            json.dump(deck, f, indent=2, ensure_ascii=False)
+
         updated_count += 1
         print(f"{pid:<42} | {prim:<9} | {sec:<9} | {source}")
 
-    # Save updated projects.json
-    with open(PROJECTS_JSON_PATH, 'w', encoding='utf-8') as f:
-        json.dump(projects, f, indent=2, ensure_ascii=False)
-    print(f"\n✅ Successfully updated {updated_count} projects in {PROJECTS_JSON_PATH}")
-
-    # 3. Update individual deck files in src/data/decks/
-    if os.path.exists(DECKS_DIR):
-        try:
-            store_updated = 0
-            for sp_id, (prim, sec) in results_map.items():
-                deck_file = os.path.join(DECKS_DIR, f"{sp_id}.json")
-                if os.path.exists(deck_file):
-                    with open(deck_file, 'r', encoding='utf-8') as f:
-                        sp_data = json.load(f)
-
-                    sp_data['primaryColor'] = prim
-                    sp_data['secondaryColor'] = sec
-                    
-                    # Also update slide visual accents
-                    slides = sp_data.get('slides', [])
-                    for s in slides:
-                        s['accentColor'] = prim
-                        s['badgeColor'] = prim
-                        s['titleGradientTo'] = prim
-                        s['subtitleGradientTo'] = sec
-
-                    with open(deck_file, 'w', encoding='utf-8') as f:
-                        json.dump(sp_data, f, indent=2, ensure_ascii=False)
-                    store_updated += 1
-
-            print(f"✅ Successfully updated {store_updated} showcase decks in {DECKS_DIR}")
-        except Exception as e:
-            print(f"⚠️ Warning updating deck files in {DECKS_DIR}: {e}")
-
-    print("\n🎉 Complete! Primary and secondary colors are now integrated.\n")
+    print(f"\n✅ Successfully updated {updated_count} project decks in {DECKS_DIR}")
+    print("\n🎉 Complete! Primary and secondary colors are now integrated into src/data/decks/.\n")
 
 if __name__ == '__main__':
     main()

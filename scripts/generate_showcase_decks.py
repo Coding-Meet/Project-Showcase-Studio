@@ -279,9 +279,15 @@ def build_project_deck(project):
     }
 
     return {
-        "slides": [slide_1, slide_2, slide_3],
+        "id": project['id'],
+        "title": project.get('title', ''),
+        "shortDescription": project.get('shortDescription', ''),
+        "features": project.get('features', []),
+        "technologies": project.get('technologies', []),
+        "platform": project.get('platform', []),
         "primaryColor": primary_color,
         "secondaryColor": secondary_color,
+        "slides": [slide_1, slide_2, slide_3],
         "backgroundColor": "#080a12",
         "accentColor": primary_color,
         "glowIntensity": 0.38,
@@ -300,12 +306,18 @@ def main():
     print("🚀 Project Showcase Studio - Individual Deck Generator (src/data/decks/)")
     print("=" * 80)
 
-    if not os.path.exists(PROJECTS_JSON_PATH):
-        print(f"❌ Error: {PROJECTS_JSON_PATH} not found.")
+    if os.path.exists(PROJECTS_JSON_PATH):
+        with open(PROJECTS_JSON_PATH, 'r', encoding='utf-8') as f:
+            projects = json.load(f)
+    elif os.path.exists(DECKS_DIR):
+        projects = []
+        for f in sorted(os.listdir(DECKS_DIR)):
+            if f.endswith('.json'):
+                with open(os.path.join(DECKS_DIR, f), 'r', encoding='utf-8') as df:
+                    projects.append(json.load(df))
+    else:
+        print(f"❌ Error: neither {PROJECTS_JSON_PATH} nor {DECKS_DIR} found.")
         sys.exit(1)
-
-    with open(PROJECTS_JSON_PATH, 'r', encoding='utf-8') as f:
-        projects = json.load(f)
 
     os.makedirs(DECKS_DIR, exist_ok=True)
 
