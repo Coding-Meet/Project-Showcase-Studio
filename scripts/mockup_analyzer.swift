@@ -275,21 +275,23 @@ func extractVisibleText(from cgImage: CGImage) -> [String] {
 
 // MARK: - Apple Foundation Model (LanguageModelSession)
 
-func analyzeWithAppleAI(session: LanguageModelSession, fileName: String, textList: [String]) async -> AIAnalysisResult {
+func analyzeWithAppleAI(session: LanguageModelSession, projectId: String, fileName: String, textList: [String]) async -> AIAnalysisResult {
     let joinedText = textList.prefix(25).joined(separator: "\n")
     let prompt = """
-    You are a senior UI/UX engineer. Analyze this application screenshot mockup based on its filename and on-screen text.
-    Mockup Filename: \(fileName)
+    You are a senior UI/UX engineer. Analyze this mobile application screenshot mockup for the project: "\(projectId)".
+    CRITICAL: Ignore generic camera, messenger, or transfer artifacts in filenames (such as "WhatsApp Image", "Screenshot", "IMG", "PXL", timestamps).
+    Base your understanding strictly on the application domain ("\(projectId)") and the actual on-screen text and UI layout.
+
     On-Screen Text Detected:
     \(joinedText.isEmpty ? "[No prominent text on screen / Pure visual graphic]" : joinedText)
 
     Reason over the UI purpose and return ONLY valid JSON (without markdown fences, no ```json, no preamble) with this schema:
     {
-      "screenType": "The specific screen type (e.g. AI Chat / Conversation, Quiz & Learning, Analytics Dashboard, Auth / Login, Settings & Profile, E-Commerce, etc.)",
-      "suggestedSlug": "A short, clean snake_case filename slug describing this screen without extension (e.g. login_screen, analytics_dashboard, settings_profile, transaction_details, onboarding_welcome)",
+      "screenType": "Specific screen purpose (e.g. Daily Affirmation Display, Quote Reader, Live Wallpaper Preview, Category Filter, Custom Quote Editor, Settings Menu, Onboarding Welcome)",
+      "suggestedSlug": "clean_snake_case_slug_describing_screen (e.g. affirmation_quote_display, wallpaper_preview, category_filter, custom_quote_menu, settings_preferences)",
       "description": "1-2 concise sentences describing what this screen displays and what the user can do here.",
-      "components": ["List of 3-5 distinct UI components present, e.g. Navigation Bar, Message Bubbles, Card List, CTA Button, Search Field"],
-      "visualStyle": "Aesthetic style (e.g. Light theme minimal, Dark theme sleek, Vibrant gradient)"
+      "components": ["List 3-5 real UI components present, e.g. Quote Card, Category Grid, Wallpaper Canvas, Header Bar, Action Button"],
+      "visualStyle": "Aesthetic style (e.g. Dark theme sleek, Minimalist typography, Vibrant gradient)"
     }
     """
 
@@ -312,7 +314,21 @@ func analyzeWithAppleAI(session: LanguageModelSession, fileName: String, textLis
            let end = content.lastIndex(of: "}") {
             let jsonSub = String(content[start...end])
             if let data = jsonSub.data(using: .utf8),
-               let parsed = try? JSONDecoder().decode(AIAnalysisResult.self, from: data) {
+               var parsed = try? JSONDecoder().decode(AIAnalysisResult.self, from: data) {
+                // Sanitize components if model echoed placeholder prompt instructions
+                let cleanComponents = parsed.components.filter { c in
+                    let lower = c.lowercased()
+                    return !lower.contains("list of") && !lower.contains("list 3-5") && !lower.contains("distinct ui")
+                }
+                if cleanComponents.isEmpty {
+                    return AIAnalysisResult(
+                        screenType: parsed.screenType,
+                        suggestedSlug: parsed.suggestedSlug,
+                        description: parsed.description,
+                        components: ["Content View", "Navigation Bar"],
+                        visualStyle: parsed.visualStyle
+                    )
+                }
                 return parsed
             }
         }
@@ -324,7 +340,7 @@ func analyzeWithAppleAI(session: LanguageModelSession, fileName: String, textLis
         screenType: "App Screen",
         suggestedSlug: "app_screen",
         description: "Application mockup showing UI components and layout.",
-        components: ["Navigation Bar", "Content View"],
+        components: ["Content View", "Navigation Bar"],
         visualStyle: "Standard"
     )
 }
@@ -490,7 +506,7 @@ func processDirectory(dir: String) async {
                 // 1. Apple Vision OCR
                 visibleText = extractVisibleText(from: cgImage)
                 // 2. Apple AI reasoning
-                aiResult = await analyzeWithAppleAI(session: session, fileName: img, textList: visibleText)
+                aiResult = await analyzeWithAppleAI(session: session, projectId: projectId, fileName: img, textList: visibleText)
             }
 
             let rawSlug = aiResult.suggestedSlug ?? aiResult.screenType
