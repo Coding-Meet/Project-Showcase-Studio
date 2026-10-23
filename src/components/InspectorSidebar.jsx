@@ -39,6 +39,8 @@ export default function InspectorSidebar({
   onChangeCustomBgImage,
   textureOverlay,
   onChangeTextureOverlay,
+  textureOpacity = 0.20,
+  onChangeTextureOpacity,
   canvasRadius,
   onChangeCanvasRadius,
   exportScale = 2,
@@ -215,6 +217,8 @@ export default function InspectorSidebar({
             onChangeGlowIntensity={onChangeGlowIntensity}
             textureOverlay={textureOverlay}
             onChangeTextureOverlay={onChangeTextureOverlay}
+            textureOpacity={textureOpacity}
+            onChangeTextureOpacity={onChangeTextureOpacity}
             canvasRadius={canvasRadius}
             onChangeCanvasRadius={onChangeCanvasRadius}
             exportScale={exportScale}

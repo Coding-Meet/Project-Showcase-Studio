@@ -19,6 +19,8 @@ export default function CanvasTab({
   onChangeGlowIntensity,
   textureOverlay,
   onChangeTextureOverlay,
+  textureOpacity = 0.20,
+  onChangeTextureOpacity,
   canvasRadius,
   onChangeCanvasRadius,
   exportScale = 2,
@@ -226,27 +228,52 @@ export default function CanvasTab({
         </span>
 
         <div>
-          <label className="text-[11px] text-slate-400 mb-1 block">Texture Pattern</label>
-          <div className="grid grid-cols-3 gap-1">
+          <label className="text-[11px] text-slate-400 mb-1.5 block">Texture Pattern</label>
+          <div className="grid grid-cols-3 gap-1.5">
             {[
               { id: 'dots', label: 'Dot Matrix' },
-              { id: 'grid', label: 'Grid Lines' },
+              { id: 'grid', label: 'Blueprint Grid' },
+              { id: 'plus', label: 'Crosshairs' },
+              { id: 'isometric', label: 'Isometric 3D' },
+              { id: 'diagonal', label: 'Carbon Mesh' },
+              { id: 'honeycomb', label: 'Honeycomb' },
+              { id: 'topography', label: 'Topography' },
+              { id: 'noise', label: 'Film Grain' },
               { id: 'none', label: 'None' },
             ].map((tex) => (
               <button
                 key={tex.id}
                 onClick={() => onChangeTextureOverlay(tex.id)}
-                className={`py-1.5 rounded-lg text-[11px] font-semibold transition-all cursor-pointer ${
+                className={`py-2 px-1.5 rounded-lg text-[10px] font-semibold transition-all cursor-pointer text-center truncate ${
                   textureOverlay === tex.id
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-white/[0.02] border border-white/[0.06] text-slate-400 hover:text-white'
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 ring-1 ring-white/20'
+                    : 'bg-white/[0.03] border border-white/[0.06] text-slate-300 hover:text-white hover:bg-white/[0.07]'
                 }`}
+                title={tex.label}
               >
                 {tex.label}
               </button>
             ))}
           </div>
         </div>
+
+        {textureOverlay !== 'none' && onChangeTextureOpacity && (
+          <div>
+            <div className="flex justify-between text-xs mb-1 font-medium">
+              <span className="text-slate-300">Texture Intensity / Opacity</span>
+              <span className="text-indigo-400 font-mono">{Math.round(textureOpacity * 100)}%</span>
+            </div>
+            <input
+              type="range"
+              min="0.05"
+              max="0.60"
+              step="0.02"
+              value={textureOpacity}
+              onChange={(e) => onChangeTextureOpacity(parseFloat(e.target.value))}
+              className="w-full accent-indigo-500 cursor-pointer"
+            />
+          </div>
+        )}
 
         <div>
           <div className="flex justify-between text-xs mb-1 font-medium">
