@@ -61,6 +61,11 @@ export default function FeatureDeepDiveSlide({
 
   const isReversed = slideData.layoutAlign === 'right';
 
+  // Customizable layout split ratio (Cards width % vs Mockup width %)
+  const split = Math.max(30, Math.min(70, slideData.layoutSplit ?? 52));
+  const contentWidthPct = `${split}%`;
+  const mockupWidthPct = `${100 - split - 3}%`;
+
   return (
     <div
       className={`w-full h-full flex items-center justify-between px-[6%] py-[5%] relative overflow-hidden z-10 ${
@@ -68,8 +73,11 @@ export default function FeatureDeepDiveSlide({
       }`}
       style={{ fontFamily: `${fontFamily}, sans-serif` }}
     >
-      {/* Mockup Column (Strict 45% boundary) */}
-      <div className="w-[45%] max-w-[45%] flex-shrink-0 flex items-center justify-center relative z-10">
+      {/* Mockup Column (Controlled by layoutSplit) */}
+      <div
+        className="flex-shrink-0 flex items-center justify-center relative z-10"
+        style={{ width: mockupWidthPct, maxWidth: mockupWidthPct }}
+      >
         <DeviceMockup
           imageSrc={slideData.imageSrc}
           hasFrame={slideData.hasFrame}
@@ -91,8 +99,11 @@ export default function FeatureDeepDiveSlide({
         />
       </div>
 
-      {/* Right Feature Cards (Strict 52% boundary) */}
-      <div className="w-[52%] max-w-[52%] flex-shrink-0 flex flex-col justify-center items-start z-10 space-y-3">
+      {/* Right Feature Cards (Controlled by layoutSplit) */}
+      <div
+        className="flex-shrink-0 flex flex-col justify-center items-start z-10 space-y-3"
+        style={{ width: contentWidthPct, maxWidth: contentWidthPct }}
+      >
         {/* Section Title with whitespace-pre-line */}
         <h2
           className={`tracking-tight whitespace-pre-line ${titleStyleObj.className} mb-1`}

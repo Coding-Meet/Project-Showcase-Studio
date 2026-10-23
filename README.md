@@ -142,6 +142,10 @@ Click the **Canvas** tab in the Inspector:
 | `frameGleam` | Checkbox | `true` | `true` / `false` | Specular metallic rim light reflection along device edges |
 | `deviceCornerRadius`| Slider | `36px` | `10px` to `54px` | Inner & outer device corner curvature |
 | `layoutAlign` | Toggle Button | `left` | `left` ⇄ `right` | **Swap Layout Alignment**: Swaps mockup and content positions (Hero Cover & Feature Deep-Dive) |
+| `layoutSplit` | Slider + 3 Quick Pills | `48` | `30%` to `70%` | **Layout Balance & Split**: Width ratio between Content and Mockup (`35/65` Focus Device, `48/52` Balanced, `60/40` Focus Content) |
+| `autoScaleEnabled` | Switch Toggle | `true` | `true` / `false` | **Auto-Scale Text & Elements**: Toggle dynamic proportional font & element scaling when switching canvas resolutions |
+| `autoScaleIntensity`| Slider | `1.0` (100%) | `0.0` (0%) to `1.0` (100%) | **Auto-Scale Intensity**: Control responsiveness (0% locked size, 50% subtle scaling, 100% full auto-scale) |
+| `deviceAutoFit` | Switch Toggle | `true` | `true` / `false` | **Device Height Auto-Fit**: Auto-shrinks device on low-height canvas (e.g. 712x430) to prevent viewport clipping |
 | `tilt` | Checkbox | `true` (Hero) | `true` / `false` | Enables 3D perspective transform (Hero Cover only) |
 | `tiltAngle` | Slider | `-8°` | `-25°` to `+25°` | 3D perspective rotation on the Y-axis |
 | `pitchAngle` | Slider | `4°` | `-15°` to `+15°` | 3D perspective rotation on the X-axis |

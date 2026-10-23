@@ -152,20 +152,27 @@ const CanvasStage = forwardRef(function CanvasStage(
     }
   }
 
+  // Resolve all properties for the active slide using centralized top-level defaults
+  const resolvedSlide = resolveSlideProperties(slide, project);
+
   // Aspect-ratio aware base resolution scaling factor:
   const aspectRatio = targetWidth / targetHeight;
   // If widescreen (>= 1.55 like 16:9 or 16:10), reference is 1920x1080.
   // If 4:3 (like Upwork 1000x750 or 1600x1200), reference is 1440x1080 so 4:3 height is not penalized by width.
   const refWidth = aspectRatio >= 1.55 ? 1920 : 1080 * aspectRatio;
-  const baseScale = Math.min(targetWidth / refWidth, targetHeight / 1080);
+  const rawBaseScale = Math.min(targetWidth / refWidth, targetHeight / 1080);
+
+  // User-customizable Auto-Scale:
+  const isAutoScale = resolvedSlide.autoScaleEnabled !== false;
+  const intensity = resolvedSlide.autoScaleIntensity ?? 1.0;
+  // If disabled, scale is fixed at 1.0; if enabled, interpolate difference by intensity:
+  const baseScale = isAutoScale ? 1 + (rawBaseScale - 1) * intensity : 1;
 
   // Device mockup fit factor:
-  // Container percentages (w-[50%], w-[45%]) automatically scale with container width.
-  // Device only needs slight reduction if vertical canvas height is under 600px (e.g. 712x430).
-  const deviceFitScale = Math.min(1, targetHeight / 640);
-
-  // Resolve all properties for the active slide using centralized top-level defaults
-  const resolvedSlide = resolveSlideProperties(slide, project);
+  // If deviceAutoFit is true, auto-shrink device if canvas height < 640px.
+  const isDeviceAutoFit = resolvedSlide.deviceAutoFit !== false;
+  const rawDeviceFit = Math.min(1, targetHeight / 640);
+  const deviceFitScale = isDeviceAutoFit ? rawDeviceFit : 1;
 
   // Variant dispatcher
   const renderVariant = () => {
