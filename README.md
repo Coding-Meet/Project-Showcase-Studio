@@ -63,11 +63,16 @@ Click the **Template** tab in the right Inspector:
 
 ### Step 5: Upload Screenshots & Set Hardware Frame
 Click the **Mockup** tab in the Inspector:
-- **Upload Screenshot:** Drag and drop or browse for your screenshot (`PNG`, `JPG`, `WebP`). You can also type local image paths (e.g., `/images/screenshot.png`) or data URLs.
+- **Upload Screenshot:** Drag and drop or browse for your screenshot (`PNG`, `JPG`, `WebP`). You can also type local image paths (e.g., `/images/screenshot.png`) or data URLs. Newly uploaded screenshots with empty transparent margins are automatically detected and auto-trimmed!
+- **✂️ Trim Transparent Padding:** If a pre-framed screenshot has empty transparent spacing at the top/bottom that causes offset shadows or weird card boxes, click the **Trim Transparent Padding** button under the preview thumbnail to crop it cleanly via 1-click canvas alpha scanning.
 - **Secondary Screenshot:** For *Dual Screen* and *Responsive Combo*, upload a 2nd screenshot for the mobile device.
 - **Auto-Color:** Click the ✨ **Auto-Color** button to sample dominant colors from your screenshot and automatically tune the ambient lighting.
 - **Hardware Frame Model:** Choose from **33 real hardware specifications** (Pixel 9/10, iPhone 16 Pro/17, Galaxy S25, iPad Pro M4, macOS Desktop Window, or Frameless).
-- **Image Has Frame Toggle:** Turn ON if your image already includes bezels to prevent double bezels.
+- **Image Has Frame Toggle:** Turn ON if your image already includes bezels/frames. When enabled:
+  - Studio synthetic bezels are bypassed to prevent double bezels.
+  - Standard rectangular `box-shadow` is automatically replaced with **alpha-aware CSS `drop-shadow`** so transparent margins never cast awkward rectangular card shadows.
+  - Screen reflection is blended with `mix-blend-mode: overlay` to preserve transparent PNG backgrounds.
+- **Device Body Finish:** Toggle ON/OFF or select `None (∅)` to preserve the original OEM stock frame, or pick from 10 metallic chassis finishes (Natural Titanium, Desert Titanium, Space Gray, etc.).
 - **3D Isometric Tilt (Hero Cover):** Adjust perspective tilt angle Y (-25° to 25°) and pitch angle X (-15° to 15°).
 - **Device Shadows & Reflection:** Choose shadow styles (*Dramatic, Soft, Neon, None*), shadow intensity, and glossy screen reflection.
 - **Scale & Offsets:** Adjust device zoom scale (50% to 140%) and X/Y offset positioning.
@@ -90,8 +95,10 @@ Click the **Canvas** tab in the Inspector:
 - **18 Curated Color Themes:** 1-click themes including *Indigo Aura, Emerald Mint, Neon Violet, Sunset Amber, Pure Obsidian, Cyberpunk Rose, Neon Lime, Sapphire Deep, Luxury Gold*, etc.
 - **Custom Texture & Background:** Upload custom wallpaper or enable Dots / Grid texture overlays.
 - **Canvas Radius:** Adjust corner roundness (0px to 48px).
+- **Live Canvas Specs Card:** Displays real-time output dimensions (e.g. `2560 × 1538 px` at 2x Retina), active format (`PNG/WebP/JPG`), and live estimated file size.
 
 ### Step 8: Export Your Showcase
+- **⚡ Live File Size Estimator:** A real-time badge in the top header (e.g. `~3.8 MB (Retina 4K)` or `~820 KB`) dynamically calculates your file size using our physics-grounded mathematical estimator (`estimateImageFileSize`) based on canvas dimensions, upscale factor, format, and compression quality.
 - **Export Single Slide:** Click **Export Slide** in the header to instantly download the active slide in high resolution (`PNG`, `JPG`, or `WebP`).
 - **Save & Export Deck (ZIP):** Click **Save Deck & ZIP** to render all slides sequentially at 2x Retina scale. The backend saves files directly to disk and downloads a packaged ZIP archive:
   ```text
@@ -136,9 +143,10 @@ Click the **Canvas** tab in the Inspector:
 |---|---|---|---|---|
 | `imageSrc` | Upload / URL | `null` | Base64 / Local URL | Primary screenshot displayed inside the device |
 | `secondaryImageSrc` | Upload / URL | `null` | Base64 / Local URL | Secondary screenshot (Dual Screen & Responsive Combo) |
-| `hasFrame` | Checkbox | `false` | `true` / `false` | Enable if screenshot already has frames to prevent double bezels |
+| `hasFrame` | Checkbox | `false` | `true` / `false` | Enable if screenshot already has frames to prevent double bezels. Automatically activates alpha-aware `filter: drop-shadow` so transparent PNG margins never cast rectangular card shadows. |
+| `autoTrim` | 1-Click Button + Auto | Action | N/A | **Trim Transparent Padding**: Detects & strips empty alpha=0 padding margins on upload or via manual 1-click button using Canvas alpha scanning |
 | `deviceType` | Select / Badges | `google-pixel-9` | 33 Real Hardware Models | Frame bezel and aspect ratio specifications |
-| `deviceFinish` | 10 Visual Swatches | `natural_titanium` | Natural Titanium, Desert Titanium, White Titanium, Black Titanium, Space Gray, Silver Aluminum, Midnight Navy, Alpine Emerald, Cosmic Orange, Rose Gold | Realistic metallic chassis finish & gradient rim |
+| `deviceFinish` | Toggle Switch + 10 Swatches + None | `natural_titanium` | `none` (OFF/Stock OEM), Natural Titanium, Desert Titanium, White Titanium, Black Titanium, Space Gray, Silver Aluminum, Midnight Navy, Alpine Emerald, Cosmic Orange, Rose Gold | Realistic metallic chassis finish & gradient rim or None (original OEM stock frame) |
 | `frameGleam` | Checkbox | `true` | `true` / `false` | Specular metallic rim light reflection along device edges |
 | `deviceCornerRadius`| Slider | `36px` | `10px` to `54px` | Inner & outer device corner curvature |
 | `layoutAlign` | Toggle Button | `left` | `left` ⇄ `right` | **Swap Layout Alignment**: Swaps mockup and content positions (Hero Cover & Feature Deep-Dive) |

@@ -50,8 +50,13 @@ export default function DeviceMockup({
   const uniqueId = useId ? useId().replace(/[^a-zA-Z0-9_-]/g, '') : Math.random().toString(36).substring(7);
   const resolvedSrc = normalizeImageSrc(imageSrc);
 
-  const finishObj =
-    DEVICE_FINISHES.find((f) => f.id === deviceFinish) || DEVICE_FINISHES[0];
+  const isFinishDisabled =
+    deviceFinish === 'none' ||
+    deviceFinish === 'off' ||
+    deviceFinish === false;
+  const finishObj = isFinishDisabled
+    ? null
+    : (DEVICE_FINISHES.find((f) => f.id === deviceFinish) || DEVICE_FINISHES[0]);
 
 
   if (!resolvedSrc) {
@@ -77,14 +82,18 @@ export default function DeviceMockup({
     );
   }
 
-  // Calculate Shadow CSS based on style and intensity
+  // Calculate Shadow CSS (both box-shadow and alpha-aware drop-shadow)
   let shadowCss = 'none';
+  let filterShadow = 'none';
   if (shadowStyle === 'dramatic') {
     shadowCss = `0 35px 70px -15px rgba(0, 0, 0, ${shadowIntensity}), 0 15px 30px -10px rgba(0, 0, 0, ${shadowIntensity * 0.8})`;
+    filterShadow = `drop-shadow(0 25px 35px rgba(0, 0, 0, ${shadowIntensity * 0.9})) drop-shadow(0 10px 15px rgba(0, 0, 0, ${shadowIntensity * 0.6}))`;
   } else if (shadowStyle === 'soft') {
     shadowCss = `0 25px 50px -12px rgba(0, 0, 0, ${shadowIntensity * 0.6})`;
+    filterShadow = `drop-shadow(0 18px 25px rgba(0, 0, 0, ${shadowIntensity * 0.55}))`;
   } else if (shadowStyle === 'neon') {
     shadowCss = `0 20px 60px -10px ${accentColor}${Math.round(shadowIntensity * 90).toString(16).padStart(2, '0')}, 0 10px 30px rgba(0, 0, 0, 0.9)`;
+    filterShadow = `drop-shadow(0 15px 30px ${accentColor}${Math.round(shadowIntensity * 90).toString(16).padStart(2, '0')}) drop-shadow(0 8px 15px rgba(0, 0, 0, 0.8))`;
   }
 
   const transformStyle = {
@@ -111,15 +120,15 @@ export default function DeviceMockup({
     ) : null;
 
   // 1. IMAGE ALREADY HAS A FRAME (In-built device frame in screenshot)
+  // Uses alpha-aware drop-shadow so transparent padding in PNGs never casts an ugly rectangular card shadow!
   if (hasFrame) {
     const radius = deviceCornerRadius || 0;
     return (
       <div className={`relative inline-block ${className}`} style={transformStyle}>
         <div
-          className="relative overflow-hidden"
+          className="relative inline-block"
           style={{
-            boxShadow: shadowCss,
-            borderRadius: radius > 0 ? `${radius}px` : undefined,
+            filter: filterShadow !== 'none' ? filterShadow : undefined,
           }}
         >
           <img
@@ -132,9 +141,9 @@ export default function DeviceMockup({
               WebkitBackfaceVisibility: 'hidden',
               backfaceVisibility: 'hidden',
               transform: 'translateZ(0)',
+              borderRadius: radius > 0 ? `${radius}px` : undefined,
             }}
           />
-          <ReflectionOverlay />
         </div>
       </div>
     );
@@ -150,7 +159,7 @@ export default function DeviceMockup({
           style={{
             boxShadow: shadowCss,
             borderRadius: `${radius}px`,
-            border: `1.5px solid ${finishObj.border}30`,
+            border: `1.5px solid ${finishObj ? `${finishObj.border}30` : 'rgba(255, 255, 255, 0.15)'}`,
           }}
         >
           <img
@@ -235,18 +244,20 @@ export default function DeviceMockup({
             </clipPath>
 
             {/* Specular Metallic Chassis Gradient */}
-            <linearGradient
-              id={finishGradId}
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="100%"
-            >
-              <stop offset="0%" stopColor={finishObj.border} />
-              <stop offset="35%" stopColor={finishObj.chassisFill} />
-              <stop offset="70%" stopColor={finishObj.bezelFill} />
-              <stop offset="100%" stopColor={finishObj.border} />
-            </linearGradient>
+            {finishObj && (
+              <linearGradient
+                id={finishGradId}
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop offset="0%" stopColor={finishObj.border} />
+                <stop offset="35%" stopColor={finishObj.chassisFill} />
+                <stop offset="70%" stopColor={finishObj.bezelFill} />
+                <stop offset="100%" stopColor={finishObj.border} />
+              </linearGradient>
+            )}
           </defs>
 
           {/* Device Frame Body (bezels, camera buttons, window bar) */}

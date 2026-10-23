@@ -1,7 +1,8 @@
-import React from 'react';
-import { Upload, Sparkles, X, ArrowLeftRight, Shield } from 'lucide-react';
+import React, { useState } from 'react';
+import { Upload, Sparkles, X, ArrowLeftRight, Shield, Crop } from 'lucide-react';
 import { normalizeImageSrc } from '../DeviceMockup';
 import { VARIANTS, DEVICE_FINISHES } from './inspectorConstants';
+import { autoTrimImage } from '../../utils/imageTrim';
 
 export default function MockupTab({
   slide,
@@ -70,27 +71,62 @@ export default function MockupTab({
         </div>
 
         {slide.imageSrc ? (
-          <div className="relative rounded-xl overflow-hidden border border-white/10 group bg-black/40">
-            <img
-              src={normalizeImageSrc(slide.imageSrc)}
-              alt="Uploaded"
-              className="w-full h-28 object-contain bg-black/60 p-2"
-            />
-            <div className="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-              <label className="px-3 py-1 rounded-lg bg-indigo-600 text-white text-xs font-semibold cursor-pointer">
-                Replace
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => handleFileUpload(e, 'imageSrc')}
-                />
-              </label>
+          <div className="space-y-2">
+            <div className="relative rounded-xl overflow-hidden border border-white/10 group bg-black/40">
+              <img
+                src={normalizeImageSrc(slide.imageSrc)}
+                alt="Uploaded"
+                className="w-full h-28 object-contain bg-black/60 p-2"
+              />
+              <div className="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const trimmed = await autoTrimImage(slide.imageSrc);
+                    if (trimmed && trimmed !== slide.imageSrc) {
+                      onUpdateSlide({ imageSrc: trimmed });
+                    }
+                  }}
+                  className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-semibold cursor-pointer flex items-center gap-1 shadow"
+                  title="Auto-crop transparent padding around screenshot"
+                >
+                  <Crop className="w-3 h-3" />
+                  <span>Trim Margins</span>
+                </button>
+                <label className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold cursor-pointer">
+                  Replace
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => handleFileUpload(e, 'imageSrc')}
+                  />
+                </label>
+                <button
+                  onClick={() => onUpdateSlide({ imageSrc: null })}
+                  className="p-1.5 rounded-lg bg-rose-500/80 text-white hover:bg-rose-600 cursor-pointer"
+                  title="Remove Screenshot"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+            {/* Quick Trim button always visible below thumbnail */}
+            <div className="flex items-center justify-between text-[11px] px-1 text-slate-400">
+              <span className="text-[10px]">Transparent margins?</span>
               <button
-                onClick={() => onUpdateSlide({ imageSrc: null })}
-                className="p-1.5 rounded-lg bg-rose-500/80 text-white hover:bg-rose-600 cursor-pointer"
+                type="button"
+                onClick={async () => {
+                  const trimmed = await autoTrimImage(slide.imageSrc);
+                  if (trimmed && trimmed !== slide.imageSrc) {
+                    onUpdateSlide({ imageSrc: trimmed });
+                  }
+                }}
+                className="text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1 cursor-pointer bg-emerald-500/10 hover:bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/20"
+                title="Automatically crop transparent empty borders around screenshot"
               >
-                <X className="w-3.5 h-3.5" />
+                <Crop className="w-3 h-3" />
+                <span>Trim Transparent Padding</span>
               </button>
             </div>
           </div>
@@ -252,39 +288,117 @@ export default function MockupTab({
       {/* Device Body Finish & Metallic Realism */}
       <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold text-white block">
-            Device Body Finish
-          </span>
-          <span className="text-[10px] text-slate-400 font-mono">
-            Titanium & Aluminum
-          </span>
-        </div>
-
-        {/* 10 Realistic Metallic Finishes */}
-        <div className="grid grid-cols-2 gap-1.5">
-          {DEVICE_FINISHES.map((fin) => {
-            const isSelected = (slide.deviceFinish || 'natural_titanium') === fin.id;
-            return (
-              <button
-                key={fin.id}
-                onClick={() => onUpdateSlide({ deviceFinish: fin.id })}
-                className={`flex items-center gap-2 p-1.5 rounded-lg border text-left transition-all cursor-pointer ${
-                  isSelected
-                    ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-sm ring-1 ring-indigo-500/50'
-                    : 'bg-white/[0.02] border-white/[0.06] text-slate-300 hover:bg-white/[0.05] hover:border-white/10'
+          <div>
+            <span className="text-xs font-semibold text-white block">
+              Device Body Finish
+            </span>
+            <span className="text-[10px] text-slate-400">
+              {slide.hasFrame
+                ? 'In-built Image Frame Active'
+                : slide.deviceFinish === 'none'
+                ? 'Disabled (Original Stock)'
+                : 'Titanium & Aluminum'}
+            </span>
+          </div>
+          {!slide.hasFrame && (
+            <div className="flex items-center gap-2">
+              <span
+                className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
+                  slide.deviceFinish === 'none'
+                    ? 'bg-rose-500/15 text-rose-400 border border-rose-500/30'
+                    : 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
                 }`}
               >
+                {slide.deviceFinish === 'none' ? 'OFF' : 'ON'}
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  if (slide.deviceFinish === 'none') {
+                    onUpdateSlide({ deviceFinish: 'natural_titanium' });
+                  } else {
+                    onUpdateSlide({ deviceFinish: 'none' });
+                  }
+                }}
+                className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  slide.deviceFinish === 'none' ? 'bg-slate-700' : 'bg-indigo-600'
+                }`}
+                title="Toggle Device Body Finish ON/OFF"
+              >
                 <span
-                  className="w-4 h-4 rounded-full flex-shrink-0 shadow-inner border border-white/20"
-                  style={{ background: fin.gradient }}
+                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                    slide.deviceFinish === 'none' ? 'translate-x-0' : 'translate-x-4'
+                  }`}
                 />
-                <span className="text-[11px] font-semibold truncate leading-none">
-                  {fin.name}
-                </span>
               </button>
-            );
-          })}
+            </div>
+          )}
         </div>
+
+        {/* When image has its own frame, finish swatches don't apply */}
+        {slide.hasFrame ? (
+          <div className="p-2.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-[11px] text-slate-300 flex items-start gap-2">
+            <span className="text-sm">ℹ️</span>
+            <div>
+              <p className="font-semibold text-white text-[11px]">Image Already Has a Phone Frame</p>
+              <p className="text-[10px] text-slate-400 mt-0.5 leading-relaxed">
+                The frame on your screen is part of your uploaded screenshot file. Studio finishes (Titanium/None) apply to studio hardware frames when "Image Has Frame?" is unchecked.
+              </p>
+            </div>
+          </div>
+        ) : (
+          /* Realistic Metallic Finishes + None Option */
+          <div className="grid grid-cols-2 gap-1.5">
+            {/* Dedicated "None / Stock" button */}
+            <button
+              type="button"
+              onClick={() => onUpdateSlide({ deviceFinish: 'none' })}
+              className={`flex items-center gap-2 p-1.5 rounded-lg border text-left transition-all cursor-pointer col-span-2 ${
+                slide.deviceFinish === 'none'
+                  ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-sm ring-1 ring-indigo-500/50'
+                  : 'bg-white/[0.02] border-white/[0.06] text-slate-400 hover:text-slate-200 hover:bg-white/[0.05]'
+              }`}
+            >
+              <span className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center border border-dashed border-white/40 text-[10px] font-mono text-slate-400 bg-white/[0.05]">
+                ∅
+              </span>
+              <div className="flex-1 min-w-0 flex items-center justify-between">
+                <span className="text-[11px] font-semibold truncate leading-none">
+                  None (Original Stock Frame)
+                </span>
+                {slide.deviceFinish === 'none' && (
+                  <span className="text-[9px] font-mono uppercase bg-indigo-500/30 text-indigo-300 px-1 py-0.5 rounded">
+                    Active
+                  </span>
+                )}
+              </div>
+            </button>
+
+            {DEVICE_FINISHES.map((fin) => {
+              const isSelected = slide.deviceFinish !== 'none' && (slide.deviceFinish || 'natural_titanium') === fin.id;
+              return (
+                <button
+                  key={fin.id}
+                  type="button"
+                  onClick={() => onUpdateSlide({ deviceFinish: fin.id })}
+                  className={`flex items-center gap-2 p-1.5 rounded-lg border text-left transition-all cursor-pointer ${
+                    isSelected
+                      ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-sm ring-1 ring-indigo-500/50'
+                      : 'bg-white/[0.02] border-white/[0.06] text-slate-300 hover:bg-white/[0.05] hover:border-white/10'
+                  }`}
+                >
+                  <span
+                    className="w-4 h-4 rounded-full flex-shrink-0 shadow-inner border border-white/20"
+                    style={{ background: fin.gradient }}
+                  />
+                  <span className="text-[11px] font-semibold truncate leading-none">
+                    {fin.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* Specular Rim Gleam & Screen Corner Radius */}
         <div className="pt-2 border-t border-white/[0.06] space-y-2.5">
@@ -451,10 +565,13 @@ export default function MockupTab({
         )}
 
         <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
-          <span className="text-xs text-slate-300">Screen Gloss Streak</span>
+          <div>
+            <span className="text-xs text-slate-300 block">Screen Glass Streak (Reflection)</span>
+            <span className="text-[10px] text-slate-500">Diagonal realistic glass sheen & glare</span>
+          </div>
           <input
             type="checkbox"
-            checked={screenReflection}
+            checked={screenReflection !== false}
             onChange={(e) => onChangeScreenReflection(e.target.checked)}
             className="w-4 h-4 rounded text-indigo-600 bg-slate-900 border-white/20 cursor-pointer"
           />
