@@ -32,12 +32,13 @@ export const BG_VARIANTS = [
   { id: 'aurora', label: 'Aurora Mesh', desc: 'Soft ambient glow' },
   { id: 'spotlight', label: 'Spotlight Cone', desc: 'Aceternity diagonal ray' },
   { id: 'radial', label: 'Studio Radial', desc: 'Apple center backlight' },
-  { id: 'grid', label: 'Cyber Grid', desc: 'Developer tech matrix' },
+  { id: 'grid', label: 'Cyber Matrix', desc: 'Developer tech glow' },
   { id: 'linear', label: 'Linear Gradient', desc: 'Smooth directional wash' },
   { id: 'mesh_sunset', label: 'Sunset Glow', desc: 'Warm dual-tone ambience' },
   { id: 'cyber_rings', label: 'Concentric Rings', desc: 'Radar target circles' },
   { id: 'deep_void', label: 'Studio Vignette', desc: 'Deep minimal dropoff' },
   { id: 'split_horizon', label: 'Horizon Ray', desc: 'Cinematic horizontal beam' },
+  { id: 'none', label: 'Pure Solid', desc: 'Clean base (no glow wash)' },
 ];
 
 export const COLOR_PRESETS = [

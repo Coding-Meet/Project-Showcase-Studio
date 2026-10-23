@@ -29,11 +29,12 @@ Open [http://localhost:5173](http://localhost:5173) in Google Chrome or any mode
 ## 📖 Step-by-Step Guide: How to Use the Studio
 
 ### Step 1: Select Your Project
-- In the top header bar, click the **Project Dropdown** to select one of the **30 pre-loaded projects** (sourced dynamically from `src/data/decks/<project_id>.json`) or create custom slide decks.
+- In the top header bar, click the **Project Dropdown** to access the custom **Searchable Glassmorphic Project Selector**.
+- Features clean, capitalized titles (e.g., *Electric Vehicle, Gemini AI Multiplatform, DevAnalyzer*), instant live search across 30+ project decks, project accent color dots, active checkmarks, and sleek dark backdrop-blur styling.
 - Titles, taglines, technologies, platforms, primary/secondary brand colors, and feature bullets are automatically populated.
 
-### Step 2: Choose Your Canvas Dimension Preset
-In the top bar, pick the ideal resolution for your target platform:
+### Step 2: Choose Your Canvas Dimension Preset & View Controls
+In the top bar, pick the ideal resolution for your target platform (compact single-line toolbar with no horizontal scrollbar):
 - 🌐 **Personal Website HD:** `1920 × 1080` (16:9 Full HD)
 - 🌐 **Personal Website 720p:** `1280 × 720` (16:9 Standard)
 - 🟢 **Fiverr Recommended:** `1280 × 769` (Official Fiverr Gig Gallery Ratio)
@@ -98,7 +99,17 @@ Click the **Canvas** tab in the Inspector:
 - **Background Lighting:** Select from 9 lighting variants (*Aurora Mesh, Spotlight Cone, Studio Radial, Cyber Grid, Linear Gradient, Sunset Glow, Concentric Rings, Studio Vignette, Horizon Ray*).
 - **Lighting Alignment:** Choose directional focus (*Behind Device Auto, Top-Left, Top-Center, Top-Right, Center-Left, Center, Center-Right, Bottom-Left, Bottom-Center, Bottom-Right*).
 - **18 Curated Color Themes:** 1-click themes including *Indigo Aura, Emerald Mint, Neon Violet, Sunset Amber, Pure Obsidian, Cyberpunk Rose, Neon Lime, Sapphire Deep, Luxury Gold*, etc.
-- **Custom Texture & Background:** Upload custom wallpaper or enable Dots / Grid texture overlays.
+- **Custom Texture Suite (9 Modern Patterns):** Choose from 9 high-tech vector patterns:
+  1. **Dot Matrix (`dots`):** Mathematically calibrated, crisp circular dots that stay sharp at any viewport scale.
+  2. **Blueprint Grid (`grid`):** Engineering blueprint lines (`40px × 40px`).
+  3. **Crosshairs (`plus`):** Modern Vercel/Linear-style tech `+` markers at grid intersections.
+  4. **Isometric 3D (`isometric`):** Hexagonal isometric cube lattice for high-tech architectural depth.
+  5. **Carbon Mesh (`diagonal`):** 45-degree technical diagonal mesh hatching.
+  6. **Honeycomb (`honeycomb`):** Hexagonal sci-fi grid matrix.
+  7. **Topography (`topography`):** Organic elevation contour curves (Stripe/Apple style).
+  8. **Film Grain (`noise`):** Procedural SVG grain overlay for rich analog texture depth.
+  9. **None (`none`):** Pure clean gradient backdrop.
+- **Texture Intensity / Opacity Slider:** Real-time slider (5% to 60%) with live percentage feedback (`%`) to dial in the exact texture prominence.
 - **Canvas Radius:** Adjust corner roundness (0px to 48px).
 - **Center Alignment Guides:** Toggle glowing vertical and horizontal center lines to visually check alignment.
 - **Live Canvas Specs Card:** Displays real-time output dimensions (e.g. `2560 × 1538 px` at 2x Retina), active format (`PNG/WebP/JPG`), and live estimated file size.
@@ -223,7 +234,8 @@ Click the **Canvas** tab in the Inspector:
 | `accentColor` | Color Picker / Hex | `#6366f1` | Any Hex Color | Primary glowing light / ambient spotlight color |
 | `glowIntensity` | Slider | `0.35` | `0.05` - `1.0` (5% - 100%) | Brightness and spread multiplier of lighting glow |
 | `customBgImage` | File Upload | `null` | Image URL / Base64 | Custom uploaded background wallpaper or texture |
-| `textureOverlay` | Buttons | `dots` | `dots`, `grid`, `none` | Subtle texture grid or dot matrix overlay on canvas |
+| `textureOverlay` | 9 Buttons | `dots` | `dots`, `grid`, `plus`, `isometric`, `diagonal`, `honeycomb`, `topography`, `noise`, `none` | High-tech vector pattern overlay on canvas |
+| `textureOpacity` | Slider | `0.20` (20%) | `0.05` - `0.60` (5% - 60%) | Visual intensity and opacity multiplier of the active texture pattern |
 | `canvasRadius` | Slider | `28px` | `0px` - `48px` | Corner roundness of the exported canvas |
 | `exportScale` | Dropdown + 4 Pills | `2` (4K) | `1` (1080p), `2` (4K Retina), `3` (6K Ultra), `4` (8K Master) | **Export Resolution Multiplier**: Upscale factor for exported slides and ZIP decks |
 | `exportQuality` | Slider | `1.0` (100%) | `0.7` (70%) to `1.0` (100% Lossless) | Compression quality for JPG and WebP export formats |
@@ -310,11 +322,21 @@ Project Showcase Studio uses a clean, 100% modular architecture where **each pro
   ```
   Scans all mockup screenshots in `projects_images/images/<project_id>/`, filters noise and device bezels, calculates the dominant `primaryColor` and `secondaryColor`, and updates `src/data/decks/<project_id>.json` directly.
 
-- **Apple Vision OCR Mockup Recognizer (macOS Native):**
+- **Apple On-Device AI Mockup Analyzer (macOS Native Vision + LanguageModelSession):**
   ```bash
-  swift scripts/ocr_recognize_mockups.swift [optional_directory]
+  # Analyze all images or a specific project folder:
+  swift scripts/ocr_recognize_mockups.swift [optional_directory] [--json]
+
+  # Example:
+  swift scripts/ocr_recognize_mockups.swift projects_images/images/uktika
   ```
-  Uses macOS native Apple Vision Neural Engine (`VNRecognizeTextRequest`) to read text inside phone/desktop screenshots to instantly identify unclassified app mockups without third-party dependencies.
+  Uses macOS native **Apple Vision Framework** (`VNRecognizeTextRequest`) alongside **Apple FoundationModels** (`LanguageModelSession` on Apple Silicon Neural Engine) to automatically analyze screenshots with **zero hardcoded conditions**:
+  - Automatically identifies **`screenType`** (e.g., *AI Chat / Conversation, Quiz & Learning, Admin Panel, Analytics Dashboard*).
+  - Synthesizes a human-like UI **`description`**.
+  - Detects UI **`components`** (*Message Bubbles, Input Fields, Navigation Bar, Card List, CTA Buttons*).
+  - Categorizes **`visualStyle`** (*Light theme minimal, Dark theme sleek, Vibrant gradient*).
+  - Extracts full **`visibleText`** in natural reading order.
+  - Automatically saves structured JSON directly inside each project's folder (`<project_folder>/mockups_metadata.json`).
 
 ---
 

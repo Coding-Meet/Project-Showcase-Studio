@@ -23,9 +23,13 @@ const bundledProjectStore = {};
 for (const [filePath, mod] of Object.entries(deckFiles)) {
   const data = mod.default || mod;
   const pid = data.id || filePath.split('/').pop().replace('.json', '');
+  const fallbackTitle = pid
+    .split('_')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
   parsedProjects.push({
     id: pid,
-    title: data.title || pid,
+    title: data.title || data.slides?.[0]?.title || fallbackTitle,
     shortDescription: data.shortDescription || (data.slides?.[0]?.tagline) || '',
     features: data.features || (data.slides?.[1]?.featureList) || [],
     technologies: data.technologies || (data.slides?.[0]?.technologies) || [],
@@ -149,6 +153,7 @@ export default function App() {
   const [bgAlignment, setBgAlignment] = useState(initialData.bgAlignment || GLOBAL_CANVAS_DEFAULTS.bgAlignment);
   const [customBgImage, setCustomBgImage] = useState(initialData.customBgImage || GLOBAL_CANVAS_DEFAULTS.customBgImage);
   const [textureOverlay, setTextureOverlay] = useState(initialData.textureOverlay || GLOBAL_CANVAS_DEFAULTS.textureOverlay);
+  const [textureOpacity, setTextureOpacity] = useState(initialData.textureOpacity ?? GLOBAL_CANVAS_DEFAULTS.textureOpacity);
   const [canvasRadius, setCanvasRadius] = useState(initialData.canvasRadius || GLOBAL_CANVAS_DEFAULTS.canvasRadius);
 
   // Export Progress & Toast State
@@ -175,6 +180,7 @@ export default function App() {
       if (saved.bgAlignment) setBgAlignment(saved.bgAlignment);
       if (saved.customBgImage !== undefined) setCustomBgImage(saved.customBgImage);
       if (saved.textureOverlay) setTextureOverlay(saved.textureOverlay);
+      if (saved.textureOpacity !== undefined) setTextureOpacity(saved.textureOpacity);
       if (saved.canvasRadius !== undefined) setCanvasRadius(saved.canvasRadius);
     } else if (fallbackProject) {
       setSlides(createDefaultSlides(fallbackProject));
@@ -246,6 +252,7 @@ export default function App() {
       bgAlignment,
       customBgImage,
       textureOverlay,
+      textureOpacity,
       canvasRadius,
     };
 
@@ -268,6 +275,7 @@ export default function App() {
     bgAlignment,
     customBgImage,
     textureOverlay,
+    textureOpacity,
     canvasRadius,
   ]);
 
@@ -402,6 +410,7 @@ export default function App() {
         bgAlignment,
         customBgImage,
         textureOverlay,
+        textureOpacity,
         canvasRadius,
         slides,
       };
@@ -508,6 +517,7 @@ export default function App() {
             bgAlignment={bgAlignment}
             customBgImage={customBgImage}
             textureOverlay={textureOverlay}
+            textureOpacity={textureOpacity}
             canvasRadius={canvasRadius}
             isThumbnailPreview={isThumbnailPreview}
             showCenterGuides={showCenterGuides && !isExporting}
@@ -543,6 +553,8 @@ export default function App() {
           onChangeCustomBgImage={setCustomBgImage}
           textureOverlay={textureOverlay}
           onChangeTextureOverlay={setTextureOverlay}
+          textureOpacity={textureOpacity}
+          onChangeTextureOpacity={setTextureOpacity}
           canvasRadius={canvasRadius}
           onChangeCanvasRadius={setCanvasRadius}
           exportScale={exportScale}

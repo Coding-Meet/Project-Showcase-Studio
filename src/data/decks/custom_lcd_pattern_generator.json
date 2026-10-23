@@ -59,7 +59,8 @@
       "badgeSize": 12,
       "featureSize": 12,
       "techChipSize": 12,
-      "iconSize": 14
+      "iconSize": 14,
+      "layoutSplit": 48
     },
     {
       "id": "slide-2",
@@ -186,15 +187,14 @@
       "iconSize": 14
     }
   ],
-  "primaryColor": "#059669",
-  "secondaryColor": "#14b8a6",
-  "backgroundColor": "#080a12",
-  "accentColor": "#059669",
-  "glowIntensity": 0.38,
-  "backgroundVariant": "aurora",
-  "bgAlignment": "behind_device",
-  "canvasRadius": 28,
-  "presetKey": "personal_website_hd",
+  "presetKey": "WEBSITE_HD",
   "exportFormat": "png",
-  "textureOverlay": "dots"
+  "backgroundColor": "#040d06",
+  "accentColor": "#22c55e",
+  "glowIntensity": 0.38,
+  "backgroundVariant": "deep_void",
+  "bgAlignment": "bottom_center",
+  "customBgImage": null,
+  "textureOverlay": "dots",
+  "canvasRadius": 20
 }

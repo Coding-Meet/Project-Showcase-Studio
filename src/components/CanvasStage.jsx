@@ -62,7 +62,7 @@ const CanvasStage = forwardRef(function CanvasStage(
     bgAlignment = 'behind_device', // 'behind_device' | 'center' | 'top_right' | 'top_left'
     customBgImage = null,
     textureOverlay = 'dots',
-    textureOpacity = 0.04,
+    textureOpacity = 0.20,
     canvasRadius = 28,
     isThumbnailPreview = false,
     showCenterGuides = false,
@@ -458,8 +458,8 @@ const CanvasStage = forwardRef(function CanvasStage(
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                backgroundImage: `radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0)`,
-                backgroundSize: '32px 32px',
+                backgroundImage: `radial-gradient(circle, rgba(255, 255, 255, 0.75) 1.5px, transparent 1.5px)`,
+                backgroundSize: '24px 24px',
                 opacity: textureOpacity,
               }}
             />
@@ -468,9 +468,67 @@ const CanvasStage = forwardRef(function CanvasStage(
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                backgroundImage: `linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)`,
+                backgroundImage: `linear-gradient(to right, rgba(255, 255, 255, 0.6) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.6) 1px, transparent 1px)`,
                 backgroundSize: '40px 40px',
                 opacity: textureOpacity,
+              }}
+            />
+          )}
+          {textureOverlay === 'plus' && (
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='36' height='36' viewBox='0 0 36 36' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18 12V24M12 18H24' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-opacity='0.75'/%3E%3C/svg%3E")`,
+                backgroundSize: '36px 36px',
+                opacity: textureOpacity,
+              }}
+            />
+          )}
+          {textureOverlay === 'isometric' && (
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='69.282' viewBox='0 0 40 69.282' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L20 11.547L0 0M40 69.282L20 57.735L0 69.282M20 11.547V57.735M40 23.094L0 46.188M0 23.094L40 46.188' stroke='white' stroke-width='1' stroke-opacity='0.6'/%3E%3C/svg%3E")`,
+                backgroundSize: '40px 69.282px',
+                opacity: textureOpacity,
+              }}
+            />
+          )}
+          {textureOverlay === 'diagonal' && (
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                backgroundImage: `repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.45) 0, rgba(255, 255, 255, 0.45) 1px, transparent 0, transparent 16px)`,
+                opacity: textureOpacity,
+              }}
+            />
+          )}
+          {textureOverlay === 'honeycomb' && (
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='56' height='100' viewBox='0 0 56 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66ZM28 100L0 84L0 66L28 82L56 66L56 84L28 100Z' stroke='white' stroke-width='1.2' stroke-opacity='0.6'/%3E%3C/svg%3E")`,
+                backgroundSize: '56px 100px',
+                opacity: textureOpacity,
+              }}
+            />
+          )}
+          {textureOverlay === 'topography' && (
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cellipse cx='60' cy='60' rx='52' ry='32' stroke='white' stroke-width='1.2' stroke-opacity='0.5'/%3E%3Cellipse cx='60' cy='60' rx='40' ry='24' stroke='white' stroke-width='1.2' stroke-opacity='0.5'/%3E%3Cellipse cx='60' cy='60' rx='26' ry='16' stroke='white' stroke-width='1.2' stroke-opacity='0.5'/%3E%3Cellipse cx='60' cy='60' rx='12' ry='8' stroke='white' stroke-width='1.2' stroke-opacity='0.5'/%3E%3C/svg%3E")`,
+                backgroundSize: '120px 120px',
+                opacity: textureOpacity,
+              }}
+            />
+          )}
+          {textureOverlay === 'noise' && (
+            <div
+              className="absolute inset-0 pointer-events-none mix-blend-overlay"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.75'/%3E%3C/svg%3E")`,
+                opacity: textureOpacity * 1.5,
               }}
             />
           )}

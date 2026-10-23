@@ -13,6 +13,7 @@ export const GLOBAL_CANVAS_DEFAULTS = {
   bgAlignment: 'behind_device',
   customBgImage: null,
   textureOverlay: 'dots',
+  textureOpacity: 0.20,
   canvasRadius: 28,
 };
 

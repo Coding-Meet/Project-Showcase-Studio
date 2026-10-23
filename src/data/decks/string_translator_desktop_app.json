@@ -58,7 +58,8 @@
       "badgeSize": 12,
       "featureSize": 12,
       "techChipSize": 12,
-      "iconSize": 14
+      "iconSize": 14,
+      "layoutSplit": 35
     },
     {
       "id": "slide-2",

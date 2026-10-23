@@ -186,7 +186,7 @@
       "iconSize": 14
     }
   ],
-  "presetKey": "personal_website_hd",
+  "presetKey": "UPWORK",
   "exportFormat": "jpg",
   "backgroundColor": "#080a12",
   "accentColor": "#3ddc84",
@@ -194,6 +194,7 @@
   "backgroundVariant": "aurora",
   "bgAlignment": "behind_device",
   "customBgImage": null,
-  "textureOverlay": "dots",
-  "canvasRadius": 36
+  "textureOverlay": "none",
+  "textureOpacity": 0.15,
+  "canvasRadius": 20
 }

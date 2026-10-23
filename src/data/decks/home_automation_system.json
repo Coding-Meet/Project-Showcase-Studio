@@ -6,7 +6,7 @@
       "title": "Home Automation System",
       "tagline": "Arduino-based real-time home automation system for remote control of appliances via a mobile app.",
       "titleColor": "#ffffff",
-      "titleGradient": "custom",
+      "titleGradient": "metallic",
       "titleGradientFrom": "#ffffff",
       "titleGradientTo": "#face3d",
       "titleGradientAngle": 90,
@@ -61,7 +61,8 @@
       "badgeSize": 12,
       "featureSize": 12,
       "techChipSize": 12,
-      "iconSize": 14
+      "iconSize": 14,
+      "layoutSplit": 55
     },
     {
       "id": "slide-2",
@@ -192,15 +193,14 @@
       "iconSize": 14
     }
   ],
-  "primaryColor": "#face3d",
-  "secondaryColor": "#fa5e52",
+  "presetKey": "personal_website_hd",
+  "exportFormat": "png",
   "backgroundColor": "#080a12",
   "accentColor": "#face3d",
   "glowIntensity": 0.38,
   "backgroundVariant": "aurora",
   "bgAlignment": "behind_device",
-  "canvasRadius": 28,
-  "presetKey": "personal_website_hd",
-  "exportFormat": "png",
-  "textureOverlay": "dots"
+  "customBgImage": null,
+  "textureOverlay": "dots",
+  "canvasRadius": 28
 }
