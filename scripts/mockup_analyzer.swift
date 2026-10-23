@@ -18,17 +18,20 @@ import FoundationModels
  *   6. Auto-Renamer: Clean snake_case filenames for mockups based on AI reasoning (--rename / --preview-rename).
  *
  * Usage:
- *   # Full AI analysis, color extraction & deck update:
+ *   # Safe read-only inspection (AI analysis + color extraction to console & mockups_metadata.json):
  *   swift scripts/mockup_analyzer.swift [optional_dir_path]
  *
- *   # Fast color extraction & deck sync only (skips AI LLM reasoning):
+ *   # Fast color extraction only (does NOT modify deck files):
  *   swift scripts/mockup_analyzer.swift --colors-only
  *
- *   # Preview what filenames will be renamed to (Dry-Run):
+ *   # Preview what filenames will be renamed to (Dry-Run, does NOT modify files):
  *   swift scripts/mockup_analyzer.swift [optional_dir_path] --preview-rename
  *
- *   # Auto-rename files safely on disk based on AI recognition:
+ *   # Auto-rename images on disk based on AI recognition:
  *   swift scripts/mockup_analyzer.swift [optional_dir_path] --rename
+ *
+ *   # OPTIONAL: Explicitly update src/data/decks/<project>.json colors/metadata:
+ *   swift scripts/mockup_analyzer.swift [optional_dir_path] --sync-deck
  */
 
 // MARK: - Data Models
@@ -413,6 +416,7 @@ var outputJson = false
 var shouldRename = false
 var isPreviewRename = false
 var colorsOnly = false
+var syncDeck = false
 var customPath: String? = nil
 
 for arg in CommandLine.arguments.dropFirst() {
@@ -424,6 +428,8 @@ for arg in CommandLine.arguments.dropFirst() {
         isPreviewRename = true
     } else if arg == "--colors-only" {
         colorsOnly = true
+    } else if arg == "--sync-deck" || arg == "--update-deck" {
+        syncDeck = true
     } else if !arg.hasPrefix("-") {
         customPath = arg
     }
@@ -578,16 +584,18 @@ func processDirectory(dir: String) async {
 
         print("  🎨 Extracted Colors:   Primary \(primaryHex)  |  Secondary \(secondaryHex) (CoreGraphics)")
 
-        // 4. Update deck file directly if deck exists
-        let deckUpdated = updateDeckFile(
-            decksDir: decksDirectory,
-            projectId: projectId,
-            primaryHex: primaryHex,
-            secondaryHex: secondaryHex,
-            ocrResults: folderResults.isEmpty ? nil : folderResults
-        )
-        if deckUpdated {
-            print("  ✨ Deck Synchronized:  src/data/decks/\(projectId).json ✅")
+        // 4. Update deck file directly ONLY if explicitly requested via --sync-deck
+        if syncDeck {
+            let deckUpdated = updateDeckFile(
+                decksDir: decksDirectory,
+                projectId: projectId,
+                primaryHex: primaryHex,
+                secondaryHex: secondaryHex,
+                ocrResults: folderResults.isEmpty ? nil : folderResults
+            )
+            if deckUpdated {
+                print("  ✨ Deck Synchronized:  src/data/decks/\(projectId).json ✅")
+            }
         }
 
         // 5. Save structured JSON inside folder
@@ -609,8 +617,8 @@ func processDirectory(dir: String) async {
 
 await processDirectory(dir: targetPath)
 
-// MARK: - Synchronize Any Remaining Decks Without Mockups via Algorithmic Palette
-if customPath == nil {
+// MARK: - Synchronize Any Remaining Decks Without Mockups via Algorithmic Palette (ONLY if --sync-deck)
+if customPath == nil && syncDeck {
     print("\n" + "=" .padding(toLength: 88, withPad: "=", startingAt: 0))
     print("🎨 Synchronizing Remaining Project Decks (Zero Hardcoding / Golden Ratio HSL)...")
     print("-" .padding(toLength: 88, withPad: "-", startingAt: 0))

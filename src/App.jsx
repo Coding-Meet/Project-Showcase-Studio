@@ -241,40 +241,15 @@ export default function App() {
     return () => window.removeEventListener('focus', onWindowFocus);
   }, [selectedProjectId, activeProject]);
 
-  // Debounced auto-save to backend disk storage: ONLY when user has modified in browser
+  // When user modifies controls in browser, mark disk status as unsaved (disk save is intentional via Save button)
   useEffect(() => {
     if (isFirstSync.current) {
       isFirstSync.current = false;
       return;
     }
-
-    if (!userHasModified.current) {
-      // Do NOT overwrite external file edits if user didn't make edits in the browser!
-      return;
+    if (userHasModified.current) {
+      setIsDiskSaved(false);
     }
-
-    setIsDiskSaved(false);
-    const timer = setTimeout(async () => {
-      try {
-        const currentProjectSnapshot = projectStore[selectedProjectId];
-        if (!currentProjectSnapshot) return;
-
-        // Save ONLY the active project to its own file in src/data/decks/<projectId>.json
-        const res = await fetch(`http://localhost:3001/api/project-store/${selectedProjectId}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(currentProjectSnapshot),
-        });
-        if (res.ok) {
-          setIsDiskSaved(true);
-          userHasModified.current = false;
-        }
-      } catch (e) {
-        // network or server offline
-      }
-    }, 1200);
-
-    return () => clearTimeout(timer);
   }, [projectStore, selectedProjectId]);
 
   // Auto-sync active state to per-project cache (localStorage + reactive state)
