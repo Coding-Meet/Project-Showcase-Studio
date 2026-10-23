@@ -29,6 +29,7 @@ export default function HeroCoverSlide({
   eyebrowText,
   statusBadge,
   deviceScale,
+  rotation = 0,
   tilt,
   tiltAngle,
   pitchAngle,
@@ -220,6 +221,7 @@ export default function HeroCoverSlide({
           deviceFinish={slideData.deviceFinish || 'natural_titanium'}
           frameGleam={slideData.frameGleam !== false}
           deviceCornerRadius={slideData.deviceCornerRadius}
+          rotation={slideData.rotation !== undefined ? slideData.rotation : rotation}
           tilt={tilt}
           tiltAngle={tiltAngle}
           pitchAngle={pitchAngle}

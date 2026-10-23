@@ -62,6 +62,7 @@ export const COMMON_SLIDE_DEFAULTS = {
   deviceAutoFit: true,
   offsetX: 0,
   offsetY: 0,
+  rotation: 0,
 };
 
 export const VARIANT_SPECIFIC_DEFAULTS = {
@@ -69,6 +70,7 @@ export const VARIANT_SPECIFIC_DEFAULTS = {
     titleSize: 52,
     subtitleSize: 18,
     deviceScale: 1,
+    rotation: 0,
     tilt: true,
     tiltAngle: -8,
     pitchAngle: 4,
@@ -77,6 +79,7 @@ export const VARIANT_SPECIFIC_DEFAULTS = {
     titleSize: 36,
     subtitleSize: 15,
     deviceScale: 1,
+    rotation: 0,
     tilt: false,
     tiltAngle: 0,
     pitchAngle: 0,
@@ -85,6 +88,8 @@ export const VARIANT_SPECIFIC_DEFAULTS = {
     titleSize: 36,
     subtitleSize: 15,
     deviceScale: 0.9,
+    rotation: -3,
+    secondaryRotation: 3,
     tilt: false,
     tiltAngle: 0,
     pitchAngle: 0,

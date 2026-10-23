@@ -20,6 +20,7 @@ export default function DesktopDashboardSlide({
   badgeColor,
   featureColor,
   deviceScale,
+  rotation = 0,
   tilt,
   tiltAngle,
   pitchAngle,
@@ -96,6 +97,7 @@ export default function DesktopDashboardSlide({
           deviceFinish={slideData.deviceFinish || 'silver_aluminum'}
           frameGleam={slideData.frameGleam !== false}
           deviceCornerRadius={slideData.deviceCornerRadius}
+          rotation={slideData.rotation !== undefined ? slideData.rotation : rotation}
           tilt={tilt}
           tiltAngle={tiltAngle}
           pitchAngle={pitchAngle}

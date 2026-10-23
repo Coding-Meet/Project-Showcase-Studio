@@ -19,6 +19,11 @@ export default function MinimalFocusSlide({
   badgeColor,
   featureColor,
   deviceScale,
+  rotation = 0,
+  tilt,
+  tiltAngle,
+  pitchAngle,
+  perspective,
   shadowStyle,
   shadowIntensity,
   screenReflection,
@@ -88,7 +93,11 @@ export default function MinimalFocusSlide({
           deviceFinish={slideData.deviceFinish || 'natural_titanium'}
           frameGleam={slideData.frameGleam !== false}
           deviceCornerRadius={slideData.deviceCornerRadius}
-          tilt={false}
+          rotation={slideData.rotation !== undefined ? slideData.rotation : rotation}
+          tilt={tilt}
+          tiltAngle={tiltAngle}
+          pitchAngle={pitchAngle}
+          perspective={perspective}
           shadowStyle={shadowStyle}
           shadowIntensity={shadowIntensity}
           screenReflection={screenReflection}

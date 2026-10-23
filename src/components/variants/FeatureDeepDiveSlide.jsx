@@ -26,6 +26,7 @@ export default function FeatureDeepDiveSlide({
   badgeColor,
   featureColor,
   deviceScale,
+  rotation = 0,
   tilt,
   tiltAngle,
   pitchAngle,
@@ -85,6 +86,7 @@ export default function FeatureDeepDiveSlide({
           deviceFinish={slideData.deviceFinish || 'natural_titanium'}
           frameGleam={slideData.frameGleam !== false}
           deviceCornerRadius={slideData.deviceCornerRadius}
+          rotation={slideData.rotation !== undefined ? slideData.rotation : rotation}
           tilt={tilt}
           tiltAngle={tiltAngle}
           pitchAngle={pitchAngle}

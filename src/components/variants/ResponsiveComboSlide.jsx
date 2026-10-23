@@ -23,6 +23,11 @@ export default function ResponsiveComboSlide({
   badgeColor,
   featureColor,
   deviceScale,
+  rotation,
+  tilt,
+  tiltAngle,
+  pitchAngle,
+  perspective,
   shadowStyle,
   shadowIntensity,
   screenReflection,
@@ -36,6 +41,19 @@ export default function ResponsiveComboSlide({
 
   const desktopImage = slideData.imageSrc;
   const mobileImage = slideData.secondaryImageSrc || slideData.imageSrc;
+
+  const rotationDesktop = slideData.rotation !== undefined ? slideData.rotation : (rotation || 0);
+  const rotationMobile = slideData.secondaryRotation !== undefined ? slideData.secondaryRotation : 0;
+
+  const hasTiltDesktop = slideData.tilt !== undefined ? slideData.tilt : (tilt || false);
+  const tiltAngleDesktop = slideData.tiltAngle !== undefined ? slideData.tiltAngle : (tiltAngle !== undefined ? tiltAngle : -8);
+  const pitchAngleDesktop = slideData.pitchAngle !== undefined ? slideData.pitchAngle : (pitchAngle !== undefined ? pitchAngle : 4);
+  const perspectiveDesktop = slideData.perspective || perspective || 1200;
+
+  const hasTiltMobile = slideData.secondaryTilt !== undefined ? slideData.secondaryTilt : false;
+  const tiltAngleMobile = slideData.secondaryTiltAngle !== undefined ? slideData.secondaryTiltAngle : 8;
+  const pitchAngleMobile = slideData.secondaryPitchAngle !== undefined ? slideData.secondaryPitchAngle : (pitchAngle !== undefined ? pitchAngle : 4);
+  const perspectiveMobile = slideData.secondaryPerspective || slideData.perspective || perspective || 1200;
 
   const titleStyleObj = resolveTextGradientStyle({
     gradient: titleGradient,
@@ -145,13 +163,18 @@ export default function ResponsiveComboSlide({
             deviceFinish={slideData.deviceFinish || 'natural_titanium'}
             frameGleam={slideData.frameGleam !== false}
             deviceCornerRadius={slideData.deviceCornerRadius}
-            shadowStyle={shadowStyle}
-            shadowIntensity={shadowIntensity}
-            screenReflection={screenReflection}
+            rotation={rotationDesktop}
+            tilt={hasTiltDesktop}
+            tiltAngle={tiltAngleDesktop}
+            pitchAngle={pitchAngleDesktop}
+            perspective={perspectiveDesktop}
+            shadowStyle={slideData.shadowStyle || shadowStyle}
+            shadowIntensity={slideData.shadowIntensity !== undefined ? slideData.shadowIntensity : shadowIntensity}
+            screenReflection={slideData.screenReflection !== undefined ? slideData.screenReflection : screenReflection}
             accentColor={accentColor}
-            scale={deviceScale * deviceFitScale * 0.88}
-            offsetX={offsetX * effectiveRatio}
-            offsetY={offsetY * effectiveRatio}
+            scale={(slideData.deviceScale !== undefined ? slideData.deviceScale : deviceScale) * deviceFitScale * 0.88}
+            offsetX={(slideData.offsetX !== undefined ? slideData.offsetX : offsetX) * effectiveRatio}
+            offsetY={(slideData.offsetY !== undefined ? slideData.offsetY : offsetY) * effectiveRatio}
           />
         </div>
 
@@ -159,17 +182,22 @@ export default function ResponsiveComboSlide({
           <DeviceMockup
             imageSrc={mobileImage}
             hasFrame={slideData.secondaryHasFrame ?? slideData.hasFrame}
-            deviceType={slideData.deviceType || 'android'}
-            deviceFinish={slideData.deviceFinish || 'natural_titanium'}
-            frameGleam={slideData.frameGleam !== false}
-            deviceCornerRadius={slideData.deviceCornerRadius}
-            shadowStyle={shadowStyle}
-            shadowIntensity={shadowIntensity}
-            screenReflection={screenReflection}
+            deviceType={slideData.secondaryDeviceType || slideData.deviceType || 'google-pixel-9'}
+            deviceFinish={slideData.secondaryDeviceFinish || slideData.deviceFinish || 'natural_titanium'}
+            frameGleam={slideData.secondaryFrameGleam !== undefined ? slideData.secondaryFrameGleam : (slideData.frameGleam !== false)}
+            deviceCornerRadius={slideData.secondaryDeviceCornerRadius ?? slideData.deviceCornerRadius}
+            rotation={rotationMobile}
+            tilt={hasTiltMobile}
+            tiltAngle={tiltAngleMobile}
+            pitchAngle={pitchAngleMobile}
+            perspective={perspectiveMobile}
+            shadowStyle={slideData.secondaryShadowStyle || slideData.shadowStyle || shadowStyle}
+            shadowIntensity={slideData.secondaryShadowIntensity !== undefined ? slideData.secondaryShadowIntensity : (slideData.shadowIntensity !== undefined ? slideData.shadowIntensity : shadowIntensity)}
+            screenReflection={slideData.secondaryScreenReflection !== undefined ? slideData.secondaryScreenReflection : (slideData.screenReflection !== undefined ? slideData.screenReflection : screenReflection)}
             accentColor={accentColor}
-            scale={deviceScale * deviceFitScale * 0.7}
-            offsetX={offsetX * effectiveRatio}
-            offsetY={offsetY * effectiveRatio}
+            scale={(slideData.secondaryDeviceScale !== undefined ? slideData.secondaryDeviceScale : (slideData.deviceScale !== undefined ? slideData.deviceScale : deviceScale)) * deviceFitScale * 0.7}
+            offsetX={(slideData.secondaryOffsetX !== undefined ? slideData.secondaryOffsetX : (slideData.offsetX !== undefined ? slideData.offsetX : offsetX)) * effectiveRatio}
+            offsetY={(slideData.secondaryOffsetY !== undefined ? slideData.secondaryOffsetY : (slideData.offsetY !== undefined ? slideData.offsetY : offsetY)) * effectiveRatio}
           />
         </div>
       </div>

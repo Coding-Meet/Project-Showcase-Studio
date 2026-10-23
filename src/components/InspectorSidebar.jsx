@@ -6,6 +6,7 @@ import {
   Palette,
 } from 'lucide-react';
 import { extractDominantColor } from '../utils/colorExtractor';
+import { autoTrimImage } from '../utils/imageTrim';
 
 import TemplateTab from './inspector/TemplateTab';
 import MockupTab from './inspector/MockupTab';
@@ -59,7 +60,11 @@ export default function InspectorSidebar({
 
     const reader = new FileReader();
     reader.onload = async (event) => {
-      const dataUrl = event.target.result;
+      let dataUrl = event.target.result;
+      try {
+        const trimmed = await autoTrimImage(dataUrl);
+        if (trimmed) dataUrl = trimmed;
+      } catch (err) {}
       onUpdateSlide({ [field]: dataUrl });
 
       try {
@@ -137,6 +142,8 @@ export default function InspectorSidebar({
             onChangeScreenReflection={(val) => onUpdateSlide({ screenReflection: val })}
             deviceScale={slide.deviceScale}
             onChangeDeviceScale={(val) => onUpdateSlide({ deviceScale: val })}
+            rotation={slide.rotation}
+            onChangeRotation={(val) => onUpdateSlide({ rotation: val })}
             offsetX={slide.offsetX}
             onChangeOffsetX={(val) => onUpdateSlide({ offsetX: val })}
             offsetY={slide.offsetY}
