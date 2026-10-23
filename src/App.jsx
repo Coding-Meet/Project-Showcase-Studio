@@ -164,9 +164,11 @@ export default function App() {
 
   const canvasRef = useRef(null);
   const isFirstSync = useRef(true);
+  const userHasModified = useRef(false);
 
   // Helper to apply stored settings to active state
   const applyProjectSnapshot = (saved, fallbackProject) => {
+    userHasModified.current = false;
     if (saved) {
       if (saved.slides) setSlides(saved.slides);
       if (saved.presetKey) setPresetKey(saved.presetKey);
@@ -189,7 +191,13 @@ export default function App() {
     }
   };
 
-  // Initial mount: load permanent store from disk & merge with localStorage
+  // Helper to wrap canvas property setters so they mark user modification
+  const modifyCanvas = (setter) => (val) => {
+    userHasModified.current = true;
+    setter(val);
+  };
+
+  // Initial mount: load permanent store from disk (Disk is the single source of truth)
   useEffect(() => {
     async function loadDiskStore() {
       try {
@@ -197,13 +205,15 @@ export default function App() {
         if (res.ok) {
           const diskStore = await res.json();
           if (diskStore && typeof diskStore === 'object' && Object.keys(diskStore).length > 0) {
-            setProjectStore((localStore) => {
-              const merged = { ...diskStore, ...localStore };
-              try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-              } catch (e) {}
-              return merged;
-            });
+            setProjectStore(diskStore);
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(diskStore));
+            } catch (e) {}
+
+            // Immediately apply the disk file to active project state
+            if (diskStore[selectedProjectId]) {
+              applyProjectSnapshot(diskStore[selectedProjectId], activeProject);
+            }
           }
         }
       } catch (err) {
@@ -213,23 +223,51 @@ export default function App() {
     loadDiskStore();
   }, []);
 
-  // Debounced auto-save to backend disk storage
+  // Auto-reload from disk when returning to the browser window from external editor
+  useEffect(() => {
+    const onWindowFocus = async () => {
+      // Only auto-reload if the user hasn't made unsaved edits inside the browser
+      if (!userHasModified.current) {
+        try {
+          const res = await fetch(`http://localhost:3001/api/project-store/${selectedProjectId}`);
+          if (res.ok) {
+            const diskDeck = await res.json();
+            applyProjectSnapshot(diskDeck, activeProject);
+          }
+        } catch (e) {}
+      }
+    };
+    window.addEventListener('focus', onWindowFocus);
+    return () => window.removeEventListener('focus', onWindowFocus);
+  }, [selectedProjectId, activeProject]);
+
+  // Debounced auto-save to backend disk storage: ONLY when user has modified in browser
   useEffect(() => {
     if (isFirstSync.current) {
       isFirstSync.current = false;
       return;
     }
 
+    if (!userHasModified.current) {
+      // Do NOT overwrite external file edits if user didn't make edits in the browser!
+      return;
+    }
+
     setIsDiskSaved(false);
     const timer = setTimeout(async () => {
       try {
-        const res = await fetch('http://localhost:3001/api/project-store', {
+        const currentProjectSnapshot = projectStore[selectedProjectId];
+        if (!currentProjectSnapshot) return;
+
+        // Save ONLY the active project to its own file in src/data/decks/<projectId>.json
+        const res = await fetch(`http://localhost:3001/api/project-store/${selectedProjectId}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ projectStore }),
+          body: JSON.stringify(currentProjectSnapshot),
         });
         if (res.ok) {
           setIsDiskSaved(true);
+          userHasModified.current = false;
         }
       } catch (e) {
         // network or server offline
@@ -237,7 +275,7 @@ export default function App() {
     }, 1200);
 
     return () => clearTimeout(timer);
-  }, [projectStore]);
+  }, [projectStore, selectedProjectId]);
 
   // Auto-sync active state to per-project cache (localStorage + reactive state)
   useEffect(() => {
@@ -279,22 +317,51 @@ export default function App() {
     canvasRadius,
   ]);
 
-  // SMART PROJECT SWITCHER: Preserves settings per project
-  const handleSelectProject = (newProjectId) => {
+  // SMART PROJECT SWITCHER: Loads fresh from disk on project selection
+  const handleSelectProject = async (newProjectId) => {
     if (newProjectId === selectedProjectId) return;
 
     const nextProject = projects.find((p) => p.id === newProjectId);
     if (!nextProject) return;
 
-    const saved = projectStore[newProjectId];
-    applyProjectSnapshot(saved, nextProject);
-
     setSelectedProjectId(newProjectId);
     setActiveSlideIndex(0);
+
+    // Fetch fresh directly from disk file
+    try {
+      const res = await fetch(`http://localhost:3001/api/project-store/${newProjectId}`);
+      if (res.ok) {
+        const diskDeck = await res.json();
+        applyProjectSnapshot(diskDeck, nextProject);
+        return;
+      }
+    } catch (e) {}
+
+    const saved = projectStore[newProjectId];
+    applyProjectSnapshot(saved, nextProject);
+  };
+
+  // Manual Reload from disk (discards any unsaved in-browser state and pulls fresh file)
+  const handleReloadFromDisk = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/api/project-store/${selectedProjectId}`);
+      if (res.ok) {
+        const diskDeck = await res.json();
+        applyProjectSnapshot(diskDeck, activeProject);
+        userHasModified.current = false;
+        setIsDiskSaved(true);
+        showToast(`Reloaded ${activeProject.title || selectedProjectId} directly from disk!`);
+      } else {
+        showToast(`Could not load ${selectedProjectId}.json from disk`);
+      }
+    } catch (e) {
+      showToast('Error reloading from disk: ' + e.message);
+    }
   };
 
   // UPDATE ONLY THE CURRENT ACTIVE SLIDE
   const handleUpdateSlide = (patch) => {
+    userHasModified.current = true;
     setSlides((prev) => {
       const copy = [...prev];
       copy[activeSlideIndex] = { ...copy[activeSlideIndex], ...patch };
@@ -304,6 +371,7 @@ export default function App() {
 
   const handleAddSlide = () => {
     if (slides.length >= 20) return;
+    userHasModified.current = true;
     const newSlide = {
       id: `slide-${Date.now()}`,
       variant: 'feature_deep_dive',
@@ -323,6 +391,7 @@ export default function App() {
 
   const handleDeleteSlide = (index) => {
     if (slides.length <= 3) return;
+    userHasModified.current = true;
     const nextSlides = slides.filter((_, i) => i !== index);
     setSlides(nextSlides);
     setActiveSlideIndex(Math.max(0, index - 1));
@@ -330,6 +399,7 @@ export default function App() {
 
   const handleDuplicateSlide = (index) => {
     if (slides.length >= 20) return;
+    userHasModified.current = true;
     const cloned = { ...slides[index], id: `slide-${Date.now()}` };
     const nextSlides = [...slides];
     nextSlides.splice(index + 1, 0, cloned);
@@ -482,23 +552,24 @@ export default function App() {
         selectedProjectId={selectedProjectId}
         onSelectProject={handleSelectProject}
         presetKey={presetKey}
-        onSelectPreset={setPresetKey}
+        onSelectPreset={modifyCanvas(setPresetKey)}
         isThumbnailPreview={isThumbnailPreview}
         onToggleThumbnailPreview={() => setIsThumbnailPreview(!isThumbnailPreview)}
         showCenterGuides={showCenterGuides}
         onToggleCenterGuides={() => setShowCenterGuides(!showCenterGuides)}
         exportFormat={exportFormat}
-        onSelectExportFormat={setExportFormat}
+        onSelectExportFormat={modifyCanvas(setExportFormat)}
         exportScale={exportScale}
-        onSelectExportScale={setExportScale}
+        onSelectExportScale={modifyCanvas(setExportScale)}
         exportQuality={exportQuality}
-        onSelectExportQuality={setExportQuality}
+        onSelectExportQuality={modifyCanvas(setExportQuality)}
         onExportCurrentSlide={handleExportCurrentSlide}
         onExportAllSlides={handleExportAllSlides}
         isExporting={isExporting}
         exportProgress={exportProgress}
         isDiskSaved={isDiskSaved}
         onSaveToDisk={handleSaveToDisk}
+        onReloadFromDisk={handleReloadFromDisk}
       />
 
       {/* Main Studio Workspace: Canvas (Hero) + Right Categorized Inspector */}
@@ -540,29 +611,29 @@ export default function App() {
           project={activeProject}
           onUpdateSlide={handleUpdateSlide}
           backgroundColor={backgroundColor}
-          onChangeBackgroundColor={setBackgroundColor}
+          onChangeBackgroundColor={modifyCanvas(setBackgroundColor)}
           accentColor={accentColor}
-          onChangeAccentColor={setAccentColor}
+          onChangeAccentColor={modifyCanvas(setAccentColor)}
           glowIntensity={glowIntensity}
-          onChangeGlowIntensity={setGlowIntensity}
+          onChangeGlowIntensity={modifyCanvas(setGlowIntensity)}
           backgroundVariant={backgroundVariant}
-          onChangeBackgroundVariant={setBackgroundVariant}
+          onChangeBackgroundVariant={modifyCanvas(setBackgroundVariant)}
           bgAlignment={bgAlignment}
-          onChangeBgAlignment={setBgAlignment}
+          onChangeBgAlignment={modifyCanvas(setBgAlignment)}
           customBgImage={customBgImage}
-          onChangeCustomBgImage={setCustomBgImage}
+          onChangeCustomBgImage={modifyCanvas(setCustomBgImage)}
           textureOverlay={textureOverlay}
-          onChangeTextureOverlay={setTextureOverlay}
+          onChangeTextureOverlay={modifyCanvas(setTextureOverlay)}
           textureOpacity={textureOpacity}
-          onChangeTextureOpacity={setTextureOpacity}
+          onChangeTextureOpacity={modifyCanvas(setTextureOpacity)}
           canvasRadius={canvasRadius}
-          onChangeCanvasRadius={setCanvasRadius}
+          onChangeCanvasRadius={modifyCanvas(setCanvasRadius)}
           exportScale={exportScale}
-          onChangeExportScale={setExportScale}
+          onChangeExportScale={modifyCanvas(setExportScale)}
           exportQuality={exportQuality}
-          onChangeExportQuality={setExportQuality}
+          onChangeExportQuality={modifyCanvas(setExportQuality)}
           exportFormat={exportFormat}
-          onChangeExportFormat={setExportFormat}
+          onChangeExportFormat={modifyCanvas(setExportFormat)}
           presetKey={presetKey}
           showCenterGuides={showCenterGuides}
           onToggleCenterGuides={() => setShowCenterGuides(!showCenterGuides)}
