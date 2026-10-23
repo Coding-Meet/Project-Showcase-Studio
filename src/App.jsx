@@ -3,30 +3,51 @@ import Header from './components/Header';
 import SlideDock from './components/SlideDock';
 import InspectorSidebar from './components/InspectorSidebar';
 import CanvasStage from './components/CanvasStage';
-import projectsData from './data/projects.json';
 import { captureNode, downloadDataUrl, saveDeckToDiskAndZip } from './utils/exportEngine';
 import { resolveSlideProperties, GLOBAL_CANVAS_DEFAULTS } from './data/slideDefaults';
 import { CheckCircle2 } from 'lucide-react';
 
 const STORAGE_KEY = 'showcase_studio_projects_cache_v2';
 
+// Dynamically load all modular project decks at build-time
+const deckFiles = import.meta.glob('./data/decks/*.json', { eager: true });
+const parsedProjects = [];
+const bundledProjectStore = {};
+
+for (const [filePath, mod] of Object.entries(deckFiles)) {
+  const data = mod.default || mod;
+  const pid = data.id || filePath.split('/').pop().replace('.json', '');
+  parsedProjects.push({
+    id: pid,
+    title: data.title || pid,
+    shortDescription: data.shortDescription || (data.slides?.[0]?.tagline) || '',
+    features: data.features || (data.slides?.[1]?.featureList) || [],
+    technologies: data.technologies || (data.slides?.[0]?.technologies) || [],
+    platform: data.platform || [],
+    primaryColor: data.primaryColor || '#6366f1',
+    secondaryColor: data.secondaryColor || '#38bdf8'
+  });
+  bundledProjectStore[pid] = data;
+}
+
+const defaultProjectId = parsedProjects[0]?.id || 'news_kotlin_multiplatform_app';
+
 export default function App() {
-  const [projects] = useState(projectsData);
-  const [selectedProjectId, setSelectedProjectId] = useState(
-    projects[0]?.id || 'news_kotlin_multiplatform_app'
-  );
+  const [projects] = useState(parsedProjects);
+  const [selectedProjectId, setSelectedProjectId] = useState(defaultProjectId);
 
   const activeProject =
     projects.find((p) => p.id === selectedProjectId) || projects[0] || {};
 
-  // Per-Project Cache Store
+  // Per-Project Cache Store - initialized with bundled decks and merged with localStorage
   const [projectStore, setProjectStore] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : {};
-    } catch (e) {
-      return {};
-    }
+      if (saved) {
+        return { ...bundledProjectStore, ...JSON.parse(saved) };
+      }
+    } catch (e) {}
+    return bundledProjectStore;
   });
 
   // Helper to create initial default slides for a project
@@ -395,7 +416,7 @@ export default function App() {
       });
       if (res.ok) {
         setIsDiskSaved(true);
-        showToast('All customizations saved permanently to src/data/projectStore.json!');
+        showToast('All customizations saved permanently to individual files in src/data/decks/!');
       } else {
         const err = await res.json();
         alert('Failed to save to disk: ' + (err.error || 'Unknown error'));

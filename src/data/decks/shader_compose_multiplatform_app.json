@@ -1,0 +1,75 @@
+{
+  "slides": [
+    {
+      "id": "slide-1",
+      "variant": "desktop_dashboard",
+      "title": "Shader Compose Multiplatform App",
+      "tagline": "A cross-platform shader showcase app with 23+ animated effects using Compose Multiplatform.",
+      "imageSrc": null,
+      "hasFrame": false,
+      "deviceType": "desktop"
+    },
+    {
+      "id": "slide-2",
+      "variant": "feature_deep_dive",
+      "title": "Core Architecture & Capabilities",
+      "tagline": "Built with scalable patterns and modern tooling.",
+      "features": [
+        "23+ animated shader screens with real-time rendering",
+        "Cross-platform support: Android, iOS, Desktop, Web (WASM/JS)",
+        "Unified shader logic using AGSL (Android) and SkSL (others)"
+      ],
+      "imageSrc": null,
+      "hasFrame": false,
+      "deviceType": "desktop"
+    },
+    {
+      "id": "slide-3",
+      "variant": "minimal_focus",
+      "title": "Intuitive Workspace Diagnostics",
+      "tagline": "Engineered for smooth navigation and reactive state management.",
+      "features": [
+        "ShaderProvider for handling uniforms (time, resolution, colors)",
+        "Advanced rendering using drawBehind and graphicsLayer",
+        "Touch-based interactive shader animations"
+      ],
+      "imageSrc": null,
+      "secondaryImageSrc": null,
+      "hasFrame": false,
+      "deviceType": "android"
+    }
+  ],
+  "presetKey": "WEBSITE_HD",
+  "exportFormat": "png",
+  "textScale": 1,
+  "titleSize": 52,
+  "subtitleSize": 18,
+  "badgeSize": 12,
+  "featureSize": 14,
+  "techChipSize": 12,
+  "iconSize": 16,
+  "fontFamily": "Plus Jakarta Sans",
+  "fontWeight": "800",
+  "titleGradient": "metallic",
+  "eyebrowIcon": "sparkles",
+  "eyebrowText": "",
+  "statusBadge": "",
+  "deviceScale": 1,
+  "tilt": true,
+  "tiltAngle": -8,
+  "pitchAngle": 4,
+  "perspective": 1200,
+  "shadowStyle": "dramatic",
+  "shadowIntensity": 0.8,
+  "screenReflection": true,
+  "offsetX": 0,
+  "offsetY": 0,
+  "backgroundColor": "#080a12",
+  "accentColor": "#6366f1",
+  "glowIntensity": 0.35,
+  "backgroundVariant": "aurora",
+  "bgAlignment": "behind_device",
+  "customBgImage": null,
+  "textureOverlay": "dots",
+  "canvasRadius": 28
+}

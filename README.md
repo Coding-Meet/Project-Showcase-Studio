@@ -29,8 +29,8 @@ Open [http://localhost:5173](http://localhost:5173) in Google Chrome or any mode
 ## 📖 Step-by-Step Guide: How to Use the Studio
 
 ### Step 1: Select Your Project
-- In the top header bar, click the **Project Dropdown** to select one of the **30 pre-loaded projects** (sourced from `ProjectData.kt`) or create custom slide decks.
-- Titles, taglines, technologies, platforms, and feature bullets are automatically populated.
+- In the top header bar, click the **Project Dropdown** to select one of the **30 pre-loaded projects** (sourced dynamically from `src/data/decks/<project_id>.json`) or create custom slide decks.
+- Titles, taglines, technologies, platforms, primary/secondary brand colors, and feature bullets are automatically populated.
 
 ### Step 2: Choose Your Canvas Dimension Preset
 In the top bar, pick the ideal resolution for your target platform:
@@ -252,9 +252,54 @@ Click the **Canvas** tab in the Inspector:
 ## 💾 Project Persistence & Disk Auto-Sync
 
 All project customizations are automatically synchronized in real time:
-- **Disk File:** `src/data/projectStore.json` (persisted on disk across git and reboots).
+- **Disk Directory:** `src/data/decks/<project_id>.json` (individual, clean ~160-line JSON files for each project).
 - **Backend Auto-Save:** The Express backend (`server.js`) listens on port 3001 and writes changes every time a slide or project property is modified.
 - **Browser Fallback:** Synchronized with `localStorage` so your work is never lost even if the backend is temporarily offline.
+
+---
+
+## 📁 Modular Data Architecture (Single Source of Truth)
+
+Project Showcase Studio uses a clean, 100% modular architecture where **each project is completely self-contained**:
+
+```text
+/Volumes/Meet/project_showcase/
+├── src/data/
+│   ├── decks/                 # Single Source of Truth: Modular 3-Slide Decks & Project Metadata
+│   │   ├── news_kotlin_multiplatform_app.json
+│   │   ├── pokemon_app_mvi_compose_multiplatform.json
+│   │   ├── devanalyzer.json
+│   │   └── ... (30 individual files, self-contained)
+│   ├── localLogos.js          # 45+ Local Brand Logos Catalog & Wordmark Index
+│   └── deviceSpecs.js         # 33 Hardware Specifications & Bezels
+├── projects_images/images/    # Organized Mockup Screenshots by Project ID
+│   ├── news_kotlin_multiplatform_app/
+│   ├── pokemon_app_mvi_compose_multiplatform/
+│   ├── chatgpt_android_app/
+│   └── ...
+└── logo/                      # Brand Logo Files (_logo.png vs _logo_2.png)
+```
+
+### 1. `src/data/decks/<project_id>.json` (Autonomous Project Decks)
+- Each project has its own dedicated file containing all project metadata and slide configurations:
+  - **Metadata:** `id`, `title`, `shortDescription`, `features`, `technologies`, `platform`, `primaryColor`, `secondaryColor`.
+  - **Slide 1 (`hero_cover` / `desktop_dashboard` / `featured_card`):** Cover slide with 3D isometric tilt, project headline, tagline, trust pill, and real app screenshot.
+  - **Slide 2 (`feature_deep_dive`):** 3 key feature highlight cards, accent glow, and secondary screen.
+  - **Slide 3 (`responsive_combo` / `dual_screen`):** Multiplatform layout showing mobile and desktop variants side by side.
+  - **Visual Atmosphere:** Canvas lighting theme (`aurora`), accent glow, 3D tilt angles, custom gradient angles, hardware finish (`natural_titanium`), and store badges.
+
+### 2. Automation Scripts (`scripts/`)
+- **Extract Colors from Mockups:**
+  ```bash
+  python3 scripts/extract_project_colors.py
+  ```
+  Scans all mockup screenshots in `projects_images/images/<project_id>/`, filters noise and device bezels, calculates the dominant `primaryColor` and `secondaryColor`, and updates `src/data/decks/<project_id>.json` directly.
+
+- **Apple Vision OCR Mockup Recognizer (macOS Native):**
+  ```bash
+  swift scripts/ocr_recognize_mockups.swift [optional_directory]
+  ```
+  Uses macOS native Apple Vision Neural Engine (`VNRecognizeTextRequest`) to read text inside phone/desktop screenshots to instantly identify unclassified app mockups without third-party dependencies.
 
 ---
 
