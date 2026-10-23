@@ -294,11 +294,6 @@ Project Showcase Studio uses a clean, 100% modular architecture where **each pro
   python3 scripts/extract_project_colors.py
   ```
   Scans all mockup screenshots in `projects_images/images/<project_id>/`, filters noise and device bezels, calculates the dominant `primaryColor` and `secondaryColor`, and updates `src/data/decks/<project_id>.json` directly.
-- **Generate Complete 3-Slide Decks:**
-  ```bash
-  python3 scripts/generate_showcase_decks.py
-  ```
-  Compiles production-ready 3-slide decks with real screenshot mockups, brand gradients, hardware frames, and status pills into `src/data/decks/<project_id>.json`.
 
 ---
 
