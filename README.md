@@ -176,10 +176,10 @@ Click the **Canvas** tab in the Inspector:
 | `technologies` | Interactive Browser + Input | Visual Chip Manager / Comma list | **Tech Stack Manager**: Live chip removal, local logo folder quick-picks (45+ pre-indexed logos), and live theSVG CDN brand search |
 | `showMetricPill` | Checkbox | `true` / `false` | **Social Proof / Metric Pill**: High-converting trust element |
 | `metricText` | Text Input | e.g. `4.9 ★ Rating • 50K+ Downloads` | Custom metric or star rating text |
-| `metricIcon` | Dropdown | `star`, `download`, `users`, `github`, `shield`, `trophy`, `bolt` | Metric icon |
+| `metricIcon` | Interactive Icon Picker | `star` | **Lucide Icon Library (100+ Curated + Search)** | Trust pill metric icon with category filters (Trust, Tech, Business, Navigation, Media, etc.) |
 | `metricStyle` | Dropdown | `gold`, `emerald`, `indigo`, `glass`, `ruby` | Trust pill color aesthetic |
 | `eyebrowText` | Input | Text string | Top tag / platform badge text |
-| `eyebrowIcon` | Icon Grid | 17 Lucide Icons | Sparkles, Flame, Star, Shield, Terminal, Zap, Rocket, Award, Crown, Code, Globe, Cpu, Heart, Lock, CheckCircle2, TrendingUp, Layers, Smartphone |
+| `eyebrowIcon` | Interactive Icon Picker | `Sparkles` | **Lucide Icon Library (100+ Curated + Search)** | Interactive searchable picker drawer across 8 categories (Trust & Badges, Tech & Code, Business & Metrics, Media, Navigation, Security, Tools, Energy & AI) or custom Lucide lookup |
 | `badgeColor` | Swatches / Color / Hex | Hex string (e.g. `#818cf8`) | Accent color for eyebrow tag and callout badge |
 | `statusBadge` | Input | Text string | Callout status pill (e.g., `⭐ 88 Stars on GitHub`) |
 | `features` | 3 Inputs | Array of 3 strings | Key feature bullets for Feature Deep-Dive |

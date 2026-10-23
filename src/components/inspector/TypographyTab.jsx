@@ -15,6 +15,7 @@ import GradientColorPicker from './GradientColorPicker';
 import TechIcon, { POPULAR_TECH_LOGOS } from '../common/TechIcon';
 import { LOCAL_LOGOS } from '../../data/localLogos';
 import FontPicker from './FontPicker';
+import IconPicker from './IconPicker';
 
 export default function TypographyTab({
   slide,
@@ -166,25 +167,12 @@ export default function TypographyTab({
             placeholder={project.platform?.join(' • ') || 'Platform tag'}
             className="w-full px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
           />
-          <div className="flex items-center gap-1 pt-1 flex-wrap">
-            <span className="text-[10px] text-slate-400 mr-1 block w-full mb-0.5">Icon:</span>
-            {EYEBROW_ICONS.map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => onChangeEyebrowIcon(item.id)}
-                  className={`p-1.5 rounded-lg transition-all cursor-pointer ${
-                    eyebrowIcon === item.id
-                      ? 'bg-indigo-600 text-white shadow-sm ring-1 ring-white/20'
-                      : 'bg-white/[0.03] text-slate-400 hover:text-white hover:bg-white/[0.06]'
-                  }`}
-                  title={item.label}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                </button>
-              );
-            })}
+          <div className="pt-1.5">
+            <IconPicker
+              currentIcon={eyebrowIcon}
+              onSelectIcon={onChangeEyebrowIcon}
+              label="Eyebrow Icon (100+ Icons)"
+            />
           </div>
 
           {/* Eyebrow Badge Color Customizer */}
@@ -724,28 +712,19 @@ export default function TypographyTab({
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="text-[10px] text-slate-400 block mb-1">Icon</label>
-                <select
-                  value={slide.metricIcon || 'star'}
-                  onChange={(e) => onUpdateSlide({ metricIcon: e.target.value })}
-                  className="w-full px-2 py-1 rounded-lg bg-white/[0.04] border border-white/[0.1] text-xs text-white focus:outline-none focus:border-indigo-500 cursor-pointer"
-                >
-                  {METRIC_ICONS_LIST.map((ic) => (
-                    <option key={ic.id} value={ic.id} className="bg-[#0f141f]">
-                      {ic.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <div className="space-y-2">
+              <IconPicker
+                currentIcon={slide.metricIcon || 'star'}
+                onSelectIcon={(iconId) => onUpdateSlide({ metricIcon: iconId })}
+                label="Trust Pill Icon (100+ Icons)"
+              />
 
               <div>
-                <label className="text-[10px] text-slate-400 block mb-1">Pill Color</label>
+                <label className="text-[10px] text-slate-400 block mb-1">Pill Color Style</label>
                 <select
                   value={slide.metricStyle || 'gold'}
                   onChange={(e) => onUpdateSlide({ metricStyle: e.target.value })}
-                  className="w-full px-2 py-1 rounded-lg bg-white/[0.04] border border-white/[0.1] text-xs text-white focus:outline-none focus:border-indigo-500 cursor-pointer"
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.1] text-xs text-white focus:outline-none focus:border-indigo-500 cursor-pointer"
                 >
                   {METRIC_STYLES.map((st) => (
                     <option key={st.id} value={st.id} className="bg-[#0f141f]">

@@ -1,11 +1,10 @@
 import React from 'react';
 import DeviceMockup from '../DeviceMockup';
-import { Sparkles } from 'lucide-react';
 import { resolveTextGradientStyle } from '../../data/typographyPresets';
-import { EYEBROW_ICONS_MAP } from '../inspector/inspectorConstants';
 import StoreBadges from '../common/StoreBadges';
 import TechIcon from '../common/TechIcon';
 import TrustPill from '../common/TrustPill';
+import DynamicIcon from '../common/DynamicIcon';
 
 export default function HeroCoverSlide({
   slideData,
@@ -47,8 +46,6 @@ export default function HeroCoverSlide({
   const technologies = Array.isArray(rawTech) ? rawTech : (typeof rawTech === 'string' ? rawTech.split(',').map((s) => s.trim()).filter(Boolean) : ['Kotlin', 'Compose', 'MVI']);
   const platforms = projectData.platform || ['Android'];
   const isReversed = slideData.layoutAlign === 'right';
-
-  const EyebrowIcon = EYEBROW_ICONS_MAP[eyebrowIcon] || Sparkles;
 
   const titleStyleObj = resolveTextGradientStyle({
     gradient: titleGradient,
@@ -95,7 +92,8 @@ export default function HeroCoverSlide({
               backgroundColor: `${badgeColor}12`,
             }}
           >
-            <EyebrowIcon
+            <DynamicIcon
+              name={eyebrowIcon}
               style={{
                 width: `${calcIcon}px`,
                 height: `${calcIcon}px`,
