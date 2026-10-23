@@ -1,8 +1,31 @@
 import React from 'react';
-import { Upload, Download, Sparkles, Sliders, HardDrive, FileImage, Crosshair } from 'lucide-react';
+import {
+  Upload,
+  Download,
+  Sparkles,
+  Sliders,
+  HardDrive,
+  FileImage,
+  Crosshair,
+  Sun,
+  Layers,
+  Palette,
+} from 'lucide-react';
 import { BG_VARIANTS, COLOR_PRESETS } from './inspectorConstants';
 import { PRESETS } from '../CanvasStage';
 import { estimateImageFileSize } from '../../utils/exportEngine';
+
+const TEXTURE_PATTERNS = [
+  { id: 'dots', label: 'Dot Matrix' },
+  { id: 'grid', label: 'Blueprint Grid' },
+  { id: 'plus', label: 'Crosshairs' },
+  { id: 'isometric', label: 'Isometric 3D' },
+  { id: 'diagonal', label: 'Carbon Mesh' },
+  { id: 'honeycomb', label: 'Honeycomb' },
+  { id: 'topography', label: 'Topography' },
+  { id: 'noise', label: 'Film Grain' },
+  { id: 'none', label: 'None' },
+];
 
 export default function CanvasTab({
   backgroundVariant,
@@ -43,210 +66,140 @@ export default function CanvasTab({
 
   return (
     <section className="space-y-4">
-      {/* Background Lighting Styles */}
-      <div>
-        <span className="text-xs font-bold text-white uppercase tracking-wider block mb-2">
-          Background Lighting
-        </span>
-        <div className="grid grid-cols-2 gap-1.5">
-          {BG_VARIANTS.map((bg) => {
-            const isSelected = backgroundVariant === bg.id;
-            return (
-              <button
-                key={bg.id}
-                onClick={() => onChangeBackgroundVariant(bg.id)}
-                className={`p-2 rounded-xl border text-left transition-all cursor-pointer ${
-                  isSelected
-                    ? 'bg-indigo-600/20 border-indigo-500 text-white ring-1 ring-indigo-500/30'
-                    : 'bg-white/[0.02] border-white/[0.06] text-slate-400 hover:text-white'
-                }`}
-              >
-                <div className="text-xs font-semibold">{bg.label}</div>
-                <div className="text-[10px] text-slate-400 truncate">{bg.desc}</div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Background Focus Alignment */}
-      <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2.5">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-white uppercase tracking-wider block">
-            Lighting Alignment
-          </span>
-          <button
-            onClick={() => onChangeBgAlignment('behind_device')}
-            className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-all cursor-pointer ${
-              bgAlignment === 'behind_device'
-                ? 'bg-indigo-600 text-white shadow-md ring-1 ring-white/20'
-                : 'bg-white/[0.04] text-slate-400 hover:text-white border border-white/10'
-            }`}
-            title="Automatically align lighting glow behind the device based on layout"
-          >
-            Behind Device (Auto)
-          </button>
-        </div>
-
-        {/* 3x3 Directional Grid */}
-        <div className="grid grid-cols-3 gap-1.5 pt-0.5">
-          {[
-            { id: 'top_left', label: 'Top-Left' },
-            { id: 'top_center', label: 'Top-Center' },
-            { id: 'top_right', label: 'Top-Right' },
-            { id: 'center_left', label: 'Center-Left' },
-            { id: 'center', label: 'Center' },
-            { id: 'center_right', label: 'Center-Right' },
-            { id: 'bottom_left', label: 'Bottom-Left' },
-            { id: 'bottom_center', label: 'Bottom-Center' },
-            { id: 'bottom_right', label: 'Bottom-Right' },
-          ].map((pos) => (
-            <button
-              key={pos.id}
-              onClick={() => onChangeBgAlignment(pos.id)}
-              className={`py-2 px-1 rounded-lg text-[10px] font-semibold text-center transition-all cursor-pointer ${
-                bgAlignment === pos.id
-                  ? 'bg-indigo-600 text-white shadow-md ring-1 ring-white/20'
-                  : 'bg-white/[0.02] border border-white/[0.06] text-slate-400 hover:text-white hover:bg-white/[0.05]'
-              }`}
-            >
-              {pos.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Custom Background Wallpaper Upload */}
-      <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2">
-        <span className="text-xs font-bold text-white uppercase tracking-wider block">
-          Custom Background Image
-        </span>
-        {customBgImage ? (
-          <div className="relative rounded-xl overflow-hidden border border-white/10 group">
-            <img
-              src={customBgImage}
-              alt="Custom BG"
-              className="w-full h-16 object-cover"
-            />
-            <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-              <button
-                onClick={() => onChangeCustomBgImage(null)}
-                className="px-2.5 py-1 rounded-lg bg-rose-600 text-white text-xs font-semibold cursor-pointer"
-              >
-                Remove Wallpaper
-              </button>
+      {/* UNIFIED BACKDROP & ATMOSPHERE SUITE (LIGHTING + TEXTURE + COLORS) */}
+      <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-4 shadow-xl">
+        <div className="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-indigo-400" />
+            <div>
+              <span className="text-xs font-bold text-white uppercase tracking-wider block">
+                Backdrop & Atmosphere
+              </span>
+              <span className="text-[10px] text-slate-400">
+                Unified ambient lighting, surface texture & colors
+              </span>
             </div>
           </div>
-        ) : (
-          <label className="border border-dashed border-white/15 hover:border-indigo-500/50 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer bg-white/[0.01]">
-            <Upload className="w-3.5 h-3.5 text-slate-400" />
-            <span className="text-xs text-slate-300">Upload Wallpaper / Texture</span>
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (event) => onChangeCustomBgImage(event.target.result);
-                reader.readAsDataURL(file);
-              }}
-            />
-          </label>
-        )}
-      </div>
+        </div>
 
-      {/* Atmosphere Presets */}
-      <div className="pt-2 border-t border-white/[0.06]">
-        <span className="text-xs font-bold text-white uppercase tracking-wider block mb-2">
-          Curated Color Themes
-        </span>
-        <div className="grid grid-cols-3 gap-1.5">
-          {COLOR_PRESETS.map((p, i) => (
-            <button
-              key={i}
-              onClick={() => {
-                onChangeBackgroundColor(p.bg);
-                onChangeAccentColor(p.accent);
-              }}
-              className="p-2 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.06] flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer"
-            >
-              <span
-                className="w-2.5 h-2.5 rounded-full inline-block"
-                style={{ backgroundColor: p.accent }}
+        {/* 1. AMBIENT LIGHTING GLOW */}
+        <div className="space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <Sun className="w-3.5 h-3.5 text-amber-400" />
+              1. Ambient Lighting Style
+            </span>
+            <span className="text-[10px] text-indigo-400 font-mono font-semibold">
+              {BG_VARIANTS.find((b) => b.id === backgroundVariant)?.label || backgroundVariant}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-1.5">
+            {BG_VARIANTS.map((bg) => {
+              const isSelected = backgroundVariant === bg.id;
+              return (
+                <button
+                  key={bg.id}
+                  onClick={() => onChangeBackgroundVariant(bg.id)}
+                  className={`p-2 rounded-xl border text-left transition-all cursor-pointer ${
+                    isSelected
+                      ? 'bg-indigo-600/20 border-indigo-500 text-white ring-1 ring-indigo-500/30'
+                      : 'bg-white/[0.02] border-white/[0.06] text-slate-400 hover:text-white hover:bg-white/[0.04]'
+                  }`}
+                >
+                  <div className="text-xs font-semibold">{bg.label}</div>
+                  <div className="text-[10px] text-slate-400 truncate">{bg.desc}</div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Glow Brightness Slider (if not pure solid) */}
+          {backgroundVariant !== 'none' && (
+            <div className="p-2.5 rounded-xl bg-black/25 border border-white/[0.04] space-y-1.5">
+              <div className="flex justify-between text-xs font-medium">
+                <span className="text-slate-300">Glow Brightness</span>
+                <span className="text-indigo-400 font-mono font-semibold">{Math.round(glowIntensity * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0.1"
+                max="0.8"
+                step="0.05"
+                value={glowIntensity}
+                onChange={(e) => onChangeGlowIntensity(parseFloat(e.target.value))}
+                className="w-full accent-indigo-500 cursor-pointer"
               />
-              <span className="text-[11px] truncate">{p.name}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+            </div>
+          )}
 
-      {/* Hex Color Controls */}
-      <div className="grid grid-cols-2 gap-2 pt-1">
-        <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between">
-          <span className="text-xs text-slate-300 font-medium">Glow Accent</span>
-          <input
-            type="color"
-            value={accentColor}
-            onChange={(e) => onChangeAccentColor(e.target.value)}
-            className="w-6 h-6 rounded cursor-pointer border-0 bg-transparent"
-          />
-        </div>
-        <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between">
-          <span className="text-xs text-slate-300 font-medium">Base Color</span>
-          <input
-            type="color"
-            value={backgroundColor}
-            onChange={(e) => onChangeBackgroundColor(e.target.value)}
-            className="w-6 h-6 rounded cursor-pointer border-0 bg-transparent"
-          />
-        </div>
-      </div>
+          {/* Directional Lighting Focus (Behind Device + 3x3) */}
+          <div className="p-2.5 rounded-xl bg-black/25 border border-white/[0.04] space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-semibold text-slate-300">
+                Light Focus Position
+              </span>
+              <button
+                onClick={() => onChangeBgAlignment('behind_device')}
+                className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-all cursor-pointer ${
+                  bgAlignment === 'behind_device'
+                    ? 'bg-indigo-600 text-white shadow-sm ring-1 ring-white/20'
+                    : 'bg-white/[0.04] text-slate-400 hover:text-white border border-white/10'
+                }`}
+                title="Automatically align lighting glow behind the device based on layout"
+              >
+                Auto Behind Device
+              </button>
+            </div>
 
-      {/* Glow Intensity Slider */}
-      <div>
-        <div className="flex justify-between text-xs mb-1 font-medium">
-          <span className="text-slate-300">Glow Brightness</span>
-          <span className="text-indigo-400 font-mono">{Math.round(glowIntensity * 100)}%</span>
+            <div className="grid grid-cols-3 gap-1">
+              {[
+                { id: 'top_left', label: '↖ Top-L' },
+                { id: 'top_center', label: '↑ Top' },
+                { id: 'top_right', label: '↗ Top-R' },
+                { id: 'center_left', label: '← Left' },
+                { id: 'center', label: '• Center' },
+                { id: 'center_right', label: '→ Right' },
+                { id: 'bottom_left', label: '↙ Btm-L' },
+                { id: 'bottom_center', label: '↓ Btm' },
+                { id: 'bottom_right', label: '↘ Btm-R' },
+              ].map((pos) => (
+                <button
+                  key={pos.id}
+                  onClick={() => onChangeBgAlignment(pos.id)}
+                  className={`py-1.5 px-1 rounded-lg text-[10px] font-medium text-center transition-all cursor-pointer ${
+                    bgAlignment === pos.id
+                      ? 'bg-indigo-600 text-white shadow-sm ring-1 ring-white/20'
+                      : 'bg-white/[0.02] border border-white/[0.06] text-slate-400 hover:text-white hover:bg-white/[0.05]'
+                  }`}
+                >
+                  {pos.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
-        <input
-          type="range"
-          min="0.1"
-          max="0.8"
-          step="0.05"
-          value={glowIntensity}
-          onChange={(e) => onChangeGlowIntensity(parseFloat(e.target.value))}
-          className="w-full accent-indigo-500 cursor-pointer"
-        />
-      </div>
 
-      {/* Textures & Corner Radius */}
-      <div className="space-y-3 pt-2 border-t border-white/[0.06]">
-        <span className="text-xs font-bold text-white uppercase tracking-wider block">
-          Texture & Frame Style
-        </span>
+        {/* 2. SURFACE TEXTURE PATTERN (SATH ME!) */}
+        <div className="pt-3 border-t border-white/[0.06] space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-cyan-400" />
+              2. Surface Texture Pattern
+            </span>
+            <span className="text-[10px] text-cyan-400 font-mono font-semibold">
+              {TEXTURE_PATTERNS.find((t) => t.id === textureOverlay)?.label || 'None'}
+            </span>
+          </div>
 
-        <div>
-          <label className="text-[11px] text-slate-400 mb-1.5 block">Texture Pattern</label>
           <div className="grid grid-cols-3 gap-1.5">
-            {[
-              { id: 'dots', label: 'Dot Matrix' },
-              { id: 'grid', label: 'Blueprint Grid' },
-              { id: 'plus', label: 'Crosshairs' },
-              { id: 'isometric', label: 'Isometric 3D' },
-              { id: 'diagonal', label: 'Carbon Mesh' },
-              { id: 'honeycomb', label: 'Honeycomb' },
-              { id: 'topography', label: 'Topography' },
-              { id: 'noise', label: 'Film Grain' },
-              { id: 'none', label: 'None' },
-            ].map((tex) => (
+            {TEXTURE_PATTERNS.map((tex) => (
               <button
                 key={tex.id}
                 onClick={() => onChangeTextureOverlay(tex.id)}
-                className={`py-2 px-1.5 rounded-lg text-[10px] font-semibold transition-all cursor-pointer text-center truncate ${
+                className={`py-2 px-1 rounded-lg text-[10px] font-semibold transition-all cursor-pointer text-center truncate ${
                   textureOverlay === tex.id
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 ring-1 ring-white/20'
+                    ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/30 ring-1 ring-white/20'
                     : 'bg-white/[0.03] border border-white/[0.06] text-slate-300 hover:text-white hover:bg-white/[0.07]'
                 }`}
                 title={tex.label}
@@ -255,40 +208,137 @@ export default function CanvasTab({
               </button>
             ))}
           </div>
+
+          {/* Texture Opacity / Intensity Slider */}
+          {textureOverlay !== 'none' && onChangeTextureOpacity && (
+            <div className="p-2.5 rounded-xl bg-black/25 border border-white/[0.04] space-y-1.5">
+              <div className="flex justify-between text-xs font-medium">
+                <span className="text-slate-300">Texture Intensity / Opacity</span>
+                <span className="text-cyan-400 font-mono font-semibold">{Math.round(textureOpacity * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0.05"
+                max="0.60"
+                step="0.02"
+                value={textureOpacity}
+                onChange={(e) => onChangeTextureOpacity(parseFloat(e.target.value))}
+                className="w-full accent-cyan-500 cursor-pointer"
+              />
+            </div>
+          )}
         </div>
 
-        {textureOverlay !== 'none' && onChangeTextureOpacity && (
+        {/* 3. COLOR PALETTE & ACCENTS */}
+        <div className="pt-3 border-t border-white/[0.06] space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <Palette className="w-3.5 h-3.5 text-purple-400" />
+              3. Color Palette & Glow
+            </span>
+          </div>
+
+          {/* Curated Themes */}
+          <div className="grid grid-cols-3 gap-1.5 max-h-36 overflow-y-auto pr-0.5 custom-scrollbar">
+            {COLOR_PRESETS.map((p, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  onChangeBackgroundColor(p.bg);
+                  onChangeAccentColor(p.accent);
+                }}
+                className="p-1.5 rounded-lg border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.06] flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer text-left"
+              >
+                <span
+                  className="w-2.5 h-2.5 rounded-full inline-block flex-shrink-0"
+                  style={{ backgroundColor: p.accent }}
+                />
+                <span className="text-[10px] truncate">{p.name}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Hex Color Controls */}
+          <div className="grid grid-cols-2 gap-2 pt-0.5">
+            <div className="p-2 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between">
+              <span className="text-[11px] text-slate-300 font-medium">Glow Accent</span>
+              <input
+                type="color"
+                value={accentColor}
+                onChange={(e) => onChangeAccentColor(e.target.value)}
+                className="w-6 h-6 rounded cursor-pointer border-0 bg-transparent"
+              />
+            </div>
+            <div className="p-2 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between">
+              <span className="text-[11px] text-slate-300 font-medium">Base Color</span>
+              <input
+                type="color"
+                value={backgroundColor}
+                onChange={(e) => onChangeBackgroundColor(e.target.value)}
+                className="w-6 h-6 rounded cursor-pointer border-0 bg-transparent"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* 4. CANVAS FRAME & WALLPAPER */}
+        <div className="pt-3 border-t border-white/[0.06] space-y-3">
           <div>
             <div className="flex justify-between text-xs mb-1 font-medium">
-              <span className="text-slate-300">Texture Intensity / Opacity</span>
-              <span className="text-indigo-400 font-mono">{Math.round(textureOpacity * 100)}%</span>
+              <span className="text-slate-300">Canvas Corner Radius</span>
+              <span className="text-indigo-400 font-mono font-semibold">{canvasRadius}px</span>
             </div>
             <input
               type="range"
-              min="0.05"
-              max="0.60"
-              step="0.02"
-              value={textureOpacity}
-              onChange={(e) => onChangeTextureOpacity(parseFloat(e.target.value))}
+              min="0"
+              max="44"
+              step="4"
+              value={canvasRadius}
+              onChange={(e) => onChangeCanvasRadius(parseInt(e.target.value))}
               className="w-full accent-indigo-500 cursor-pointer"
             />
           </div>
-        )}
 
-        <div>
-          <div className="flex justify-between text-xs mb-1 font-medium">
-            <span className="text-slate-300">Canvas Corner Radius</span>
-            <span className="text-indigo-400 font-mono">{canvasRadius}px</span>
+          {/* Custom Background Wallpaper Upload */}
+          <div className="space-y-1.5">
+            <span className="text-[11px] font-semibold text-slate-400 block">
+              Custom Wallpaper / Image (Optional)
+            </span>
+            {customBgImage ? (
+              <div className="relative rounded-xl overflow-hidden border border-white/10 group">
+                <img
+                  src={customBgImage}
+                  alt="Custom BG"
+                  className="w-full h-14 object-cover"
+                />
+                <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                  <button
+                    onClick={() => onChangeCustomBgImage(null)}
+                    className="px-2.5 py-1 rounded-lg bg-rose-600 text-white text-xs font-semibold cursor-pointer"
+                  >
+                    Remove Wallpaper
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <label className="border border-dashed border-white/15 hover:border-indigo-500/50 rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer bg-white/[0.01]">
+                <Upload className="w-3.5 h-3.5 text-slate-400" />
+                <span className="text-xs text-slate-300">Upload Wallpaper File</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (event) => onChangeCustomBgImage(event.target.result);
+                    reader.readAsDataURL(file);
+                  }}
+                />
+              </label>
+            )}
           </div>
-          <input
-            type="range"
-            min="0"
-            max="44"
-            step="4"
-            value={canvasRadius}
-            onChange={(e) => onChangeCanvasRadius(parseInt(e.target.value))}
-            className="w-full accent-indigo-500 cursor-pointer"
-          />
         </div>
       </div>
 
