@@ -139,6 +139,7 @@ export default function App() {
   const [exportScale, setExportScale] = useState(initialData.exportScale || 2);
   const [exportQuality, setExportQuality] = useState(initialData.exportQuality !== undefined ? initialData.exportQuality : 1.0);
   const [isThumbnailPreview, setIsThumbnailPreview] = useState(false);
+  const [showCenterGuides, setShowCenterGuides] = useState(false);
 
   // Global Canvas Atmosphere & Lighting Settings
   const [backgroundColor, setBackgroundColor] = useState(initialData.backgroundColor || GLOBAL_CANVAS_DEFAULTS.backgroundColor);
@@ -475,6 +476,8 @@ export default function App() {
         onSelectPreset={setPresetKey}
         isThumbnailPreview={isThumbnailPreview}
         onToggleThumbnailPreview={() => setIsThumbnailPreview(!isThumbnailPreview)}
+        showCenterGuides={showCenterGuides}
+        onToggleCenterGuides={() => setShowCenterGuides(!showCenterGuides)}
         exportFormat={exportFormat}
         onSelectExportFormat={setExportFormat}
         exportScale={exportScale}
@@ -507,6 +510,7 @@ export default function App() {
             textureOverlay={textureOverlay}
             canvasRadius={canvasRadius}
             isThumbnailPreview={isThumbnailPreview}
+            showCenterGuides={showCenterGuides && !isExporting}
           />
 
           {/* Floating Bottom Slide Dock */}
@@ -548,6 +552,8 @@ export default function App() {
           exportFormat={exportFormat}
           onChangeExportFormat={setExportFormat}
           presetKey={presetKey}
+          showCenterGuides={showCenterGuides}
+          onToggleCenterGuides={() => setShowCenterGuides(!showCenterGuides)}
         />
       </div>
 

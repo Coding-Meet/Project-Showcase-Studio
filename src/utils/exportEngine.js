@@ -22,6 +22,11 @@ export async function captureNode(
     pixelRatio: pixelRatio,
     backgroundColor: null,
     cacheBust: true,
+    filter: (domNode) => {
+      if (domNode?.classList && domNode.classList.contains('export-ignore')) return false;
+      if (domNode?.getAttribute && domNode.getAttribute('data-export-ignore') === 'true') return false;
+      return true;
+    },
     style: {
       transform: 'none',
       transformOrigin: 'top left',

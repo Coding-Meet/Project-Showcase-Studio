@@ -41,6 +41,7 @@ In the top bar, pick the ideal resolution for your target platform:
 - 💼 **Upwork Portfolio:** `1000 × 750` (4:3 Upwork Project Gallery Standard)
 - ⚙️ **Custom:** Enter custom pixel Width × Height.
 - 🔍 **Thumbnail Mode:** Toggle to preview how your slide looks at small card scale to ensure headline legibility.
+- 🎯 **Center Guides (Crosshair):** 1-click toggle to show glowing horizontal and vertical center guide lines with pixel coordinate readouts (`X: 50%`, `Y: 50%`, and center bullseye target) to verify whether devices, titles, and elements are centered. Includes subtle rule-of-thirds composition guides. Completely ignored during export!
 
 ### Step 3: Manage Multi-Slide Carousel Deck
 - Use the **Slide Dock** floating at the bottom of the screen.
@@ -99,6 +100,7 @@ Click the **Canvas** tab in the Inspector:
 - **18 Curated Color Themes:** 1-click themes including *Indigo Aura, Emerald Mint, Neon Violet, Sunset Amber, Pure Obsidian, Cyberpunk Rose, Neon Lime, Sapphire Deep, Luxury Gold*, etc.
 - **Custom Texture & Background:** Upload custom wallpaper or enable Dots / Grid texture overlays.
 - **Canvas Radius:** Adjust corner roundness (0px to 48px).
+- **Center Alignment Guides:** Toggle glowing vertical and horizontal center lines to visually check alignment.
 - **Live Canvas Specs Card:** Displays real-time output dimensions (e.g. `2560 × 1538 px` at 2x Retina), active format (`PNG/WebP/JPG`), and live estimated file size.
 
 ### Step 8: Export Your Showcase
