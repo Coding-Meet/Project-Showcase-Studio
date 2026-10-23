@@ -6,6 +6,7 @@ import DesktopDashboardSlide from './variants/DesktopDashboardSlide';
 import ResponsiveComboSlide from './variants/ResponsiveComboSlide';
 import MinimalFocusSlide from './variants/MinimalFocusSlide';
 import { resolveSlideProperties } from '../data/slideDefaults';
+import { loadGoogleFont } from '../utils/fontLoader';
 
 export const PRESETS = {
   WEBSITE_HD: { label: 'Personal Website HD (1920×1080)', width: 1920, height: 1080, category: 'Website' },
@@ -94,6 +95,13 @@ const CanvasStage = forwardRef(function CanvasStage(
     window.addEventListener('resize', updateScale);
     return () => window.removeEventListener('resize', updateScale);
   }, [targetWidth, targetHeight, isThumbnailPreview]);
+
+  // Dynamically load Google Font into document head
+  useEffect(() => {
+    if (fontFamily) {
+      loadGoogleFont(fontFamily);
+    }
+  }, [fontFamily]);
 
   // Determine focus coordinates based on variant and alignment
   const variant = slide.variant || 'hero_cover';

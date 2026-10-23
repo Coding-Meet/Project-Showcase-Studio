@@ -14,6 +14,7 @@ import {
 import GradientColorPicker from './GradientColorPicker';
 import TechIcon, { POPULAR_TECH_LOGOS } from '../common/TechIcon';
 import { LOCAL_LOGOS } from '../../data/localLogos';
+import FontPicker from './FontPicker';
 
 export default function TypographyTab({
   slide,
@@ -760,22 +761,10 @@ export default function TypographyTab({
 
       {/* 6. Font Family & Boldness */}
       <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2.5">
-        <div>
-          <label className="text-xs font-bold text-white uppercase tracking-wider block mb-1">
-            Font Family
-          </label>
-          <select
-            value={fontFamily}
-            onChange={(e) => onChangeFontFamily(e.target.value)}
-            className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-xs text-white focus:outline-none focus:border-indigo-500 cursor-pointer"
-          >
-            {FONTS.map((f) => (
-              <option key={f.id} value={f.id} className="bg-[#0f141f]">
-                {f.label}
-              </option>
-            ))}
-          </select>
-        </div>
+        <FontPicker
+          currentFont={fontFamily}
+          onSelectFont={onChangeFontFamily}
+        />
 
         <div>
           <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">

@@ -21,6 +21,13 @@ export async function captureNode(node, format = 'png', targetWidth = 1920, targ
     },
   };
 
+  // Ensure all dynamic Google Fonts are loaded and rendered
+  try {
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+  } catch (e) {}
+
   if (format === 'jpg') {
     return await toJpeg(node, options);
   }

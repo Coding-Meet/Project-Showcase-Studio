@@ -80,7 +80,7 @@ Click the **Content** tab in the Inspector:
   - 🎨 **Solid Color Mode:** Pick from 11 curated swatches or type custom hex values.
 - **Eyebrow Badge & Tags:** Customize badge text, accent color, and choose from 17 Lucide icons (*Sparkles, Flame, Star, Shield, Terminal, Lightning, Rocket, Award, Crown, Code, Globe, AI/Cpu, Heart, Lock, Verified, Growth, Layers, Mobile*).
 - **Feature Cards:** Edit 3 key feature bullets and card text color (for Feature Deep-Dive & Desktop Dashboard).
-- **Font & Weights:** Select font (*Plus Jakarta Sans, Outfit, Inter, Cabinet Grotesk, Space Grotesk, Poppins, JetBrains Mono*) and boldness (*Regular 400, Medium 500, SemiBold 600, Bold 700, ExtraBold 800, Black 900*).
+- **Font Library & Boldness:** Access the full **Google Fonts Library (1,600+ fonts)** with 80+ curated fonts across 6 categories (*Modern Sans, Display & Bold, Luxury Serif, Tech & Code, Futuristic, Creative / Script*) plus live search and custom Google Font importer, with 6 boldness weights (*Regular 400, Medium 500, SemiBold 600, Bold 700, ExtraBold 800, Black 900*).
 - **Element Sizing:** Adjust individual sliders for Headline Size, Subtitle Size, Eyebrow Badge Size, Icon Size, Feature Text Size, Tech Pills Size, and Global Text Scale.
 
 ### Step 7: Tune Background Atmosphere
@@ -184,22 +184,7 @@ Click the **Canvas** tab in the Inspector:
 | `statusBadge` | Input | Text string | Callout status pill (e.g., `⭐ 88 Stars on GitHub`) |
 | `features` | 3 Inputs | Array of 3 strings | Key feature bullets for Feature Deep-Dive |
 | `featureColor` | Swatches / Color / Hex | Hex string | Text color for floating feature cards |
-| `fontFamily` | Select | 7 Fonts | Plus Jakarta Sans, Outfit, Inter, Cabinet Grotesk, Space Grotesk, Poppins, JetBrains Mono |
-| `fontWeight` | 6 Buttons | `400`, `500`, `600`, `700`, `800`, `900` | Headline boldness (Regular, Medium, SemiBold, Bold, ExtraBold, Black) |
-| `titleSize` | Slider | `28px` - `76px` | Headline font size |
-| `subtitleSize` | Slider | `13px` - `26px` | Subtitle font size |
-| `badgeSize` | Slider | `10px` - `18px` | Eyebrow badge font size |
-| `iconSize` | Slider | `12px` - `28px` | Badge icon size |
-| `featureSize` | Slider | `11px` - `20px` | Feature cards text size |
-| `techChipSize` | Slider | `10px` - `18px` | Tech stack pills font size |
-| `textScale` | Slider | `0.75` - `1.4` (75% - 140%) | Global typography scaling multiplier |
-| `eyebrowText` | Input | Text string | Top tag / platform badge text |
-| `eyebrowIcon` | Icon Grid | 17 Lucide Icons | Sparkles, Flame, Star, Shield, Terminal, Zap, Rocket, Award, Crown, Code, Globe, Cpu, Heart, Lock, CheckCircle2, TrendingUp, Layers, Smartphone |
-| `badgeColor` | Swatches / Color / Hex | Hex string (e.g. `#818cf8`) | Accent color for eyebrow tag and callout badge |
-| `statusBadge` | Input | Text string | Callout status pill (e.g., `⭐ 88 Stars on GitHub`) |
-| `features` | 3 Inputs | Array of 3 strings | Key feature bullets for Feature Deep-Dive |
-| `featureColor` | Swatches / Color / Hex | Hex string | Text color for floating feature cards |
-| `fontFamily` | Select | 7 Fonts | Plus Jakarta Sans, Outfit, Inter, Cabinet Grotesk, Space Grotesk, Poppins, JetBrains Mono |
+| `fontFamily` | Interactive Font Picker | `Plus Jakarta Sans` | **1,600+ Google Fonts** (80+ Curated across 6 categories + Live Search & Custom Google Font Importer) | Full typography library with real-time Google Fonts CDN loader |
 | `fontWeight` | 6 Buttons | `400`, `500`, `600`, `700`, `800`, `900` | Headline boldness (Regular, Medium, SemiBold, Bold, ExtraBold, Black) |
 | `titleSize` | Slider | `28px` - `76px` | Headline font size |
 | `subtitleSize` | Slider | `13px` - `26px` | Subtitle font size |
