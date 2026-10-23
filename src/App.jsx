@@ -3,7 +3,13 @@ import Header from './components/Header';
 import SlideDock from './components/SlideDock';
 import InspectorSidebar from './components/InspectorSidebar';
 import CanvasStage from './components/CanvasStage';
-import { captureNode, downloadDataUrl, saveDeckToDiskAndZip } from './utils/exportEngine';
+import {
+  captureNode,
+  downloadDataUrl,
+  saveDeckToDiskAndZip,
+  getDataUrlByteSize,
+  formatByteSize,
+} from './utils/exportEngine';
 import { resolveSlideProperties, GLOBAL_CANVAS_DEFAULTS } from './data/slideDefaults';
 import { CheckCircle2 } from 'lucide-react';
 
@@ -342,7 +348,11 @@ export default function App() {
         `${activeProject.id}_slide_${activeSlideIndex + 1}_${cleanTitle}.${exportFormat}`
       );
 
-      showToast(`Slide ${activeSlideIndex + 1} exported successfully!`);
+      const actualBytes = getDataUrlByteSize(dataUrl);
+      const actualSizeStr = formatByteSize(actualBytes);
+      showToast(
+        `Slide ${activeSlideIndex + 1} exported! (${actualSizeStr} • ${exportScale}x • ${exportFormat.toUpperCase()})`
+      );
     } catch (err) {
       console.error(err);
       alert('Export failed: ' + err.message);
@@ -403,12 +413,18 @@ export default function App() {
 
       setActiveSlideIndex(originalSlideIndex);
 
+      let totalDeckBytes = 0;
+      renderedSlides.forEach((s) => {
+        if (s.dataUrl) totalDeckBytes += getDataUrlByteSize(s.dataUrl);
+      });
+      const deckSizeStr = formatByteSize(totalDeckBytes);
+
       if (backendRes?.folderPath) {
         showToast(
-          `Deck saved to: exports/${activeProject.id}/ and downloaded as ZIP!`
+          `Deck saved! (${renderedSlides.length} slides • ${deckSizeStr}) in exports/${activeProject.id}/ and ZIP!`
         );
       } else {
-        showToast(`Deck exported as ZIP successfully!`);
+        showToast(`Deck exported as ZIP! (${renderedSlides.length} slides • ${deckSizeStr})`);
       }
     } catch (err) {
       console.error('Batch export failed:', err);

@@ -9,6 +9,7 @@ import {
   Save,
 } from 'lucide-react';
 import { PRESETS } from './CanvasStage';
+import { estimateImageFileSize } from '../utils/exportEngine';
 
 export default function Header({
   projects,
@@ -22,6 +23,7 @@ export default function Header({
   onSelectExportFormat,
   exportScale = 2,
   onSelectExportScale,
+  exportQuality = 1.0,
   onExportCurrentSlide,
   onExportAllSlides,
   isExporting,
@@ -29,6 +31,10 @@ export default function Header({
   isDiskSaved,
   onSaveToDisk,
 }) {
+  const currentPreset = (presetKey && PRESETS[presetKey]) || (presetKey && PRESETS[presetKey.toUpperCase()]) || PRESETS.WEBSITE_HD;
+  const targetW = currentPreset?.width || 1920;
+  const targetH = currentPreset?.height || 1080;
+  const estimatedSize = estimateImageFileSize(targetW * exportScale, targetH * exportScale, exportFormat, exportQuality);
   return (
     <header className="h-14 px-5 bg-[#090b11]/85 backdrop-blur-xl border-b border-white/[0.07] flex items-center justify-between select-none z-30 sticky top-0">
       {/* Left: Brand & Project Selector */}
@@ -122,6 +128,15 @@ export default function Header({
             <option value={4} className="bg-[#0f141f] text-slate-200">4x (Studio 8K)</option>
           </select>
         )}
+
+        {/* Live File Size Preview Badge */}
+        <div
+          className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs font-mono font-bold text-emerald-400"
+          title={`Estimated Export File Size: ~${estimatedSize} (${targetW * exportScale} × ${targetH * exportScale} px at ${exportScale}x ${exportFormat.toUpperCase()})`}
+        >
+          <span className="text-[10px] text-emerald-500/80 uppercase font-sans font-semibold">Size:</span>
+          <span>~{estimatedSize}</span>
+        </div>
 
         {/* Save to Project File (src/data/projectStore.json) */}
         <button

@@ -113,3 +113,47 @@ export function downloadDataUrl(dataUrl, filename) {
   a.click();
   document.body.removeChild(a);
 }
+
+/**
+ * Accurately calculate byte size from base64 dataUrl
+ */
+export function getDataUrlByteSize(dataUrl) {
+  if (!dataUrl || typeof dataUrl !== 'string') return 0;
+  const commaIdx = dataUrl.indexOf(',');
+  const base64Str = commaIdx !== -1 ? dataUrl.slice(commaIdx + 1) : dataUrl;
+  return Math.round(base64Str.length * 0.75);
+}
+
+/**
+ * Format raw bytes into human-readable KB or MB
+ */
+export function formatByteSize(bytes) {
+  if (!bytes || bytes <= 0) return '0 KB';
+  if (bytes >= 1024 * 1024) {
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  }
+  return `${Math.round(bytes / 1024)} KB`;
+}
+
+/**
+ * Real-time estimation of exported image file size based on dimensions, format, and quality
+ */
+export function estimateImageFileSize(width, height, format = 'png', quality = 1.0) {
+  const totalPixels = width * height;
+  let bytes = 0;
+
+  if (format === 'png') {
+    // PNG lossless compression with dark background: ~0.35 bytes/pixel
+    bytes = totalPixels * 0.35;
+  } else if (format === 'jpg' || format === 'jpeg') {
+    // JPEG compression varies with quality exponent
+    const qFactor = Math.pow(Math.min(1.0, Math.max(0.2, quality)), 2.2);
+    bytes = totalPixels * 0.22 * qFactor;
+  } else if (format === 'webp') {
+    // WebP has higher efficiency
+    const qFactor = Math.pow(Math.min(1.0, Math.max(0.2, quality)), 2.0);
+    bytes = totalPixels * 0.14 * qFactor;
+  }
+
+  return formatByteSize(bytes);
+}
