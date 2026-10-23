@@ -332,26 +332,25 @@ To inspect the complete, fully commented specification of all available fields a
 ---
 
 ### 4. Automation Scripts (`scripts/`)
-- **Extract Colors from Mockups:**
+- **Apple On-Device AI Mockup Analyzer & Color Extractor (macOS Native Vision + FoundationModels + CoreGraphics):**
   ```bash
-  python3 scripts/extract_project_colors.py
-  ```
-  Scans all mockup screenshots in `projects_images/images/<project_id>/`, filters noise and device bezels, calculates the dominant `primaryColor` and `secondaryColor`, and updates `src/data/decks/<project_id>.json` directly.
+  # 1. Fast Color Extraction & Deck Synchronization only (CoreGraphics sub-second speed):
+  swift scripts/mockup_analyzer.swift --colors-only
 
-- **Apple On-Device AI Mockup Analyzer (macOS Native Vision + LanguageModelSession):**
-  ```bash
-  # Analyze all images or a specific project folder:
-  swift scripts/ocr_recognize_mockups.swift [optional_directory] [--json]
+  # 2. Full Apple Vision OCR + Apple FoundationModels AI analysis + Color Extraction:
+  swift scripts/mockup_analyzer.swift [optional_directory]
 
-  # Example:
-  swift scripts/ocr_recognize_mockups.swift projects_images/images/uktika
+  # 3. Preview AI-suggested filename cleanups (Dry-Run):
+  swift scripts/mockup_analyzer.swift [optional_directory] --preview-rename
+
+  # 4. Auto-rename files safely on disk based on AI recognition:
+  swift scripts/mockup_analyzer.swift [optional_directory] --rename
   ```
-  Uses macOS native **Apple Vision Framework** (`VNRecognizeTextRequest`) alongside **Apple FoundationModels** (`LanguageModelSession` on Apple Silicon Neural Engine) to automatically analyze screenshots with **zero hardcoded conditions**:
-  - Automatically identifies **`screenType`** (e.g., *AI Chat / Conversation, Quiz & Learning, Admin Panel, Analytics Dashboard*).
-  - Synthesizes a human-like UI **`description`**.
-  - Detects UI **`components`** (*Message Bubbles, Input Fields, Navigation Bar, Card List, CTA Buttons*).
-  - Categorizes **`visualStyle`** (*Light theme minimal, Dark theme sleek, Vibrant gradient*).
-  - Extracts full **`visibleText`** in natural reading order.
+  Uses macOS native **Apple Vision Framework** (`VNRecognizeTextRequest`), **Apple FoundationModels** (`LanguageModelSession`), and **CoreGraphics** with **zero hardcoded conditions & zero fallback dictionaries**:
+  - **Dominant Color Extraction:** High-precision pixel sampling (hue binning + vibrance enhancement) from mockups.
+  - **Algorithmic Fallback:** Deterministic golden-ratio HSV color generation for projects without screenshots.
+  - **Deck Synchronization:** Automatically updates `src/data/decks/<project_id>.json` (`primaryColor`, `secondaryColor`, and slide visual accents).
+  - **OCR & Semantic UI Reasoning:** Identifies **`screenType`**, synthesizes human-like **`description`**, detects **`components`**, and extracts **`visibleText`**.
   - Automatically saves structured JSON directly inside each project's folder (`<project_folder>/mockups_metadata.json`).
 
 ---
