@@ -298,11 +298,11 @@ func analyzeWithAppleAI(session: LanguageModelSession, projectId: String, fileNa
     """
 
     do {
-        // Apple FoundationModels Multimodal Attachment
-        let attachment = Attachment(cgImage)
-        let response = try await session.respond {
+        // Apple FoundationModels Multimodal Attachment with official label & greedy deterministic sampling
+        // Reference: https://developer.apple.com/documentation/foundationmodels/analyzing-images-with-multimodal-prompting
+        let response = try await session.respond(options: GenerationOptions(samplingMode: .greedy)) {
             promptText
-            attachment
+            Attachment(cgImage).label("mockup-image")
         }
 
         var content = response.content.trimmingCharacters(in: .whitespacesAndNewlines)
