@@ -51,7 +51,7 @@ struct MockupMetadata: Codable {
     let description: String
     let components: [String]
     let visualStyle: String
-    let visibleText: [String]
+    let visibleText: [String]?
     let dimensions: [String: Int]
 }
 
@@ -240,57 +240,17 @@ func sanitizeSlug(_ text: String) -> String {
     return result.isEmpty ? "screen" : result
 }
 
-// MARK: - Apple Vision OCR
-
-func extractVisibleText(from cgImage: CGImage) -> [String] {
-    let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
-    let textRequest = VNRecognizeTextRequest()
-    textRequest.recognitionLevel = .fast
-    textRequest.usesLanguageCorrection = true
-
-    do {
-        try requestHandler.perform([textRequest])
-        guard let observations = textRequest.results else { return [] }
-
-        var lines: [(text: String, y: CGFloat, x: CGFloat)] = []
-        for obs in observations {
-            if let candidate = obs.topCandidates(1).first {
-                let trimmed = candidate.string.trimmingCharacters(in: .whitespacesAndNewlines)
-                if !trimmed.isEmpty {
-                    lines.append((trimmed, obs.boundingBox.midY, obs.boundingBox.minX))
-                }
-            }
-        }
-
-        // Natural top-to-bottom, left-to-right reading order
-        lines.sort {
-            if abs($0.y - $1.y) > 0.03 {
-                return $0.y > $1.y
-            }
-            return $0.x < $1.x
-        }
-
-        return lines.map { $0.text }
-    } catch {
-        return []
-    }
-}
-
 // MARK: - Apple Foundation Model (Multimodal LanguageModelSession)
-// Uses Apple's official Multimodal Prompting (Attachment<CGImage>) as documented at:
+// Pure on-device visual analysis via Apple's official Multimodal Prompting (Attachment<CGImage>):
 // https://developer.apple.com/documentation/foundationmodels/analyzing-images-with-multimodal-prompting
 
-func analyzeWithAppleAI(session: LanguageModelSession, projectId: String, fileName: String, cgImage: CGImage, textList: [String]) async -> AIAnalysisResult {
-    let joinedText = textList.prefix(20).joined(separator: "\n")
+func analyzeWithAppleAI(projectId: String, fileName: String, cgImage: CGImage) async -> AIAnalysisResult? {
     let promptText = """
-    You are a senior UI/UX engineer. Inspect this mobile application screenshot mockup for project "\(projectId)".
-    CRITICAL: Ignore generic camera/transfer artifacts in filenames (such as "WhatsApp Image", "Screenshot", "IMG", timestamps).
-    Base your understanding on visual inspection of the attached mockup image, UI layout, and on-screen text.
+    You are a senior UI/UX engineer. Visually inspect this mobile application screenshot mockup for project "\(projectId)".
+    CRITICAL: Base your analysis purely on the attached mockup image: its visible layout, screens, cards, typography, controls, buttons, navigation, and theme.
+    Ignore generic camera or transfer artifacts in filenames.
 
-    On-Screen Text Detected:
-    \(joinedText.isEmpty ? "[Visual UI Graphic]" : joinedText)
-
-    Reason over the visual mockup and return ONLY valid JSON (without markdown fences, no ```json, no preamble) with this schema:
+    Return ONLY valid JSON (without markdown fences, no ```json, no preamble) with this schema:
     {
       "screenType": "Specific screen purpose (e.g. Daily Affirmation Display, Lock Screen Quote, Live Wallpaper Preview, Category Filter, Custom Quote Editor, Settings Menu, Onboarding Welcome)",
       "suggestedSlug": "clean_snake_case_slug_describing_screen (e.g. lockscreen_quote_preview, wallpaper_preview, category_filter, custom_quote_menu, settings_preferences)",
@@ -301,15 +261,14 @@ func analyzeWithAppleAI(session: LanguageModelSession, projectId: String, fileNa
     """
 
     do {
-        // Apple FoundationModels Multimodal Attachment with official label & greedy deterministic sampling
-        // Reference: https://developer.apple.com/documentation/foundationmodels/analyzing-images-with-multimodal-prompting
+        // Isolated Apple FoundationModels LanguageModelSession per image
+        let session = LanguageModelSession()
         let response = try await session.respond(options: GenerationOptions(samplingMode: .greedy)) {
             promptText
             Attachment(cgImage).label("mockup-image")
         }
 
         var content = response.content.trimmingCharacters(in: .whitespacesAndNewlines)
-
         if content.hasPrefix("```json") {
             content = content.replacingOccurrences(of: "```json", with: "")
         }
@@ -325,35 +284,41 @@ func analyzeWithAppleAI(session: LanguageModelSession, projectId: String, fileNa
            let end = content.lastIndex(of: "}") {
             let jsonSub = String(content[start...end])
             if let data = jsonSub.data(using: .utf8),
-               var parsed = try? JSONDecoder().decode(AIAnalysisResult.self, from: data) {
-                // Sanitize components if model echoed placeholder prompt instructions
-                let cleanComponents = parsed.components.filter { c in
+               let dict = (try? JSONSerialization.jsonObject(with: data, options: [.fragmentsAllowed])) as? [String: Any] {
+                
+                let rawType = dict["screenType"] as? String ?? dict["type"] as? String ?? dict["screen_type"] as? String ?? "App Screen"
+                let rawSlug = dict["suggestedSlug"] as? String ?? dict["slug"] as? String ?? dict["suggested_slug"] as? String
+                let rawDesc = dict["description"] as? String ?? dict["desc"] as? String ?? "Application screen mockup showing UI components and layout."
+                let rawStyle = dict["visualStyle"] as? String ?? dict["style"] as? String ?? dict["visual_style"] as? String ?? "Modern minimalist"
+                
+                var rawComponents: [String] = []
+                if let compArr = dict["components"] as? [String] {
+                    rawComponents = compArr
+                } else if let compStr = dict["components"] as? String {
+                    rawComponents = compStr.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+                } else if let compAny = dict["components"] as? [Any] {
+                    rawComponents = compAny.compactMap { "\($0)".trimmingCharacters(in: .whitespaces) }
+                }
+                
+                let cleanComponents = rawComponents.filter { c in
                     let lower = c.lowercased()
-                    return !lower.contains("list of") && !lower.contains("list 3-5") && !lower.contains("distinct ui")
+                    return !lower.contains("list of") && !lower.contains("list 3-5") && !lower.contains("distinct ui") && !c.isEmpty
                 }
-                if cleanComponents.isEmpty {
-                    return AIAnalysisResult(
-                        screenType: parsed.screenType,
-                        suggestedSlug: parsed.suggestedSlug,
-                        description: parsed.description,
-                        components: ["Content View", "Navigation Bar"],
-                        visualStyle: parsed.visualStyle
-                    )
-                }
-                return parsed
+                
+                return AIAnalysisResult(
+                    screenType: rawType,
+                    suggestedSlug: rawSlug,
+                    description: rawDesc,
+                    components: cleanComponents,
+                    visualStyle: rawStyle
+                )
             }
         }
     } catch {
-        print("    ⚠️ Apple Multimodal Model error: \(error.localizedDescription)")
+        print("    ⚠️ Apple Multimodal Model error for \(fileName): \(error.localizedDescription)")
     }
 
-    return AIAnalysisResult(
-        screenType: "App Screen",
-        suggestedSlug: "app_screen",
-        description: "Application mockup showing UI components and layout.",
-        components: ["Content View", "Navigation Bar"],
-        visualStyle: "Standard"
-    )
+    return nil
 }
 
 // MARK: - Deck File Synchronization
@@ -461,7 +426,6 @@ if colorsOnly {
 }
 print("=" .padding(toLength: 88, withPad: "=", startingAt: 0))
 
-let aiSession = colorsOnly ? nil : LanguageModelSession()
 var allResults: [MockupMetadata] = []
 var processedProjectIds = Set<String>()
 
@@ -507,36 +471,27 @@ func processDirectory(dir: String) async {
             let width = cgImage.width
             let height = cgImage.height
 
-            var aiResult = AIAnalysisResult(
-                screenType: "App Screen",
-                suggestedSlug: "app_screen",
-                description: "Application mockup showing UI components and layout.",
-                components: ["Navigation Bar", "Content View"],
-                visualStyle: "Standard"
-            )
-            var visibleText: [String] = []
-
-            if !colorsOnly, let session = aiSession {
-                // 1. Apple Vision OCR
-                visibleText = extractVisibleText(from: cgImage)
-                // 2. Apple Multimodal AI reasoning (Vision + LanguageModelSession Attachment)
-                aiResult = await analyzeWithAppleAI(session: session, projectId: projectId, fileName: img, cgImage: cgImage, textList: visibleText)
+            let aiResult: AIAnalysisResult?
+            if !colorsOnly {
+                // Apple Multimodal AI reasoning (Pure Vision Attachment - no OCR noise)
+                aiResult = await analyzeWithAppleAI(projectId: projectId, fileName: img, cgImage: cgImage)
+            } else {
+                aiResult = nil
             }
 
-            let rawSlug = aiResult.suggestedSlug ?? aiResult.screenType
-            let cleanSlug = sanitizeSlug(rawSlug)
+            let rawSlug = aiResult?.suggestedSlug ?? aiResult?.screenType
+            let cleanSlug = rawSlug != nil ? sanitizeSlug(rawSlug!) : "screen"
             let formattedIndex = String(format: "%02d", index + 1)
             let proposedFileName = "\(formattedIndex)_\(cleanSlug).\(ext)"
 
             var finalFileName = img
             var finalRelPath = relPath
 
-            if !colorsOnly {
+            if let ai = aiResult, !colorsOnly {
                 print("  🖼️  \(img) [\(width)×\(height)px]")
-                print("      🏷️  Screen Type:    \(aiResult.screenType)")
-                print("      🎨 Visual Style:   \(aiResult.visualStyle)")
-                print("      🧩 Components:     \(aiResult.components.joined(separator: ", "))")
-                print("      📝 Visible Text:   \(visibleText.prefix(5).joined(separator: " | "))\(visibleText.count > 5 ? " (+ more)" : "")")
+                print("      🏷️  Screen Type:    \(ai.screenType)")
+                print("      🎨 Visual Style:   \(ai.visualStyle)")
+                print("      🧩 Components:     \(ai.components.joined(separator: ", "))")
             }
 
             if isPreviewRename {
@@ -566,11 +521,11 @@ func processDirectory(dir: String) async {
             let meta = MockupMetadata(
                 fileName: finalFileName,
                 relativePath: finalRelPath,
-                screenType: aiResult.screenType,
-                description: aiResult.description,
-                components: aiResult.components,
-                visualStyle: aiResult.visualStyle,
-                visibleText: visibleText,
+                screenType: aiResult?.screenType ?? "App Screen",
+                description: aiResult?.description ?? "",
+                components: aiResult?.components ?? [],
+                visualStyle: aiResult?.visualStyle ?? "",
+                visibleText: nil,
                 dimensions: ["width": width, "height": height]
             )
             folderResults.append(meta)
