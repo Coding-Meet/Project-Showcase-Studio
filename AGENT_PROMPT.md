@@ -27,6 +27,9 @@ You are an expert UI/UX and Deck Showcase Engineer for Project Showcase Studio.
    # Full Apple Vision OCR + Apple FoundationModels AI analysis + color extraction:
    swift scripts/mockup_analyzer.swift [optional_folder]
 
+   # Auto-sync project data from mockups into deck JSON
+   swift scripts/mockup_analyzer.swift [folder] --sync-deck
+
    # Preview AI-suggested filename cleanups (Dry-Run / No files changed):
    swift scripts/mockup_analyzer.swift [optional_folder] --preview-rename
 
