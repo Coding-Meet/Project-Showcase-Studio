@@ -293,9 +293,11 @@ def build_project_deck(project):
         "textureOverlay": "dots"
     }
 
+DECKS_DIR = os.path.join(WORKSPACE_DIR, 'src', 'data', 'decks')
+
 def main():
     print("=" * 80)
-    print("🚀 Project Showcase Studio - Complete Deck Generator for All Projects")
+    print("🚀 Project Showcase Studio - Individual Deck Generator (src/data/decks/)")
     print("=" * 80)
 
     if not os.path.exists(PROJECTS_JSON_PATH):
@@ -305,20 +307,14 @@ def main():
     with open(PROJECTS_JSON_PATH, 'r', encoding='utf-8') as f:
         projects = json.load(f)
 
-    # Load existing projectStore if exists
-    store = {}
-    if os.path.exists(PROJECT_STORE_JSON_PATH):
-        try:
-            with open(PROJECT_STORE_JSON_PATH, 'r', encoding='utf-8') as f:
-                store = json.load(f)
-        except Exception:
-            store = {}
+    os.makedirs(DECKS_DIR, exist_ok=True)
 
-    print(f"\nBuilding complete showcase decks for {len(projects)} projects:")
+    print(f"\nBuilding individual showcase decks for {len(projects)} projects:")
     print("-" * 80)
-    print(f"{'Project ID':<42} | {'Mockups':<8} | {'Primary':<9} | Deck Status")
+    print(f"{'Project ID':<42} | {'Mockups':<8} | {'Primary':<9} | Output File")
     print("-" * 80)
 
+    generated_count = 0
     for p in projects:
         pid = p['id']
         mockup_count = len(get_project_mockup_paths(pid))
@@ -326,18 +322,19 @@ def main():
         
         # Build 3-slide showcase deck
         deck = build_project_deck(p)
-        store[pid] = deck
-
+        
+        # Save individual file src/data/decks/<pid>.json
+        deck_file = os.path.join(DECKS_DIR, f"{pid}.json")
+        with open(deck_file, 'w', encoding='utf-8') as f:
+            json.dump(deck, f, indent=2, ensure_ascii=False)
+        
+        generated_count += 1
         mockup_str = f"{mockup_count} imgs" if mockup_count > 0 else "0 (UI)"
-        print(f"{pid:<42} | {mockup_str:<8} | {prim:<9} | ✅ 3 Slides Generated")
-
-    # Save to projectStore.json
-    with open(PROJECT_STORE_JSON_PATH, 'w', encoding='utf-8') as f:
-        json.dump(store, f, indent=2, ensure_ascii=False)
+        print(f"{pid:<42} | {mockup_str:<8} | {prim:<9} | ✅ decks/{pid}.json")
 
     print("\n" + "=" * 80)
-    print(f"🎉 Successfully generated full showcase decks for {len(projects)} projects!")
-    print(f"💾 Permanently saved to: {PROJECT_STORE_JSON_PATH}")
+    print(f"🎉 Successfully generated {generated_count} individual project decks!")
+    print(f"💾 Permanently saved to: {DECKS_DIR}")
     print("=" * 80 + "\n")
 
 if __name__ == '__main__':

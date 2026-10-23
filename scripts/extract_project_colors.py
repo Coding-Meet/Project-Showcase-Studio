@@ -15,7 +15,7 @@ from PIL import Image
 WORKSPACE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 IMAGES_BASE_DIR = os.path.join(WORKSPACE_DIR, 'projects_images', 'images')
 PROJECTS_JSON_PATH = os.path.join(WORKSPACE_DIR, 'src', 'data', 'projects.json')
-PROJECT_STORE_JSON_PATH = os.path.join(WORKSPACE_DIR, 'src', 'data', 'projectStore.json')
+DECKS_DIR = os.path.join(WORKSPACE_DIR, 'src', 'data', 'decks')
 
 # Aesthetic fallback palettes for projects without screenshot images
 FALLBACK_PALETTES = {
@@ -168,16 +168,16 @@ def main():
         json.dump(projects, f, indent=2, ensure_ascii=False)
     print(f"\n✅ Successfully updated {updated_count} projects in {PROJECTS_JSON_PATH}")
 
-    # 3. Update projectStore.json if it exists
-    if os.path.exists(PROJECT_STORE_JSON_PATH):
+    # 3. Update individual deck files in src/data/decks/
+    if os.path.exists(DECKS_DIR):
         try:
-            with open(PROJECT_STORE_JSON_PATH, 'r', encoding='utf-8') as f:
-                store = json.load(f)
-            
             store_updated = 0
-            for sp_id, sp_data in store.items():
-                if sp_id in results_map:
-                    prim, sec = results_map[sp_id]
+            for sp_id, (prim, sec) in results_map.items():
+                deck_file = os.path.join(DECKS_DIR, f"{sp_id}.json")
+                if os.path.exists(deck_file):
+                    with open(deck_file, 'r', encoding='utf-8') as f:
+                        sp_data = json.load(f)
+
                     sp_data['primaryColor'] = prim
                     sp_data['secondaryColor'] = sec
                     
@@ -188,13 +188,14 @@ def main():
                         s['badgeColor'] = prim
                         s['titleGradientTo'] = prim
                         s['subtitleGradientTo'] = sec
+
+                    with open(deck_file, 'w', encoding='utf-8') as f:
+                        json.dump(sp_data, f, indent=2, ensure_ascii=False)
                     store_updated += 1
 
-            with open(PROJECT_STORE_JSON_PATH, 'w', encoding='utf-8') as f:
-                json.dump(store, f, indent=2, ensure_ascii=False)
-            print(f"✅ Successfully updated {store_updated} showcase decks in {PROJECT_STORE_JSON_PATH}")
+            print(f"✅ Successfully updated {store_updated} showcase decks in {DECKS_DIR}")
         except Exception as e:
-            print(f"⚠️ Warning updating projectStore.json: {e}")
+            print(f"⚠️ Warning updating deck files in {DECKS_DIR}: {e}")
 
     print("\n🎉 Complete! Primary and secondary colors are now integrated.\n")
 

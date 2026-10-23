@@ -395,7 +395,7 @@ export default function App() {
       });
       if (res.ok) {
         setIsDiskSaved(true);
-        showToast('All customizations saved permanently to src/data/projectStore.json!');
+        showToast('All customizations saved permanently to individual files in src/data/decks/!');
       } else {
         const err = await res.json();
         alert('Failed to save to disk: ' + (err.error || 'Unknown error'));

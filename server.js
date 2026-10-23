@@ -25,7 +25,10 @@ if (!fs.existsSync(EXPORTS_DIR)) {
 // Find Google Chrome path on Mac
 const CHROME_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
-const PROJECT_STORE_PATH = path.join(__dirname, 'src/data/projectStore.json');
+const DECKS_DIR = path.join(__dirname, 'src/data/decks');
+if (!fs.existsSync(DECKS_DIR)) {
+  fs.mkdirSync(DECKS_DIR, { recursive: true });
+}
 
 // 1. Get projects
 app.get('/api/projects', (req, res) => {
@@ -38,29 +41,86 @@ app.get('/api/projects', (req, res) => {
   }
 });
 
-// 1b. Get permanently saved project store from disk
+// 1b. Get all project decks from src/data/decks/
 app.get('/api/project-store', (req, res) => {
   try {
-    if (fs.existsSync(PROJECT_STORE_PATH)) {
-      const data = JSON.parse(fs.readFileSync(PROJECT_STORE_PATH, 'utf-8'));
+    const store = {};
+    if (fs.existsSync(DECKS_DIR)) {
+      const files = fs.readdirSync(DECKS_DIR).filter(f => f.endsWith('.json'));
+      for (const file of files) {
+        const pid = path.basename(file, '.json');
+        try {
+          const content = fs.readFileSync(path.join(DECKS_DIR, file), 'utf-8');
+          store[pid] = JSON.parse(content);
+        } catch (e) {
+          console.warn(`Error reading deck file ${file}:`, e.message);
+        }
+      }
+    }
+    res.json(store);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 1c. Get a single project's deck
+app.get('/api/project-store/:projectId', (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const filePath = path.join(DECKS_DIR, `${projectId}.json`);
+    if (fs.existsSync(filePath)) {
+      const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
       res.json(data);
     } else {
-      res.json({});
+      res.status(404).json({ error: `Deck not found for project: ${projectId}` });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// 1c. Save project store permanently to disk (src/data/projectStore.json)
+// 1d. Save project deck(s) permanently to disk (src/data/decks/<projectId>.json)
 app.post('/api/project-store', (req, res) => {
   try {
-    const { projectStore } = req.body;
-    if (!projectStore || typeof projectStore !== 'object') {
-      return res.status(400).json({ error: 'Invalid projectStore object' });
+    const { projectStore, projectId, deck } = req.body;
+    
+    // Save single project if projectId and deck are provided
+    if (projectId && deck) {
+      const filePath = path.join(DECKS_DIR, `${projectId}.json`);
+      fs.writeFileSync(filePath, JSON.stringify(deck, null, 2), 'utf-8');
+      return res.json({ success: true, count: 1, projectId });
     }
-    fs.writeFileSync(PROJECT_STORE_PATH, JSON.stringify(projectStore, null, 2), 'utf-8');
-    res.json({ success: true, count: Object.keys(projectStore).length });
+
+    // Save full store object { [pid]: deckData }
+    if (projectStore && typeof projectStore === 'object') {
+      let savedCount = 0;
+      for (const [pid, pdata] of Object.entries(projectStore)) {
+        if (pdata && typeof pdata === 'object') {
+          const filePath = path.join(DECKS_DIR, `${pid}.json`);
+          fs.writeFileSync(filePath, JSON.stringify(pdata, null, 2), 'utf-8');
+          savedCount++;
+        }
+      }
+      return res.json({ success: true, count: savedCount });
+    }
+
+    res.status(400).json({ error: 'Invalid payload: expected projectStore or projectId + deck' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 1e. Save individual project deck directly
+app.post('/api/project-store/:projectId', (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const deck = req.body;
+    if (!deck || typeof deck !== 'object') {
+      return res.status(400).json({ error: 'Invalid deck data' });
+    }
+    const filePath = path.join(DECKS_DIR, `${projectId}.json`);
+    fs.writeFileSync(filePath, JSON.stringify(deck, null, 2), 'utf-8');
+    res.json({ success: true, projectId });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

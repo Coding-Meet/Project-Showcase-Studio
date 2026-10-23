@@ -252,21 +252,25 @@ Click the **Canvas** tab in the Inspector:
 ## 💾 Project Persistence & Disk Auto-Sync
 
 All project customizations are automatically synchronized in real time:
-- **Disk File:** `src/data/projectStore.json` (persisted on disk across git and reboots).
+- **Disk Directory:** `src/data/decks/<project_id>.json` (individual, clean ~160-line JSON files for each project).
 - **Backend Auto-Save:** The Express backend (`server.js`) listens on port 3001 and writes changes every time a slide or project property is modified.
 - **Browser Fallback:** Synchronized with `localStorage` so your work is never lost even if the backend is temporarily offline.
 
 ---
 
-## 📁 Data Architecture: `projects.json` vs `projectStore.json`
+## 📁 Data Architecture: `projects.json` vs `src/data/decks/`
 
-Project Showcase Studio uses a clean, two-layer data separation:
+Project Showcase Studio uses a clean, two-layer modular data separation:
 
 ```text
 /Volumes/Meet/project_showcase/
 ├── src/data/
-│   ├── projects.json          # 1. Project Directory & Metadata Catalog (Master)
-│   ├── projectStore.json      # 2. Studio Visual State & 3-Slide Decks Database
+│   ├── projects.json          # 1. Master Project Directory & Metadata Catalog (30 projects)
+│   ├── decks/                 # 2. Modular 3-Slide Presentation Decks (Individual JSON per project)
+│   │   ├── news_kotlin_multiplatform_app.json
+│   │   ├── pokemon_app_mvi_compose_multiplatform.json
+│   │   ├── devanalyzer.json
+│   │   └── ... (30 individual files, ~160 lines each)
 │   ├── localLogos.js          # 3. 45+ Local Brand Logos Catalog & Wordmark Index
 │   └── deviceSpecs.js         # 4. 33 Hardware Specifications & Bezels
 ├── projects_images/images/    # Organized Mockup Screenshots by Project ID
@@ -286,9 +290,9 @@ Project Showcase Studio uses a clean, two-layer data separation:
   - `platform`: Target platforms (`Android`, `iOS`, `Desktop`, `macOS`, `Windows`, `Linux`).
   - `primaryColor` & `secondaryColor`: Dominant brand colors automatically extracted from real app screenshots.
 
-### 2. `src/data/projectStore.json` (Showcase Studio Visual State Database)
-- Stores the customized **3-Slide Showcase Decks** for each project:
-  - **Slide 1 (`hero_cover`):** Cover slide with 3D isometric tilt, project headline, tagline, trust pill, and real app screenshot.
+### 2. `src/data/decks/<project_id>.json` (Modular Showcase Decks)
+- Each project has its own dedicated, light (~160 lines) configuration file containing:
+  - **Slide 1 (`hero_cover` / `desktop_dashboard` / `featured_card`):** Cover slide with 3D isometric tilt, project headline, tagline, trust pill, and real app screenshot.
   - **Slide 2 (`feature_deep_dive`):** 3 key feature highlight cards, accent glow, and secondary screen.
   - **Slide 3 (`responsive_combo` / `dual_screen`):** Multiplatform layout showing mobile and desktop variants side by side.
   - **Visual Styling:** Canvas lighting theme (`aurora`), accent glow, 3D tilt angles, custom gradient angles, hardware finish (`natural_titanium`), and store badges.
@@ -298,12 +302,12 @@ Project Showcase Studio uses a clean, two-layer data separation:
   ```bash
   python3 scripts/extract_project_colors.py
   ```
-  Scans all mockup screenshots in `projects_images/images/<project_id>/`, filters noise and device bezels, calculates the dominant `primaryColor` and `secondaryColor`, and updates `src/data/projects.json`.
+  Scans all mockup screenshots in `projects_images/images/<project_id>/`, filters noise and device bezels, calculates the dominant `primaryColor` and `secondaryColor`, and updates `src/data/projects.json` and `src/data/decks/`.
 - **Generate Complete 3-Slide Decks:**
   ```bash
   python3 scripts/generate_showcase_decks.py
   ```
-  Automatically compiles production-ready 3-slide decks for all 30 projects with real screenshot mockups, brand gradients, hardware frames, and status pills, saving directly to `src/data/projectStore.json`.
+  Automatically compiles production-ready 3-slide decks for all 30 projects with real screenshot mockups, brand gradients, hardware frames, and status pills, saving directly into `src/data/decks/<project_id>.json`.
 
 ---
 
