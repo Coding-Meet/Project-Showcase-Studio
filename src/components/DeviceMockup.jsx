@@ -34,6 +34,7 @@ export default function DeviceMockup({
   deviceFinish = 'natural_titanium',
   frameGleam = true,
   deviceCornerRadius,
+  rotation = 0,
   tilt = false,
   tiltAngle = -8,
   pitchAngle = 4,
@@ -97,7 +98,7 @@ export default function DeviceMockup({
   }
 
   const transformStyle = {
-    transform: `scale(${scale}) translate(${offsetX}px, ${offsetY}px) ${
+    transform: `scale(${scale}) translate(${offsetX}px, ${offsetY}px) rotate(${rotation || 0}deg) ${
       tilt ? `perspective(${perspective}px) rotateY(${tiltAngle}deg) rotateX(${pitchAngle}deg)` : ''
     }`,
     transformStyle: 'preserve-3d',

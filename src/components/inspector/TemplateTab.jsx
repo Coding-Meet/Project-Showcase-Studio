@@ -208,12 +208,12 @@ export default function TemplateTab({ slide, onUpdateSlide }) {
         <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.06] flex items-center justify-between">
           <div>
             <div className="text-xs font-semibold text-slate-200">
-              Device Height Auto-Fit
+              Preset Dimension Auto-Fit
             </div>
             <div className="text-[10px] text-slate-400">
               {deviceAutoFit
-                ? 'Auto-shrinks device on low-height canvas to prevent cut-off'
-                : 'Maintains exact device scale regardless of canvas height'}
+                ? 'Auto-adjusts device width & height for Upwork, Fiverr & Personal presets'
+                : 'Maintains fixed 100% device scale regardless of preset'}
             </div>
           </div>
           <button

@@ -65,7 +65,11 @@ Click the **Template** tab in the right Inspector:
 Click the **Mockup** tab in the Inspector:
 - **Upload Screenshot:** Drag and drop or browse for your screenshot (`PNG`, `JPG`, `WebP`). You can also type local image paths (e.g., `/images/screenshot.png`) or data URLs. Newly uploaded screenshots with empty transparent margins are automatically detected and auto-trimmed!
 - **✂️ Trim Transparent Padding:** If a pre-framed screenshot has empty transparent spacing at the top/bottom that causes offset shadows or weird card boxes, click the **Trim Transparent Padding** button under the preview thumbnail to crop it cleanly via 1-click canvas alpha scanning.
-- **Secondary Screenshot:** For *Dual Screen* and *Responsive Combo*, upload a 2nd screenshot for the mobile device.
+- **📱 Multi-Device Independent Customization (Dual Screen & Responsive Combo):**
+  - **Screen 1 vs Screen 2 Switcher:** In multi-device slides, a segmented toggle allows you to switch between **Screen 1 (Left / Desktop)** and **Screen 2 (Right / Mobile)**.
+  - **Individual Previews & Trims:** Each device gets its own independent preview thumbnail, replace button, clear button, and **Trim Transparent Padding** button.
+  - **100% Independent Controls:** Customize `hasFrame`, hardware model (e.g. Pixel 9 on left, iPhone 16 Pro on right), chassis finish, rim gleam, corner radius, shadow style, shadow intensity, screen glass streak reflection, zoom scale, X/Y translation offsets, **2D Device Rotation Angle (-90° to +90°)**, and **3D Isometric Tilt (Tilt Angle Y & Pitch Angle X)** completely independently for each device!
+  - **⇄ 1-Click Swap Screens:** Instantly swaps all settings (screenshots, frames, models, finishes, scale, rotation angles, 3D tilt angles, and positions) between both devices.
 - **Auto-Color:** Click the ✨ **Auto-Color** button to sample dominant colors from your screenshot and automatically tune the ambient lighting.
 - **Hardware Frame Model:** Choose from **33 real hardware specifications** (Pixel 9/10, iPhone 16 Pro/17, Galaxy S25, iPad Pro M4, macOS Desktop Window, or Frameless).
 - **Image Has Frame Toggle:** Turn ON if your image already includes bezels/frames. When enabled:
@@ -73,9 +77,9 @@ Click the **Mockup** tab in the Inspector:
   - Standard rectangular `box-shadow` is automatically replaced with **alpha-aware CSS `drop-shadow`** so transparent margins never cast awkward rectangular card shadows.
   - Screen reflection is blended with `mix-blend-mode: overlay` to preserve transparent PNG backgrounds.
 - **Device Body Finish:** Toggle ON/OFF or select `None (∅)` to preserve the original OEM stock frame, or pick from 10 metallic chassis finishes (Natural Titanium, Desert Titanium, Space Gray, etc.).
-- **3D Isometric Tilt (Hero Cover):** Adjust perspective tilt angle Y (-25° to 25°) and pitch angle X (-15° to 15°).
+- **3D Isometric Tilt (Universal to ALL templates & each device):** Enable perspective 3D isometric tilt across all 6 layout templates! Adjust perspective tilt angle Y (-25° to 25°) and pitch angle X (-15° to 15°) with live real-time rendering. In multi-device slides, tilt controls are applied independently to Screen 1 vs Screen 2.
 - **Device Shadows & Reflection:** Choose shadow styles (*Dramatic, Soft, Neon, None*), shadow intensity, and glossy screen reflection.
-- **Scale & Offsets:** Adjust device zoom scale (50% to 140%) and X/Y offset positioning.
+- **Scale, Rotation & Offsets:** Adjust device zoom scale (50% to 140%), 2D device rotation (-90° to +90° with 1-click **Reset (0°)** button), and X/Y offset positioning. In multi-device layouts, rotation is customizable individually per image.
 
 ### Step 6: Customize Typography & Gradient Styles
 Click the **Content** tab in the Inspector:
@@ -153,7 +157,7 @@ Click the **Canvas** tab in the Inspector:
 | `layoutSplit` | Slider + 3 Quick Pills | `48` | `30%` to `70%` | **Layout Balance & Split**: Width ratio between Content and Mockup (`35/65` Focus Device, `48/52` Balanced, `60/40` Focus Content) |
 | `autoScaleEnabled` | Switch Toggle | `true` | `true` / `false` | **Auto-Scale Text & Elements**: Toggle dynamic proportional font & element scaling when switching canvas resolutions |
 | `autoScaleIntensity`| Slider | `1.0` (100%) | `0.0` (0%) to `1.0` (100%) | **Auto-Scale Intensity**: Control responsiveness (0% locked size, 50% subtle scaling, 100% full auto-scale) |
-| `deviceAutoFit` | Switch Toggle | `true` | `true` / `false` | **Device Height Auto-Fit**: Auto-shrinks device on low-height canvas (e.g. 712x430) to prevent viewport clipping |
+| `deviceAutoFit` | Switch Toggle | `true` | `true` / `false` | **Preset Dimension Auto-Fit**: Proportional mockup dimension scaling — automatically resizes device height and width across Personal (1080p/720p), Upwork (1000x750), and Fiverr (1280x769 / 712x430) to prevent overflow or clipping |
 | `tilt` | Checkbox | `true` (Hero) | `true` / `false` | Enables 3D perspective transform (Hero Cover only) |
 | `tiltAngle` | Slider | `-8°` | `-25°` to `+25°` | 3D perspective rotation on the Y-axis |
 | `pitchAngle` | Slider | `4°` | `-15°` to `+15°` | 3D perspective rotation on the X-axis |

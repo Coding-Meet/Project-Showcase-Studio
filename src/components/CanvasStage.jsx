@@ -44,6 +44,7 @@ const CanvasStage = forwardRef(function CanvasStage(
     statusBadge = '',
     // Device & 3D
     deviceScale = 1,
+    rotation = 0,
     tilt = true,
     tiltAngle = -8,
     pitchAngle = 4,
@@ -168,11 +169,18 @@ const CanvasStage = forwardRef(function CanvasStage(
   // If disabled, scale is fixed at 1.0; if enabled, interpolate difference by intensity:
   const baseScale = isAutoScale ? 1 + (rawBaseScale - 1) * intensity : 1;
 
-  // Device mockup fit factor:
-  // If deviceAutoFit is true, auto-shrink device if canvas height < 640px.
+  // Proportional Device Dimensions Auto-Fit (Personal / Fiverr / Upwork):
+  // Automatically scales device height and width proportionally across all canvas presets:
+  // - Personal HD (1920x1080): 100% scale
+  // - Personal 720p (1280x720): 66.7% scale (matches 720p height)
+  // - Fiverr Recommended (1280x769): 71.2% scale (matches 769p height)
+  // - Upwork Portfolio (1000x750 4:3): ~65.1% scale (fits 750px height + 1000px width with no clipping)
+  // - Fiverr Minimum (712x430): ~39.8% scale (fits 430px height with no clipping)
   const isDeviceAutoFit = resolvedSlide.deviceAutoFit !== false;
-  const rawDeviceFit = Math.min(1, targetHeight / 640);
-  const deviceFitScale = isDeviceAutoFit ? rawDeviceFit : 1;
+  const normHeightScale = targetHeight / 1080;
+  const normWidthScale = targetWidth / 1920;
+  const proportionalDeviceFit = Math.min(normHeightScale, normWidthScale * 1.25);
+  const deviceFitScale = isDeviceAutoFit ? proportionalDeviceFit : 1;
 
   // Variant dispatcher
   const renderVariant = () => {

@@ -142,6 +142,8 @@ export default function InspectorSidebar({
             onChangeScreenReflection={(val) => onUpdateSlide({ screenReflection: val })}
             deviceScale={slide.deviceScale}
             onChangeDeviceScale={(val) => onUpdateSlide({ deviceScale: val })}
+            rotation={slide.rotation}
+            onChangeRotation={(val) => onUpdateSlide({ rotation: val })}
             offsetX={slide.offsetX}
             onChangeOffsetX={(val) => onUpdateSlide({ offsetX: val })}
             offsetY={slide.offsetY}
