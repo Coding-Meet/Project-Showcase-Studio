@@ -1,62 +1,44 @@
 {
-  "accentColor" : "#c7f23a",
-  "backgroundColor" : "#080a12",
-  "backgroundVariant" : "aurora",
-  "bgAlignment" : "behind_device",
-  "canvasRadius" : 28,
-  "customBgImage" : null,
-  "exportFormat" : "png",
-  "glowIntensity" : 0.34999999999999998,
-  "presetKey" : "WEBSITE_HD",
-  "primaryColor" : "#c7f23a",
-  "secondaryColor" : "#46f253",
-  "slides" : [
+  "slides": [
     {
-      "accentColor" : "#c7f23a",
-      "badgeColor" : "#c7f23a",
-      "deviceType" : "android",
-      "hasFrame" : false,
-      "id" : "slide-1",
-      "imageSrc" : null,
-      "subtitleGradientTo" : "#46f253",
-      "tagline" : "Automates content rewriting using Selenium and Apache POI.",
-      "title" : "Quillbot Web Scraper",
-      "titleGradientTo" : "#c7f23a",
-      "variant" : "hero_cover"
+      "id": "slide-1",
+      "variant": "hero_cover",
+      "title": "Quillbot Web Scraper",
+      "tagline": "Automates content rewriting using Selenium and Apache POI.",
+      "imageSrc": null,
+      "hasFrame": false,
+      "deviceType": "android"
     },
     {
-      "accentColor" : "#c7f23a",
-      "badgeColor" : "#c7f23a",
-      "deviceType" : "android",
-      "features" : [
-
-      ],
-      "hasFrame" : false,
-      "id" : "slide-2",
-      "imageSrc" : null,
-      "subtitleGradientTo" : "#46f253",
-      "tagline" : "Built with scalable patterns and modern tooling.",
-      "title" : "Core Architecture & Capabilities",
-      "titleGradientTo" : "#c7f23a",
-      "variant" : "feature_deep_dive"
+      "id": "slide-2",
+      "variant": "feature_deep_dive",
+      "title": "Core Architecture & Capabilities",
+      "tagline": "Built with scalable patterns and modern tooling.",
+      "features": [],
+      "imageSrc": null,
+      "hasFrame": false,
+      "deviceType": "android"
     },
     {
-      "accentColor" : "#c7f23a",
-      "badgeColor" : "#c7f23a",
-      "deviceType" : "android",
-      "features" : [
-
-      ],
-      "hasFrame" : false,
-      "id" : "slide-3",
-      "imageSrc" : null,
-      "secondaryImageSrc" : null,
-      "subtitleGradientTo" : "#46f253",
-      "tagline" : "Engineered for smooth navigation and reactive state management.",
-      "title" : "Seamless User Journey & Experience",
-      "titleGradientTo" : "#c7f23a",
-      "variant" : "dual_screen"
+      "id": "slide-3",
+      "variant": "dual_screen",
+      "title": "Seamless User Journey & Experience",
+      "tagline": "Engineered for smooth navigation and reactive state management.",
+      "features": [],
+      "imageSrc": null,
+      "secondaryImageSrc": null,
+      "hasFrame": false,
+      "deviceType": "android"
     }
   ],
-  "textureOverlay" : "dots"
+  "presetKey": "WEBSITE_HD",
+  "exportFormat": "png",
+  "backgroundColor": "#080a12",
+  "accentColor": "#6366f1",
+  "glowIntensity": 0.35,
+  "backgroundVariant": "aurora",
+  "bgAlignment": "behind_device",
+  "customBgImage": null,
+  "textureOverlay": "dots",
+  "canvasRadius": 28
 }
