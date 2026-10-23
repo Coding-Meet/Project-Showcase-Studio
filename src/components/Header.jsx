@@ -10,6 +10,7 @@ import {
   Crosshair,
   Search,
   Check,
+  RefreshCw,
 } from 'lucide-react';
 import { PRESETS } from './CanvasStage';
 import { estimateImageFileSize } from '../utils/exportEngine';
@@ -35,6 +36,7 @@ export default function Header({
   exportProgress,
   isDiskSaved,
   onSaveToDisk,
+  onReloadFromDisk,
 }) {
   const [isProjectMenuOpen, setIsProjectMenuOpen] = useState(false);
   const [projectSearch, setProjectSearch] = useState('');
@@ -240,7 +242,19 @@ export default function Header({
           <span>~{estimatedSize}</span>
         </div>
 
-        {/* Save to Project File (src/data/projectStore.json) */}
+        {/* Reload from Disk (Discard in-memory stale cache & pull latest from src/data/decks/) */}
+        {onReloadFromDisk && (
+          <button
+            onClick={onReloadFromDisk}
+            className="h-8 px-2.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-semibold text-slate-300 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap flex-shrink-0"
+            title="Reload this project directly from disk file (src/data/decks/<project>.json)"
+          >
+            <RefreshCw className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+            <span className="whitespace-nowrap hidden sm:inline">Reload</span>
+          </button>
+        )}
+
+        {/* Save to Project File (src/data/decks/<project>.json) */}
         <button
           onClick={onSaveToDisk}
           className={`h-8 px-2.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap flex-shrink-0 ${
@@ -248,7 +262,7 @@ export default function Header({
               ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20'
               : 'bg-white/[0.04] hover:bg-white/[0.08] border-white/[0.08] text-slate-200 hover:text-white'
           }`}
-          title="Save all customized colors, sizes, and slides permanently to src/data/projectStore.json"
+          title="Save all customized colors, sizes, and slides permanently to src/data/decks/<project>.json"
         >
           {isDiskSaved ? (
             <>

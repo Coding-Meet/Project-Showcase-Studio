@@ -18,17 +18,20 @@ import FoundationModels
  *   6. Auto-Renamer: Clean snake_case filenames for mockups based on AI reasoning (--rename / --preview-rename).
  *
  * Usage:
- *   # Full AI analysis, color extraction & deck update:
+ *   # Safe read-only inspection (AI analysis + color extraction to console & mockups_metadata.json):
  *   swift scripts/mockup_analyzer.swift [optional_dir_path]
  *
- *   # Fast color extraction & deck sync only (skips AI LLM reasoning):
+ *   # Fast color extraction only (does NOT modify deck files):
  *   swift scripts/mockup_analyzer.swift --colors-only
  *
- *   # Preview what filenames will be renamed to (Dry-Run):
+ *   # Preview what filenames will be renamed to (Dry-Run, does NOT modify files):
  *   swift scripts/mockup_analyzer.swift [optional_dir_path] --preview-rename
  *
- *   # Auto-rename files safely on disk based on AI recognition:
+ *   # Auto-rename images on disk based on AI recognition:
  *   swift scripts/mockup_analyzer.swift [optional_dir_path] --rename
+ *
+ *   # OPTIONAL: Explicitly update src/data/decks/<project>.json colors/metadata:
+ *   swift scripts/mockup_analyzer.swift [optional_dir_path] --sync-deck
  */
 
 // MARK: - Data Models
@@ -273,30 +276,38 @@ func extractVisibleText(from cgImage: CGImage) -> [String] {
     }
 }
 
-// MARK: - Apple Foundation Model (LanguageModelSession)
+// MARK: - Apple Foundation Model (Multimodal LanguageModelSession)
+// Uses Apple's official Multimodal Prompting (Attachment<CGImage>) as documented at:
+// https://developer.apple.com/documentation/foundationmodels/analyzing-images-with-multimodal-prompting
 
-func analyzeWithAppleAI(session: LanguageModelSession, projectId: String, fileName: String, textList: [String]) async -> AIAnalysisResult {
-    let joinedText = textList.prefix(25).joined(separator: "\n")
-    let prompt = """
-    You are a senior UI/UX engineer. Analyze this mobile application screenshot mockup for the project: "\(projectId)".
-    CRITICAL: Ignore generic camera, messenger, or transfer artifacts in filenames (such as "WhatsApp Image", "Screenshot", "IMG", "PXL", timestamps).
-    Base your understanding strictly on the application domain ("\(projectId)") and the actual on-screen text and UI layout.
+func analyzeWithAppleAI(session: LanguageModelSession, projectId: String, fileName: String, cgImage: CGImage, textList: [String]) async -> AIAnalysisResult {
+    let joinedText = textList.prefix(20).joined(separator: "\n")
+    let promptText = """
+    You are a senior UI/UX engineer. Inspect this mobile application screenshot mockup for project "\(projectId)".
+    CRITICAL: Ignore generic camera/transfer artifacts in filenames (such as "WhatsApp Image", "Screenshot", "IMG", timestamps).
+    Base your understanding on visual inspection of the attached mockup image, UI layout, and on-screen text.
 
     On-Screen Text Detected:
-    \(joinedText.isEmpty ? "[No prominent text on screen / Pure visual graphic]" : joinedText)
+    \(joinedText.isEmpty ? "[Visual UI Graphic]" : joinedText)
 
-    Reason over the UI purpose and return ONLY valid JSON (without markdown fences, no ```json, no preamble) with this schema:
+    Reason over the visual mockup and return ONLY valid JSON (without markdown fences, no ```json, no preamble) with this schema:
     {
-      "screenType": "Specific screen purpose (e.g. Daily Affirmation Display, Quote Reader, Live Wallpaper Preview, Category Filter, Custom Quote Editor, Settings Menu, Onboarding Welcome)",
-      "suggestedSlug": "clean_snake_case_slug_describing_screen (e.g. affirmation_quote_display, wallpaper_preview, category_filter, custom_quote_menu, settings_preferences)",
+      "screenType": "Specific screen purpose (e.g. Daily Affirmation Display, Lock Screen Quote, Live Wallpaper Preview, Category Filter, Custom Quote Editor, Settings Menu, Onboarding Welcome)",
+      "suggestedSlug": "clean_snake_case_slug_describing_screen (e.g. lockscreen_quote_preview, wallpaper_preview, category_filter, custom_quote_menu, settings_preferences)",
       "description": "1-2 concise sentences describing what this screen displays and what the user can do here.",
-      "components": ["List 3-5 real UI components present, e.g. Quote Card, Category Grid, Wallpaper Canvas, Header Bar, Action Button"],
+      "components": ["List 3-5 real UI components visibly present, e.g. Quote Card, Category Grid, Wallpaper Canvas, Header Bar, Action Button"],
       "visualStyle": "Aesthetic style (e.g. Dark theme sleek, Minimalist typography, Vibrant gradient)"
     }
     """
 
     do {
-        let response = try await session.respond(to: prompt)
+        // Apple FoundationModels Multimodal Attachment with official label & greedy deterministic sampling
+        // Reference: https://developer.apple.com/documentation/foundationmodels/analyzing-images-with-multimodal-prompting
+        let response = try await session.respond(options: GenerationOptions(samplingMode: .greedy)) {
+            promptText
+            Attachment(cgImage).label("mockup-image")
+        }
+
         var content = response.content.trimmingCharacters(in: .whitespacesAndNewlines)
 
         if content.hasPrefix("```json") {
@@ -333,7 +344,7 @@ func analyzeWithAppleAI(session: LanguageModelSession, projectId: String, fileNa
             }
         }
     } catch {
-        print("    ⚠️ Apple AI Model error: \(error.localizedDescription)")
+        print("    ⚠️ Apple Multimodal Model error: \(error.localizedDescription)")
     }
 
     return AIAnalysisResult(
@@ -405,6 +416,7 @@ var outputJson = false
 var shouldRename = false
 var isPreviewRename = false
 var colorsOnly = false
+var syncDeck = false
 var customPath: String? = nil
 
 for arg in CommandLine.arguments.dropFirst() {
@@ -416,6 +428,8 @@ for arg in CommandLine.arguments.dropFirst() {
         isPreviewRename = true
     } else if arg == "--colors-only" {
         colorsOnly = true
+    } else if arg == "--sync-deck" || arg == "--update-deck" {
+        syncDeck = true
     } else if !arg.hasPrefix("-") {
         customPath = arg
     }
@@ -505,8 +519,8 @@ func processDirectory(dir: String) async {
             if !colorsOnly, let session = aiSession {
                 // 1. Apple Vision OCR
                 visibleText = extractVisibleText(from: cgImage)
-                // 2. Apple AI reasoning
-                aiResult = await analyzeWithAppleAI(session: session, projectId: projectId, fileName: img, textList: visibleText)
+                // 2. Apple Multimodal AI reasoning (Vision + LanguageModelSession Attachment)
+                aiResult = await analyzeWithAppleAI(session: session, projectId: projectId, fileName: img, cgImage: cgImage, textList: visibleText)
             }
 
             let rawSlug = aiResult.suggestedSlug ?? aiResult.screenType
@@ -570,16 +584,18 @@ func processDirectory(dir: String) async {
 
         print("  🎨 Extracted Colors:   Primary \(primaryHex)  |  Secondary \(secondaryHex) (CoreGraphics)")
 
-        // 4. Update deck file directly if deck exists
-        let deckUpdated = updateDeckFile(
-            decksDir: decksDirectory,
-            projectId: projectId,
-            primaryHex: primaryHex,
-            secondaryHex: secondaryHex,
-            ocrResults: folderResults.isEmpty ? nil : folderResults
-        )
-        if deckUpdated {
-            print("  ✨ Deck Synchronized:  src/data/decks/\(projectId).json ✅")
+        // 4. Update deck file directly ONLY if explicitly requested via --sync-deck
+        if syncDeck {
+            let deckUpdated = updateDeckFile(
+                decksDir: decksDirectory,
+                projectId: projectId,
+                primaryHex: primaryHex,
+                secondaryHex: secondaryHex,
+                ocrResults: folderResults.isEmpty ? nil : folderResults
+            )
+            if deckUpdated {
+                print("  ✨ Deck Synchronized:  src/data/decks/\(projectId).json ✅")
+            }
         }
 
         // 5. Save structured JSON inside folder
@@ -601,8 +617,8 @@ func processDirectory(dir: String) async {
 
 await processDirectory(dir: targetPath)
 
-// MARK: - Synchronize Any Remaining Decks Without Mockups via Algorithmic Palette
-if customPath == nil {
+// MARK: - Synchronize Any Remaining Decks Without Mockups via Algorithmic Palette (ONLY if --sync-deck)
+if customPath == nil && syncDeck {
     print("\n" + "=" .padding(toLength: 88, withPad: "=", startingAt: 0))
     print("🎨 Synchronizing Remaining Project Decks (Zero Hardcoding / Golden Ratio HSL)...")
     print("-" .padding(toLength: 88, withPad: "-", startingAt: 0))

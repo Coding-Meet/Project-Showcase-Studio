@@ -1,66 +1,52 @@
 {
-  "accentColor" : "#e6225b",
-  "backgroundColor" : "#080a12",
-  "backgroundVariant" : "aurora",
-  "bgAlignment" : "behind_device",
-  "canvasRadius" : 28,
-  "customBgImage" : null,
-  "exportFormat" : "png",
-  "glowIntensity" : 0.34999999999999998,
-  "presetKey" : "WEBSITE_HD",
-  "primaryColor" : "#e6225b",
-  "secondaryColor" : "#2ee658",
-  "slides" : [
+  "slides": [
     {
-      "accentColor" : "#e6225b",
-      "badgeColor" : "#e6225b",
-      "deviceType" : "desktop",
-      "hasFrame" : false,
-      "id" : "slide-1",
-      "imageSrc" : null,
-      "subtitleGradientTo" : "#2ee658",
-      "tagline" : "A cross-platform shader showcase app with 23+ animated effects using Compose Multiplatform.",
-      "title" : "Shader Compose Multiplatform App",
-      "titleGradientTo" : "#e6225b",
-      "variant" : "desktop_dashboard"
+      "id": "slide-1",
+      "variant": "desktop_dashboard",
+      "title": "Shader Compose Multiplatform App",
+      "tagline": "A cross-platform shader showcase app with 23+ animated effects using Compose Multiplatform.",
+      "imageSrc": null,
+      "hasFrame": false,
+      "deviceType": "desktop"
     },
     {
-      "accentColor" : "#e6225b",
-      "badgeColor" : "#e6225b",
-      "deviceType" : "desktop",
-      "features" : [
+      "id": "slide-2",
+      "variant": "feature_deep_dive",
+      "title": "Core Architecture & Capabilities",
+      "tagline": "Built with scalable patterns and modern tooling.",
+      "features": [
         "23+ animated shader screens with real-time rendering",
         "Cross-platform support: Android, iOS, Desktop, Web (WASM/JS)",
         "Unified shader logic using AGSL (Android) and SkSL (others)"
       ],
-      "hasFrame" : false,
-      "id" : "slide-2",
-      "imageSrc" : null,
-      "subtitleGradientTo" : "#2ee658",
-      "tagline" : "Built with scalable patterns and modern tooling.",
-      "title" : "Core Architecture & Capabilities",
-      "titleGradientTo" : "#e6225b",
-      "variant" : "feature_deep_dive"
+      "imageSrc": null,
+      "hasFrame": false,
+      "deviceType": "desktop"
     },
     {
-      "accentColor" : "#e6225b",
-      "badgeColor" : "#e6225b",
-      "deviceType" : "android",
-      "features" : [
+      "id": "slide-3",
+      "variant": "minimal_focus",
+      "title": "Intuitive Workspace Diagnostics",
+      "tagline": "Engineered for smooth navigation and reactive state management.",
+      "features": [
         "ShaderProvider for handling uniforms (time, resolution, colors)",
         "Advanced rendering using drawBehind and graphicsLayer",
         "Touch-based interactive shader animations"
       ],
-      "hasFrame" : false,
-      "id" : "slide-3",
-      "imageSrc" : null,
-      "secondaryImageSrc" : null,
-      "subtitleGradientTo" : "#2ee658",
-      "tagline" : "Engineered for smooth navigation and reactive state management.",
-      "title" : "Intuitive Workspace Diagnostics",
-      "titleGradientTo" : "#e6225b",
-      "variant" : "minimal_focus"
+      "imageSrc": null,
+      "secondaryImageSrc": null,
+      "hasFrame": false,
+      "deviceType": "android"
     }
   ],
-  "textureOverlay" : "dots"
+  "presetKey": "WEBSITE_HD",
+  "exportFormat": "png",
+  "backgroundColor": "#080a12",
+  "accentColor": "#6366f1",
+  "glowIntensity": 0.35,
+  "backgroundVariant": "aurora",
+  "bgAlignment": "behind_device",
+  "customBgImage": null,
+  "textureOverlay": "dots",
+  "canvasRadius": 28
 }
