@@ -224,7 +224,8 @@ func processDirectory(dir: String) async {
         for (index, img) in validImages.enumerated() {
             let fileURL = URL(fileURLWithPath: "\(dir)/\(img)")
             let ext = fileURL.pathExtension.lowercased()
-            let relPath = fileURL.path.replacingOccurrences(of: workspaceRoot + "/", with: "")
+            let cleanRel = fileURL.path.replacingOccurrences(of: workspaceRoot + "/", with: "")
+            let relPath = cleanRel.hasPrefix("/") ? cleanRel : "/" + cleanRel
 
             guard let nsImage = NSImage(contentsOf: fileURL),
                   let cgImage = nsImage.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
@@ -271,7 +272,8 @@ func processDirectory(dir: String) async {
                     do {
                         try FileManager.default.moveItem(at: fileURL, to: safeTargetURL)
                         finalFileName = safeTargetURL.lastPathComponent
-                        finalRelPath = safeTargetURL.path.replacingOccurrences(of: workspaceRoot + "/", with: "")
+                        let safeRel = safeTargetURL.path.replacingOccurrences(of: workspaceRoot + "/", with: "")
+                        finalRelPath = safeRel.hasPrefix("/") ? safeRel : "/" + safeRel
                         renameCount += 1
                         print("      🔄 Renamed To:     \(finalFileName) ✅")
                     } catch {
@@ -300,7 +302,7 @@ func processDirectory(dir: String) async {
         // Save structured JSON directly inside this folder
         let folderJsonFile = URL(fileURLWithPath: "\(dir)/mockups_metadata.json")
         let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
         if let folderJsonData = try? encoder.encode(folderResults) {
             try? folderJsonData.write(to: folderJsonFile)
             print("  💾 Saved \(folderResults.count) mockups metadata inside: \(relDir)/mockups_metadata.json")
@@ -320,7 +322,7 @@ await processDirectory(dir: targetPath)
 // If targetPath is a parent directory containing multiple subfolders, also save aggregated summary
 let targetJsonFile = URL(fileURLWithPath: "\(targetPath)/mockups_metadata.json")
 let encoder = JSONEncoder()
-encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
 
 if let jsonData = try? encoder.encode(allResults) {
     if !FileManager.default.fileExists(atPath: targetJsonFile.path) {
