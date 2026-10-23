@@ -265,7 +265,8 @@ Project Showcase Studio uses a clean, 100% modular architecture where **each pro
 ```text
 /Volumes/Meet/project_showcase/
 ├── src/data/
-│   ├── decks/                 # Single Source of Truth: Modular 3-Slide Decks & Project Metadata
+│   ├── projects.json          # Master Project Knowledge Base (Full descriptions, features & what each project actually is)
+│   ├── decks/                 # Visual Presentation Decks (Individual 3-Slide decks, tilts, lighting & mockups)
 │   │   ├── news_kotlin_multiplatform_app.json
 │   │   ├── pokemon_app_mvi_compose_multiplatform.json
 │   │   ├── devanalyzer.json
@@ -280,7 +281,15 @@ Project Showcase Studio uses a clean, 100% modular architecture where **each pro
 └── logo/                      # Brand Logo Files (_logo.png vs _logo_2.png)
 ```
 
-### 1. `src/data/decks/<project_id>.json` (Autonomous Project Decks)
+### 1. `src/data/projects.json` (Master Project Knowledge Base & Feature Catalog)
+- **Purpose:** Yeh file har project ke **complete details, comprehensive features, aur deep descriptions** ko reference ke liye store karti hai:
+  - `longDescription`: Project ka detailed explanation ki application actually kya karta hai aur kis problem ko solve karta hai.
+  - `shortDescription`: Ek-line ka compact elevator pitch / tagline.
+  - `features`: Application ki puri exhaustive features list (10–15 bullet points per project).
+  - `technologies`: Full architecture aur tech stack items (`Kotlin`, `Compose Multiplatform`, `Room`, `Ktor`, `QiSDK`, etc.).
+  - `platform`: Target operating systems (`Android`, `iOS`, `Windows`, `macOS`, `Linux`).
+
+### 2. `src/data/decks/<project_id>.json` (Studio 3-Slide Visual Decks)
 - Each project has its own dedicated file containing all project metadata and slide configurations:
   - **Metadata:** `id`, `title`, `shortDescription`, `features`, `technologies`, `platform`, `primaryColor`, `secondaryColor`.
   - **Slide 1 (`hero_cover` / `desktop_dashboard` / `featured_card`):** Cover slide with 3D isometric tilt, project headline, tagline, trust pill, and real app screenshot.
