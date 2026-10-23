@@ -1,7 +1,12 @@
 const fs = require('fs');
 const path = require('path');
+const projectDataPath = path.join(__dirname, '../ProjectData.kt');
+if (!fs.existsSync(projectDataPath)) {
+  console.log('ProjectData.kt has been imported and removed. src/data/projects.json is the active master catalog.');
+  process.exit(0);
+}
 
-const content = fs.readFileSync(path.join(__dirname, '../ProjectData.kt'), 'utf-8');
+const content = fs.readFileSync(projectDataPath, 'utf-8');
 
 const projects = [];
 const parts = content.split(/Project\s*\(/g);

@@ -685,11 +685,11 @@
     "exportFormat": "png",
     "backgroundColor": "#080a12",
     "accentColor": "#0cfa75",
-    "glowIntensity": 0.38,
+    "glowIntensity": 0.35,
     "backgroundVariant": "aurora",
-    "bgAlignment": "behind_device",
+    "bgAlignment": "top_center",
     "customBgImage": null,
-    "textureOverlay": "dots",
+    "textureOverlay": "none",
     "canvasRadius": 28
   },
   "pokemon_app_mvi_compose_multiplatform": {

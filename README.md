@@ -29,8 +29,8 @@ Open [http://localhost:5173](http://localhost:5173) in Google Chrome or any mode
 ## 📖 Step-by-Step Guide: How to Use the Studio
 
 ### Step 1: Select Your Project
-- In the top header bar, click the **Project Dropdown** to select one of the **30 pre-loaded projects** (sourced from `ProjectData.kt`) or create custom slide decks.
-- Titles, taglines, technologies, platforms, and feature bullets are automatically populated.
+- In the top header bar, click the **Project Dropdown** to select one of the **30 pre-loaded projects** (sourced from `src/data/projects.json`) or create custom slide decks.
+- Titles, taglines, technologies, platforms, primary/secondary brand colors, and feature bullets are automatically populated.
 
 ### Step 2: Choose Your Canvas Dimension Preset
 In the top bar, pick the ideal resolution for your target platform:
@@ -255,6 +255,55 @@ All project customizations are automatically synchronized in real time:
 - **Disk File:** `src/data/projectStore.json` (persisted on disk across git and reboots).
 - **Backend Auto-Save:** The Express backend (`server.js`) listens on port 3001 and writes changes every time a slide or project property is modified.
 - **Browser Fallback:** Synchronized with `localStorage` so your work is never lost even if the backend is temporarily offline.
+
+---
+
+## 📁 Data Architecture: `projects.json` vs `projectStore.json`
+
+Project Showcase Studio uses a clean, two-layer data separation:
+
+```text
+/Volumes/Meet/project_showcase/
+├── src/data/
+│   ├── projects.json          # 1. Project Directory & Metadata Catalog (Master)
+│   ├── projectStore.json      # 2. Studio Visual State & 3-Slide Decks Database
+│   ├── localLogos.js          # 3. 45+ Local Brand Logos Catalog & Wordmark Index
+│   └── deviceSpecs.js         # 4. 33 Hardware Specifications & Bezels
+├── projects_images/images/    # Organized Mockup Screenshots by Project ID
+│   ├── news_kotlin_multiplatform_app/
+│   ├── pokemon_app_mvi_compose_multiplatform/
+│   ├── chatgpt_android_app/
+│   └── ...
+└── logo/                      # Brand Logo Files (_logo.png vs _logo_2.png)
+```
+
+### 1. `src/data/projects.json` (Master Metadata Catalog)
+- Contains the static project metadata for all **30 projects**:
+  - `id`: Unique identifier slug (e.g. `news_kotlin_multiplatform_app`).
+  - `title`, `shortDescription`, `longDescription`.
+  - `features`: Array of core features.
+  - `technologies`: Array of tech stack items (`Kotlin`, `Compose Multiplatform`, `Room`, etc.).
+  - `platform`: Target platforms (`Android`, `iOS`, `Desktop`, `macOS`, `Windows`, `Linux`).
+  - `primaryColor` & `secondaryColor`: Dominant brand colors automatically extracted from real app screenshots.
+
+### 2. `src/data/projectStore.json` (Showcase Studio Visual State Database)
+- Stores the customized **3-Slide Showcase Decks** for each project:
+  - **Slide 1 (`hero_cover`):** Cover slide with 3D isometric tilt, project headline, tagline, trust pill, and real app screenshot.
+  - **Slide 2 (`feature_deep_dive`):** 3 key feature highlight cards, accent glow, and secondary screen.
+  - **Slide 3 (`responsive_combo` / `dual_screen`):** Multiplatform layout showing mobile and desktop variants side by side.
+  - **Visual Styling:** Canvas lighting theme (`aurora`), accent glow, 3D tilt angles, custom gradient angles, hardware finish (`natural_titanium`), and store badges.
+
+### 3. Automation Scripts (`scripts/`)
+- **Extract Colors from Mockups:**
+  ```bash
+  python3 scripts/extract_project_colors.py
+  ```
+  Scans all mockup screenshots in `projects_images/images/<project_id>/`, filters noise and device bezels, calculates the dominant `primaryColor` and `secondaryColor`, and updates `src/data/projects.json`.
+- **Generate Complete 3-Slide Decks:**
+  ```bash
+  python3 scripts/generate_showcase_decks.py
+  ```
+  Automatically compiles production-ready 3-slide decks for all 30 projects with real screenshot mockups, brand gradients, hardware frames, and status pills, saving directly to `src/data/projectStore.json`.
 
 ---
 
