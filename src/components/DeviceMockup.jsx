@@ -93,6 +93,9 @@ export default function DeviceMockup({
     }`,
     transformStyle: 'preserve-3d',
     transition: 'transform 0.25s ease',
+    willChange: 'transform',
+    backfaceVisibility: 'hidden',
+    WebkitBackfaceVisibility: 'hidden',
   };
 
   // Reflection gloss overlay element
@@ -107,36 +110,31 @@ export default function DeviceMockup({
       />
     ) : null;
 
-  // 1. IMAGE ALREADY HAS A FRAME
+  // 1. IMAGE ALREADY HAS A FRAME (In-built device frame in screenshot)
   if (hasFrame) {
-    const radius = deviceCornerRadius || 24;
+    const radius = deviceCornerRadius || 0;
     return (
       <div className={`relative inline-block ${className}`} style={transformStyle}>
         <div
-          className="relative overflow-hidden ring-1 ring-white/10"
+          className="relative overflow-hidden"
           style={{
             boxShadow: shadowCss,
-            borderRadius: `${radius}px`,
-            border: `2px solid ${finishObj.border}`,
+            borderRadius: radius > 0 ? `${radius}px` : undefined,
           }}
         >
           <img
             src={resolvedSrc}
             alt="Device Screenshot"
-            className="w-auto max-h-[520px] object-contain block select-none pointer-events-none"
+            className="w-auto max-h-[720px] object-contain block select-none pointer-events-none"
             crossOrigin="anonymous"
+            style={{
+              imageRendering: '-webkit-optimize-contrast',
+              WebkitBackfaceVisibility: 'hidden',
+              backfaceVisibility: 'hidden',
+              transform: 'translateZ(0)',
+            }}
           />
           <ReflectionOverlay />
-          {frameGleam && (
-            <div
-              className="absolute inset-0 pointer-events-none z-30"
-              style={{
-                boxShadow:
-                  'inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.4), inset 1px 0 1px 0 rgba(255, 255, 255, 0.2)',
-                borderRadius: `${radius}px`,
-              }}
-            />
-          )}
         </div>
       </div>
     );
@@ -152,14 +150,20 @@ export default function DeviceMockup({
           style={{
             boxShadow: shadowCss,
             borderRadius: `${radius}px`,
-            border: `2.5px solid ${finishObj.border}`,
+            border: `1.5px solid ${finishObj.border}30`,
           }}
         >
           <img
             src={resolvedSrc}
             alt="Screenshot"
-            className="w-auto max-h-[500px] object-cover block select-none pointer-events-none"
+            className="w-auto max-h-[720px] object-cover block select-none pointer-events-none"
             crossOrigin="anonymous"
+            style={{
+              imageRendering: '-webkit-optimize-contrast',
+              WebkitBackfaceVisibility: 'hidden',
+              backfaceVisibility: 'hidden',
+              transform: 'translateZ(0)',
+            }}
           />
           <ReflectionOverlay />
           {frameGleam && (
@@ -182,8 +186,8 @@ export default function DeviceMockup({
   const clipId = `screen-clip-${spec.id}-${uniqueId}`;
   const finishGradId = `finish-grad-${spec.id}-${uniqueId}`;
   const isDesktop = spec.kind === 'desktop';
-  const isTablet = spec.kind === 'tablet' || spec.kind === 'foldable';
-  const maxH = isDesktop ? 460 : isTablet ? 500 : 530;
+  const isTablet = spec.kind === 'tablet' || (spec.kind === 'foldable' && spec.frameSize.width > 600);
+  const maxH = isDesktop ? 550 : isTablet ? 660 : 720;
   const aspect = spec.frameSize.width / spec.frameSize.height;
   const targetW = Math.round(maxH * aspect);
   const resolvedRadius = isDesktop ? 12 : deviceCornerRadius || 36;
@@ -213,6 +217,7 @@ export default function DeviceMockup({
           viewBox={`0 0 ${spec.frameSize.width} ${spec.frameSize.height}`}
           width={isDesktop ? '100%' : targetW}
           height={isDesktop ? undefined : maxH}
+          shapeRendering="geometricPrecision"
           style={{
             width: isDesktop ? '100%' : `${targetW}px`,
             height: isDesktop ? 'auto' : `${maxH}px`,
@@ -220,6 +225,7 @@ export default function DeviceMockup({
             maxWidth: '100%',
             aspectRatio: `${spec.frameSize.width} / ${spec.frameSize.height}`,
             display: 'block',
+            imageRendering: 'high-quality',
           }}
           className="select-none pointer-events-none"
         >
@@ -257,6 +263,11 @@ export default function DeviceMockup({
                 width={spec.portraitSize.width}
                 height={spec.portraitSize.height}
                 preserveAspectRatio="xMidYMid slice"
+                imageRendering="optimizeQuality"
+                style={{
+                  imageRendering: 'high-quality',
+                  WebkitBackfaceVisibility: 'hidden',
+                }}
               />
             </g>
           </g>

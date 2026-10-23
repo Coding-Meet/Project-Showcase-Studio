@@ -56,6 +56,10 @@ export const COMMON_SLIDE_DEFAULTS = {
   metricIcon: 'star',
   metricStyle: 'gold',
   layoutAlign: 'left',
+  layoutSplit: 48,
+  autoScaleEnabled: true,
+  autoScaleIntensity: 1.0,
+  deviceAutoFit: true,
   offsetX: 0,
   offsetY: 0,
 };

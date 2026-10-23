@@ -3,7 +3,13 @@ import Header from './components/Header';
 import SlideDock from './components/SlideDock';
 import InspectorSidebar from './components/InspectorSidebar';
 import CanvasStage from './components/CanvasStage';
-import { captureNode, downloadDataUrl, saveDeckToDiskAndZip } from './utils/exportEngine';
+import {
+  captureNode,
+  downloadDataUrl,
+  saveDeckToDiskAndZip,
+  getDataUrlByteSize,
+  formatByteSize,
+} from './utils/exportEngine';
 import { resolveSlideProperties, GLOBAL_CANVAS_DEFAULTS } from './data/slideDefaults';
 import { CheckCircle2 } from 'lucide-react';
 
@@ -130,6 +136,8 @@ export default function App() {
   // Global Presets & Formats
   const [presetKey, setPresetKey] = useState(initialData.presetKey || GLOBAL_CANVAS_DEFAULTS.presetKey);
   const [exportFormat, setExportFormat] = useState(initialData.exportFormat || GLOBAL_CANVAS_DEFAULTS.exportFormat);
+  const [exportScale, setExportScale] = useState(initialData.exportScale || 2);
+  const [exportQuality, setExportQuality] = useState(initialData.exportQuality !== undefined ? initialData.exportQuality : 1.0);
   const [isThumbnailPreview, setIsThumbnailPreview] = useState(false);
 
   // Global Canvas Atmosphere & Lighting Settings
@@ -157,6 +165,8 @@ export default function App() {
       if (saved.slides) setSlides(saved.slides);
       if (saved.presetKey) setPresetKey(saved.presetKey);
       if (saved.exportFormat) setExportFormat(saved.exportFormat);
+      if (saved.exportScale) setExportScale(saved.exportScale);
+      if (saved.exportQuality !== undefined) setExportQuality(saved.exportQuality);
       if (saved.backgroundColor) setBackgroundColor(saved.backgroundColor);
       if (saved.accentColor) setAccentColor(saved.accentColor);
       if (saved.glowIntensity !== undefined) setGlowIntensity(saved.glowIntensity);
@@ -325,7 +335,10 @@ export default function App() {
       const target = document.getElementById('showcase-canvas-target');
       if (!target) return;
 
-      const dataUrl = await captureNode(target, exportFormat);
+      const dataUrl = await captureNode(target, exportFormat, undefined, undefined, {
+        pixelRatio: exportScale,
+        quality: exportQuality,
+      });
       const cleanTitle = (slides[activeSlideIndex]?.title || 'showcase_slide')
         .toLowerCase()
         .replace(/[^a-z0-9_-]+/g, '_');
@@ -335,7 +348,11 @@ export default function App() {
         `${activeProject.id}_slide_${activeSlideIndex + 1}_${cleanTitle}.${exportFormat}`
       );
 
-      showToast(`Slide ${activeSlideIndex + 1} exported successfully!`);
+      const actualBytes = getDataUrlByteSize(dataUrl);
+      const actualSizeStr = formatByteSize(actualBytes);
+      showToast(
+        `Slide ${activeSlideIndex + 1} exported! (${actualSizeStr} • ${exportScale}x • ${exportFormat.toUpperCase()})`
+      );
     } catch (err) {
       console.error(err);
       alert('Export failed: ' + err.message);
@@ -358,7 +375,10 @@ export default function App() {
 
         const target = document.getElementById('showcase-canvas-target');
         if (target) {
-          const dataUrl = await captureNode(target, exportFormat);
+          const dataUrl = await captureNode(target, exportFormat, undefined, undefined, {
+            pixelRatio: exportScale,
+            quality: exportQuality,
+          });
           renderedSlides.push({
             title: slides[i].title || `slide_${i + 1}`,
             dataUrl,
@@ -373,6 +393,8 @@ export default function App() {
         title: activeProject.title,
         platformPreset: presetKey,
         exportFormat,
+        exportScale,
+        exportQuality,
         backgroundColor,
         accentColor,
         backgroundVariant,
@@ -391,12 +413,18 @@ export default function App() {
 
       setActiveSlideIndex(originalSlideIndex);
 
+      let totalDeckBytes = 0;
+      renderedSlides.forEach((s) => {
+        if (s.dataUrl) totalDeckBytes += getDataUrlByteSize(s.dataUrl);
+      });
+      const deckSizeStr = formatByteSize(totalDeckBytes);
+
       if (backendRes?.folderPath) {
         showToast(
-          `Deck saved to: exports/${activeProject.id}/ and downloaded as ZIP!`
+          `Deck saved! (${renderedSlides.length} slides • ${deckSizeStr}) in exports/${activeProject.id}/ and ZIP!`
         );
       } else {
-        showToast(`Deck exported as ZIP successfully!`);
+        showToast(`Deck exported as ZIP! (${renderedSlides.length} slides • ${deckSizeStr})`);
       }
     } catch (err) {
       console.error('Batch export failed:', err);
@@ -449,6 +477,10 @@ export default function App() {
         onToggleThumbnailPreview={() => setIsThumbnailPreview(!isThumbnailPreview)}
         exportFormat={exportFormat}
         onSelectExportFormat={setExportFormat}
+        exportScale={exportScale}
+        onSelectExportScale={setExportScale}
+        exportQuality={exportQuality}
+        onSelectExportQuality={setExportQuality}
         onExportCurrentSlide={handleExportCurrentSlide}
         onExportAllSlides={handleExportAllSlides}
         isExporting={isExporting}
@@ -509,6 +541,13 @@ export default function App() {
           onChangeTextureOverlay={setTextureOverlay}
           canvasRadius={canvasRadius}
           onChangeCanvasRadius={setCanvasRadius}
+          exportScale={exportScale}
+          onChangeExportScale={setExportScale}
+          exportQuality={exportQuality}
+          onChangeExportQuality={setExportQuality}
+          exportFormat={exportFormat}
+          onChangeExportFormat={setExportFormat}
+          presetKey={presetKey}
         />
       </div>
 

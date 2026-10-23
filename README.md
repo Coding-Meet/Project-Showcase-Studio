@@ -80,7 +80,7 @@ Click the **Content** tab in the Inspector:
   - 🎨 **Solid Color Mode:** Pick from 11 curated swatches or type custom hex values.
 - **Eyebrow Badge & Tags:** Customize badge text, accent color, and choose from 17 Lucide icons (*Sparkles, Flame, Star, Shield, Terminal, Lightning, Rocket, Award, Crown, Code, Globe, AI/Cpu, Heart, Lock, Verified, Growth, Layers, Mobile*).
 - **Feature Cards:** Edit 3 key feature bullets and card text color (for Feature Deep-Dive & Desktop Dashboard).
-- **Font & Weights:** Select font (*Plus Jakarta Sans, Outfit, Inter, Cabinet Grotesk, Space Grotesk, Poppins, JetBrains Mono*) and boldness (*Regular 400, Medium 500, SemiBold 600, Bold 700, ExtraBold 800, Black 900*).
+- **Font Library & Boldness:** Access the full **Google Fonts Library (1,600+ fonts)** with 80+ curated fonts across 6 categories (*Modern Sans, Display & Bold, Luxury Serif, Tech & Code, Futuristic, Creative / Script*) plus live search and custom Google Font importer, with 6 boldness weights (*Regular 400, Medium 500, SemiBold 600, Bold 700, ExtraBold 800, Black 900*).
 - **Element Sizing:** Adjust individual sliders for Headline Size, Subtitle Size, Eyebrow Badge Size, Icon Size, Feature Text Size, Tech Pills Size, and Global Text Scale.
 
 ### Step 7: Tune Background Atmosphere
@@ -142,6 +142,10 @@ Click the **Canvas** tab in the Inspector:
 | `frameGleam` | Checkbox | `true` | `true` / `false` | Specular metallic rim light reflection along device edges |
 | `deviceCornerRadius`| Slider | `36px` | `10px` to `54px` | Inner & outer device corner curvature |
 | `layoutAlign` | Toggle Button | `left` | `left` ⇄ `right` | **Swap Layout Alignment**: Swaps mockup and content positions (Hero Cover & Feature Deep-Dive) |
+| `layoutSplit` | Slider + 3 Quick Pills | `48` | `30%` to `70%` | **Layout Balance & Split**: Width ratio between Content and Mockup (`35/65` Focus Device, `48/52` Balanced, `60/40` Focus Content) |
+| `autoScaleEnabled` | Switch Toggle | `true` | `true` / `false` | **Auto-Scale Text & Elements**: Toggle dynamic proportional font & element scaling when switching canvas resolutions |
+| `autoScaleIntensity`| Slider | `1.0` (100%) | `0.0` (0%) to `1.0` (100%) | **Auto-Scale Intensity**: Control responsiveness (0% locked size, 50% subtle scaling, 100% full auto-scale) |
+| `deviceAutoFit` | Switch Toggle | `true` | `true` / `false` | **Device Height Auto-Fit**: Auto-shrinks device on low-height canvas (e.g. 712x430) to prevent viewport clipping |
 | `tilt` | Checkbox | `true` (Hero) | `true` / `false` | Enables 3D perspective transform (Hero Cover only) |
 | `tiltAngle` | Slider | `-8°` | `-25°` to `+25°` | 3D perspective rotation on the Y-axis |
 | `pitchAngle` | Slider | `4°` | `-15°` to `+15°` | 3D perspective rotation on the X-axis |
@@ -176,30 +180,15 @@ Click the **Canvas** tab in the Inspector:
 | `technologies` | Interactive Browser + Input | Visual Chip Manager / Comma list | **Tech Stack Manager**: Live chip removal, local logo folder quick-picks (45+ pre-indexed logos), and live theSVG CDN brand search |
 | `showMetricPill` | Checkbox | `true` / `false` | **Social Proof / Metric Pill**: High-converting trust element |
 | `metricText` | Text Input | e.g. `4.9 ★ Rating • 50K+ Downloads` | Custom metric or star rating text |
-| `metricIcon` | Dropdown | `star`, `download`, `users`, `github`, `shield`, `trophy`, `bolt` | Metric icon |
+| `metricIcon` | Interactive Icon Picker | `star` | **Lucide Icon Library (100+ Curated + Search)** | Trust pill metric icon with category filters (Trust, Tech, Business, Navigation, Media, etc.) |
 | `metricStyle` | Dropdown | `gold`, `emerald`, `indigo`, `glass`, `ruby` | Trust pill color aesthetic |
 | `eyebrowText` | Input | Text string | Top tag / platform badge text |
-| `eyebrowIcon` | Icon Grid | 17 Lucide Icons | Sparkles, Flame, Star, Shield, Terminal, Zap, Rocket, Award, Crown, Code, Globe, Cpu, Heart, Lock, CheckCircle2, TrendingUp, Layers, Smartphone |
+| `eyebrowIcon` | Interactive Icon Picker | `Sparkles` | **Lucide Icon Library (100+ Curated + Search)** | Interactive searchable picker drawer across 8 categories (Trust & Badges, Tech & Code, Business & Metrics, Media, Navigation, Security, Tools, Energy & AI) or custom Lucide lookup |
 | `badgeColor` | Swatches / Color / Hex | Hex string (e.g. `#818cf8`) | Accent color for eyebrow tag and callout badge |
 | `statusBadge` | Input | Text string | Callout status pill (e.g., `⭐ 88 Stars on GitHub`) |
 | `features` | 3 Inputs | Array of 3 strings | Key feature bullets for Feature Deep-Dive |
 | `featureColor` | Swatches / Color / Hex | Hex string | Text color for floating feature cards |
-| `fontFamily` | Select | 7 Fonts | Plus Jakarta Sans, Outfit, Inter, Cabinet Grotesk, Space Grotesk, Poppins, JetBrains Mono |
-| `fontWeight` | 6 Buttons | `400`, `500`, `600`, `700`, `800`, `900` | Headline boldness (Regular, Medium, SemiBold, Bold, ExtraBold, Black) |
-| `titleSize` | Slider | `28px` - `76px` | Headline font size |
-| `subtitleSize` | Slider | `13px` - `26px` | Subtitle font size |
-| `badgeSize` | Slider | `10px` - `18px` | Eyebrow badge font size |
-| `iconSize` | Slider | `12px` - `28px` | Badge icon size |
-| `featureSize` | Slider | `11px` - `20px` | Feature cards text size |
-| `techChipSize` | Slider | `10px` - `18px` | Tech stack pills font size |
-| `textScale` | Slider | `0.75` - `1.4` (75% - 140%) | Global typography scaling multiplier |
-| `eyebrowText` | Input | Text string | Top tag / platform badge text |
-| `eyebrowIcon` | Icon Grid | 17 Lucide Icons | Sparkles, Flame, Star, Shield, Terminal, Zap, Rocket, Award, Crown, Code, Globe, Cpu, Heart, Lock, CheckCircle2, TrendingUp, Layers, Smartphone |
-| `badgeColor` | Swatches / Color / Hex | Hex string (e.g. `#818cf8`) | Accent color for eyebrow tag and callout badge |
-| `statusBadge` | Input | Text string | Callout status pill (e.g., `⭐ 88 Stars on GitHub`) |
-| `features` | 3 Inputs | Array of 3 strings | Key feature bullets for Feature Deep-Dive |
-| `featureColor` | Swatches / Color / Hex | Hex string | Text color for floating feature cards |
-| `fontFamily` | Select | 7 Fonts | Plus Jakarta Sans, Outfit, Inter, Cabinet Grotesk, Space Grotesk, Poppins, JetBrains Mono |
+| `fontFamily` | Interactive Font Picker | `Plus Jakarta Sans` | **1,600+ Google Fonts** (80+ Curated across 6 categories + Live Search & Custom Google Font Importer) | Full typography library with real-time Google Fonts CDN loader |
 | `fontWeight` | 6 Buttons | `400`, `500`, `600`, `700`, `800`, `900` | Headline boldness (Regular, Medium, SemiBold, Bold, ExtraBold, Black) |
 | `titleSize` | Slider | `28px` - `76px` | Headline font size |
 | `subtitleSize` | Slider | `13px` - `26px` | Subtitle font size |
@@ -222,6 +211,9 @@ Click the **Canvas** tab in the Inspector:
 | `customBgImage` | File Upload | `null` | Image URL / Base64 | Custom uploaded background wallpaper or texture |
 | `textureOverlay` | Buttons | `dots` | `dots`, `grid`, `none` | Subtle texture grid or dot matrix overlay on canvas |
 | `canvasRadius` | Slider | `28px` | `0px` - `48px` | Corner roundness of the exported canvas |
+| `exportScale` | Dropdown + 4 Pills | `2` (4K) | `1` (1080p), `2` (4K Retina), `3` (6K Ultra), `4` (8K Master) | **Export Resolution Multiplier**: Upscale factor for exported slides and ZIP decks |
+| `exportQuality` | Slider | `1.0` (100%) | `0.7` (70%) to `1.0` (100% Lossless) | Compression quality for JPG and WebP export formats |
+| `exportFormat` | Dropdown | `png` | `png`, `webp`, `jpg` | Image output file encoding format |
 
 ---
 
@@ -265,7 +257,8 @@ Project Showcase Studio uses a clean, 100% modular architecture where **each pro
 ```text
 /Volumes/Meet/project_showcase/
 ├── src/data/
-│   ├── decks/                 # Single Source of Truth: Modular 3-Slide Decks & Project Metadata
+│   ├── projects.json          # Master Project Knowledge Base (Full descriptions, features & what each project actually is)
+│   ├── decks/                 # Visual Presentation Decks (Individual 3-Slide decks, tilts, lighting & mockups)
 │   │   ├── news_kotlin_multiplatform_app.json
 │   │   ├── pokemon_app_mvi_compose_multiplatform.json
 │   │   ├── devanalyzer.json
@@ -280,7 +273,15 @@ Project Showcase Studio uses a clean, 100% modular architecture where **each pro
 └── logo/                      # Brand Logo Files (_logo.png vs _logo_2.png)
 ```
 
-### 1. `src/data/decks/<project_id>.json` (Autonomous Project Decks)
+### 1. `src/data/projects.json` (Master Project Knowledge Base & Feature Catalog)
+- **Purpose:** Yeh file har project ke **complete details, comprehensive features, aur deep descriptions** ko reference ke liye store karti hai:
+  - `longDescription`: Project ka detailed explanation ki application actually kya karta hai aur kis problem ko solve karta hai.
+  - `shortDescription`: Ek-line ka compact elevator pitch / tagline.
+  - `features`: Application ki puri exhaustive features list (10–15 bullet points per project).
+  - `technologies`: Full architecture aur tech stack items (`Kotlin`, `Compose Multiplatform`, `Room`, `Ktor`, `QiSDK`, etc.).
+  - `platform`: Target operating systems (`Android`, `iOS`, `Windows`, `macOS`, `Linux`).
+
+### 2. `src/data/decks/<project_id>.json` (Studio 3-Slide Visual Decks)
 - Each project has its own dedicated file containing all project metadata and slide configurations:
   - **Metadata:** `id`, `title`, `shortDescription`, `features`, `technologies`, `platform`, `primaryColor`, `secondaryColor`.
   - **Slide 1 (`hero_cover` / `desktop_dashboard` / `featured_card`):** Cover slide with 3D isometric tilt, project headline, tagline, trust pill, and real app screenshot.

@@ -1,16 +1,4 @@
-import React from 'react';
-import { Star, Download, Users, GitBranch, ShieldCheck, Trophy, Zap, CheckCircle2 } from 'lucide-react';
-
-export const METRIC_ICONS = {
-  star: Star,
-  download: Download,
-  users: Users,
-  github: GitBranch,
-  shield: ShieldCheck,
-  trophy: Trophy,
-  bolt: Zap,
-  check: CheckCircle2,
-};
+import DynamicIcon from './DynamicIcon';
 
 export default function TrustPill({
   text = '4.9 ★ (50K+ Downloads)',
@@ -20,7 +8,6 @@ export default function TrustPill({
   className = '',
 }) {
   if (!text) return null;
-  const IconComponent = METRIC_ICONS[icon] || Star;
 
   let styleClasses = 'bg-amber-500/10 border-amber-400/30 text-amber-300';
   let iconColor = '#fbbf24';
@@ -47,7 +34,7 @@ export default function TrustPill({
         transformOrigin: 'left center',
       }}
     >
-      <IconComponent className="w-3.5 h-3.5 flex-shrink-0 animate-pulse" style={{ color: iconColor }} />
+      <DynamicIcon name={icon} className="w-3.5 h-3.5 flex-shrink-0 animate-pulse" style={{ color: iconColor }} />
       <span className="truncate">{text}</span>
     </div>
   );

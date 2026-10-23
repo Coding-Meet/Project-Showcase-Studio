@@ -1,11 +1,10 @@
 import React from 'react';
 import DeviceMockup from '../DeviceMockup';
-import { Sparkles } from 'lucide-react';
 import { resolveTextGradientStyle } from '../../data/typographyPresets';
-import { EYEBROW_ICONS_MAP } from '../inspector/inspectorConstants';
 import StoreBadges from '../common/StoreBadges';
 import TechIcon from '../common/TechIcon';
 import TrustPill from '../common/TrustPill';
+import DynamicIcon from '../common/DynamicIcon';
 
 export default function HeroCoverSlide({
   slideData,
@@ -48,8 +47,6 @@ export default function HeroCoverSlide({
   const platforms = projectData.platform || ['Android'];
   const isReversed = slideData.layoutAlign === 'right';
 
-  const EyebrowIcon = EYEBROW_ICONS_MAP[eyebrowIcon] || Sparkles;
-
   const titleStyleObj = resolveTextGradientStyle({
     gradient: titleGradient,
     solidColor: titleColor,
@@ -74,6 +71,11 @@ export default function HeroCoverSlide({
   const calcIcon = Math.max(10, Math.round(iconSize * textScale * effectiveRatio));
   const calcTech = Math.max(9, Math.round(techChipSize * textScale * effectiveRatio));
 
+  // Customizable layout split ratio (Text width % vs Mockup width %)
+  const split = Math.max(30, Math.min(70, slideData.layoutSplit ?? 48));
+  const contentWidthPct = `${split - 2}%`;
+  const mockupWidthPct = `${100 - split}%`;
+
   return (
     <div
       className={`w-full h-full flex items-center justify-between px-[6%] py-[5%] relative overflow-hidden z-10 ${
@@ -81,8 +83,11 @@ export default function HeroCoverSlide({
       }`}
       style={{ fontFamily: `${fontFamily}, sans-serif` }}
     >
-      {/* Text & Content Column (Strict 46% boundary to guarantee 0% overlap) */}
-      <div className="w-[46%] max-w-[46%] flex-shrink-0 flex flex-col justify-center items-start z-10 space-y-3.5">
+      {/* Text & Content Column (Controlled by layoutSplit) */}
+      <div
+        className="flex-shrink-0 flex flex-col justify-center items-start z-10 space-y-3.5"
+        style={{ width: contentWidthPct, maxWidth: contentWidthPct }}
+      >
         {/* Eyebrow Platform Tag & Trust Metric Pill in Header */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Category / Platform Tag */}
@@ -95,7 +100,8 @@ export default function HeroCoverSlide({
               backgroundColor: `${badgeColor}12`,
             }}
           >
-            <EyebrowIcon
+            <DynamicIcon
+              name={eyebrowIcon}
               style={{
                 width: `${calcIcon}px`,
                 height: `${calcIcon}px`,
@@ -202,8 +208,11 @@ export default function HeroCoverSlide({
         )}
       </div>
 
-      {/* Mockup Column (Strict 50% boundary, perfectly contained) */}
-      <div className="w-[50%] max-w-[50%] flex-shrink-0 flex items-center justify-center relative z-10">
+      {/* Mockup Column (Controlled by layoutSplit) */}
+      <div
+        className="flex-shrink-0 flex items-center justify-center relative z-10"
+        style={{ width: mockupWidthPct, maxWidth: mockupWidthPct }}
+      >
         <DeviceMockup
           imageSrc={slideData.imageSrc}
           hasFrame={slideData.hasFrame}

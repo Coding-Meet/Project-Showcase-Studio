@@ -6,6 +6,7 @@ import DesktopDashboardSlide from './variants/DesktopDashboardSlide';
 import ResponsiveComboSlide from './variants/ResponsiveComboSlide';
 import MinimalFocusSlide from './variants/MinimalFocusSlide';
 import { resolveSlideProperties } from '../data/slideDefaults';
+import { loadGoogleFont } from '../utils/fontLoader';
 
 export const PRESETS = {
   WEBSITE_HD: { label: 'Personal Website HD (1920×1080)', width: 1920, height: 1080, category: 'Website' },
@@ -95,6 +96,13 @@ const CanvasStage = forwardRef(function CanvasStage(
     return () => window.removeEventListener('resize', updateScale);
   }, [targetWidth, targetHeight, isThumbnailPreview]);
 
+  // Dynamically load Google Font into document head
+  useEffect(() => {
+    if (fontFamily) {
+      loadGoogleFont(fontFamily);
+    }
+  }, [fontFamily]);
+
   // Determine focus coordinates based on variant and alignment
   const variant = slide.variant || 'hero_cover';
   let focusX = 72;
@@ -144,20 +152,27 @@ const CanvasStage = forwardRef(function CanvasStage(
     }
   }
 
+  // Resolve all properties for the active slide using centralized top-level defaults
+  const resolvedSlide = resolveSlideProperties(slide, project);
+
   // Aspect-ratio aware base resolution scaling factor:
   const aspectRatio = targetWidth / targetHeight;
   // If widescreen (>= 1.55 like 16:9 or 16:10), reference is 1920x1080.
   // If 4:3 (like Upwork 1000x750 or 1600x1200), reference is 1440x1080 so 4:3 height is not penalized by width.
   const refWidth = aspectRatio >= 1.55 ? 1920 : 1080 * aspectRatio;
-  const baseScale = Math.min(targetWidth / refWidth, targetHeight / 1080);
+  const rawBaseScale = Math.min(targetWidth / refWidth, targetHeight / 1080);
+
+  // User-customizable Auto-Scale:
+  const isAutoScale = resolvedSlide.autoScaleEnabled !== false;
+  const intensity = resolvedSlide.autoScaleIntensity ?? 1.0;
+  // If disabled, scale is fixed at 1.0; if enabled, interpolate difference by intensity:
+  const baseScale = isAutoScale ? 1 + (rawBaseScale - 1) * intensity : 1;
 
   // Device mockup fit factor:
-  // Container percentages (w-[50%], w-[45%]) automatically scale with container width.
-  // Device only needs slight reduction if vertical canvas height is under 600px (e.g. 712x430).
-  const deviceFitScale = Math.min(1, targetHeight / 640);
-
-  // Resolve all properties for the active slide using centralized top-level defaults
-  const resolvedSlide = resolveSlideProperties(slide, project);
+  // If deviceAutoFit is true, auto-shrink device if canvas height < 640px.
+  const isDeviceAutoFit = resolvedSlide.deviceAutoFit !== false;
+  const rawDeviceFit = Math.min(1, targetHeight / 640);
+  const deviceFitScale = isDeviceAutoFit ? rawDeviceFit : 1;
 
   // Variant dispatcher
   const renderVariant = () => {
@@ -210,11 +225,13 @@ const CanvasStage = forwardRef(function CanvasStage(
           style={{
             width: `${targetWidth}px`,
             height: `${targetHeight}px`,
-            transform: `scale(${stageScale})`,
+            transform: `scale(${stageScale}) translateZ(0)`,
             transformOrigin: 'top left',
             backgroundColor: backgroundColor,
             borderRadius: `${canvasRadius}px`,
             fontFamily: `${fontFamily}, sans-serif`,
+            imageRendering: '-webkit-optimize-contrast',
+            WebkitBackfaceVisibility: 'hidden',
           }}
           className="absolute top-0 left-0 overflow-hidden select-none shadow-2xl ring-1 ring-white/10"
         >

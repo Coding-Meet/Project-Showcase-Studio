@@ -63,3 +63,24 @@ body {
   filter: blur(90px);
   pointer-events: none;
 }
+
+/* 100% Maximum Quality Crisp Image & Vector Rendering */
+img,
+image,
+svg {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  shape-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
+}
+
+/* Anti-blur subpixel 3D rendering */
+[style*="perspective"],
+[style*="rotateY"],
+[style*="scale"] {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
