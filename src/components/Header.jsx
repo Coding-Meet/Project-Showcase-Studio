@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   FolderOpen,
   Download,
@@ -8,6 +8,8 @@ import {
   ChevronDown,
   Save,
   Crosshair,
+  Search,
+  Check,
 } from 'lucide-react';
 import { PRESETS } from './CanvasStage';
 import { estimateImageFileSize } from '../utils/exportEngine';
@@ -34,6 +36,31 @@ export default function Header({
   isDiskSaved,
   onSaveToDisk,
 }) {
+  const [isProjectMenuOpen, setIsProjectMenuOpen] = useState(false);
+  const [projectSearch, setProjectSearch] = useState('');
+  const projectDropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (projectDropdownRef.current && !projectDropdownRef.current.contains(e.target)) {
+        setIsProjectMenuOpen(false);
+      }
+    }
+    if (isProjectMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isProjectMenuOpen]);
+
+  const activeProject = projects.find((p) => p.id === selectedProjectId) || projects[0] || {};
+  const activeTitle = activeProject.title || selectedProjectId;
+
+  const filteredProjects = projects.filter((p) => {
+    if (!projectSearch.trim()) return true;
+    const q = projectSearch.toLowerCase();
+    return (p.title || '').toLowerCase().includes(q) || (p.id || '').toLowerCase().includes(q);
+  });
+
   const currentPreset = (presetKey && PRESETS[presetKey]) || (presetKey && PRESETS[presetKey.toUpperCase()]) || PRESETS.WEBSITE_HD;
   const targetW = currentPreset?.width || 1920;
   const targetH = currentPreset?.height || 1080;
@@ -53,22 +80,76 @@ export default function Header({
 
         <div className="h-4 w-[1px] bg-white/10 hidden lg:block"></div>
 
-        {/* Project Selector Dropdown */}
-        <div className="relative flex items-center flex-shrink-0">
-          <FolderOpen className="w-3.5 h-3.5 text-slate-400 absolute left-2 pointer-events-none" />
-          <select
-            value={selectedProjectId}
-            onChange={(e) => onSelectProject(e.target.value)}
-            className="h-8 pl-7 pr-6 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-semibold text-slate-200 focus:outline-none focus:border-indigo-500/60 transition-all cursor-pointer appearance-none max-w-[120px] sm:max-w-[150px] md:max-w-[175px] truncate whitespace-nowrap"
-            title="Switch Project Deck"
+        {/* Custom Searchable Project Selector Dropdown */}
+        <div className="relative flex items-center flex-shrink-0" ref={projectDropdownRef}>
+          <button
+            type="button"
+            onClick={() => setIsProjectMenuOpen(!isProjectMenuOpen)}
+            className="h-8 pl-2.5 pr-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-semibold text-slate-200 focus:outline-none focus:border-indigo-500/60 transition-all cursor-pointer flex items-center gap-1.5 max-w-[130px] sm:max-w-[160px] md:max-w-[190px]"
+            title={`Active Project: ${activeTitle} (Click to browse & search)`}
           >
-            {projects.map((p) => (
-              <option key={p.id} value={p.id} className="bg-[#0f141f] text-slate-200">
-                {p.title}
-              </option>
-            ))}
-          </select>
-          <ChevronDown className="w-3 h-3 text-slate-400 absolute right-1.5 pointer-events-none" />
+            <FolderOpen className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0" />
+            <span className="truncate text-left flex-1 whitespace-nowrap">{activeTitle}</span>
+            <ChevronDown
+              className={`w-3 h-3 text-slate-400 flex-shrink-0 transition-transform duration-200 ${
+                isProjectMenuOpen ? 'rotate-180' : ''
+              }`}
+            />
+          </button>
+
+          {isProjectMenuOpen && (
+            <div className="absolute left-0 top-full mt-1.5 w-72 sm:w-80 bg-[#0d111a]/95 backdrop-blur-2xl border border-white/10 rounded-xl shadow-2xl shadow-black/80 p-2 z-50 flex flex-col gap-1.5 ring-1 ring-white/5 animate-in fade-in zoom-in-95 duration-100">
+              {/* Search Bar */}
+              <div className="relative flex items-center">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 pointer-events-none" />
+                <input
+                  type="text"
+                  value={projectSearch}
+                  onChange={(e) => setProjectSearch(e.target.value)}
+                  placeholder="Search 25+ projects..."
+                  autoFocus
+                  className="w-full h-8 pl-8 pr-3 rounded-lg bg-white/[0.05] border border-white/10 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500/60 transition-all"
+                />
+              </div>
+
+              {/* Projects List */}
+              <div className="max-h-64 overflow-y-auto space-y-0.5 pr-1 scrollbar-thin">
+                {filteredProjects.map((p) => {
+                  const isSelected = p.id === selectedProjectId;
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => {
+                        onSelectProject(p.id);
+                        setIsProjectMenuOpen(false);
+                        setProjectSearch('');
+                      }}
+                      className={`w-full px-2.5 py-1.5 rounded-lg text-left text-xs font-medium flex items-center justify-between gap-2 transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-indigo-500/20 text-indigo-200 font-semibold ring-1 ring-indigo-500/30'
+                          : 'text-slate-300 hover:text-white hover:bg-white/[0.06]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        <div
+                          className="w-2 h-2 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: p.primaryColor || '#6366f1' }}
+                        />
+                        <span className="truncate">{p.title}</span>
+                      </div>
+                      {isSelected && <Check className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0" />}
+                    </button>
+                  );
+                })}
+                {filteredProjects.length === 0 && (
+                  <div className="py-4 text-center text-xs text-slate-500">
+                    No projects found for "{projectSearch}"
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

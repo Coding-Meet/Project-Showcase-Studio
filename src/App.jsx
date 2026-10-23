@@ -23,9 +23,13 @@ const bundledProjectStore = {};
 for (const [filePath, mod] of Object.entries(deckFiles)) {
   const data = mod.default || mod;
   const pid = data.id || filePath.split('/').pop().replace('.json', '');
+  const fallbackTitle = pid
+    .split('_')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
   parsedProjects.push({
     id: pid,
-    title: data.title || pid,
+    title: data.title || data.slides?.[0]?.title || fallbackTitle,
     shortDescription: data.shortDescription || (data.slides?.[0]?.tagline) || '',
     features: data.features || (data.slides?.[1]?.featureList) || [],
     technologies: data.technologies || (data.slides?.[0]?.technologies) || [],
